@@ -1,0 +1,68 @@
+spring:
+  cloud:
+    nacos:
+      server-addr: ${NACOS_SERVER:124.71.21.11:8848}
+      username: ${NACOS_USERNAME:nacos}
+      password: ${NACOS_PASSWORD:rundo@nacos*2023}
+      discovery:
+        namespace: ${NACOS_NAMESPACE:public}
+        group: ${NACOS_GROUP:DEFAULT_GROUP}
+      config:
+        namespace: ${NACOS_NAMESPACE:public}
+        group: ${NACOS_GROUP:DEFAULT_GROUP}
+    gateway:
+      discovery:
+        locator:
+          # 开启网关拉取 nacos的服务
+          enabled: true
+          lower-case-service-id: true
+      routes:
+        - id: auth-server
+          uri: lb://auth-server
+          predicates:
+            - Path=/auth/**,/oauth2/**
+          filters:
+            - AuthSuccess
+            - Auth
+            - AuthFailure
+        - id: auth-resource
+          uri: lb://auth-resource
+          predicates:
+            - Path=/api/**
+          filters:
+            - AuthSuccess
+            - Auth
+            - AuthFailure
+        - id: device-control
+          uri: lb://device-control
+          predicates:
+            - Path=/device-control/**
+          filters:
+            - StripPrefix=1
+      globalcors:
+        add-to-simple-url-handler-mapping: true
+        cors-configurations:
+          '[/**]':
+            allowedOrigins: # 允许哪些网站的跨域请求
+              - "https://docs.spring.io"
+              - "https://localhost:8090"
+            allowedMethods: # 允许的跨域ajax的请求方式
+              - "GET"
+              - "POST"
+              - "DELETE"
+              - "PUT"
+              - "OPTIONS"
+            allowedHeaders: "*"    # 允许请求头中携带的信息
+            allowCredentials: true  # 是否允许携带cookie信息
+            allowed-origin-patterns: "*"
+            maxAge: 360000  # 这次跨域检测的有效期
+  config:
+    import:
+      - optional:nacos:${spring.application.name}-${spring.profiles.active}.yml
+server:
+  port: 9090
+
+auth:
+  addr: /auth/request
+  prefix: /oauth2/**
+  server-name: auth-server
