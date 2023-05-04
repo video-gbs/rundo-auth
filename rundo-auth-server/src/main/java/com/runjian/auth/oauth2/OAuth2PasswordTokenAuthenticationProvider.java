@@ -91,18 +91,14 @@ public class OAuth2PasswordTokenAuthenticationProvider implements Authentication
 
 
         UsernamePasswordAuthenticationToken token = new UsernamePasswordAuthenticationToken(userAuth, null, userDetails.getAuthorities());
-        OAuth2Authorization authorization = null;
-        if (Objects.isNull(authorization)){
-            authorization = OAuth2Authorization
-                    .withRegisteredClient(registeredClient)
-                    .id(UUID.randomUUID().toString())
-                    .authorizedScopes(oAuth2TokenPasswordAuthenticationToken.getScopes())
-                    .principalName(userDetails.getUsername())
-                    .authorizationGrantType(AuthorizationGrantType.PASSWORD)
-                    .attribute(Principal.class.getName(), token)
-
-                    .build();
-        }
+        OAuth2Authorization authorization = OAuth2Authorization
+                .withRegisteredClient(registeredClient)
+                .id(UUID.randomUUID().toString())
+                .authorizedScopes(oAuth2TokenPasswordAuthenticationToken.getScopes())
+                .principalName(userDetails.getUsername())
+                .authorizationGrantType(AuthorizationGrantType.PASSWORD)
+                .attribute(Principal.class.getName(), token)
+                .build();
 
         DefaultOAuth2TokenContext.Builder tokenContextBuilder = DefaultOAuth2TokenContext.builder()
                 .registeredClient(registeredClient)
