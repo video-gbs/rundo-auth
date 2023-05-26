@@ -19,6 +19,7 @@
         <module>rundo-common</module>
         <module>rundo-auth-gateway</module>
         <module>rundo-auth-resouce</module>
+        <module>rundo-rbac-server</module>
     </modules>
     <properties>
         <java.version>17</java.version>
@@ -35,6 +36,7 @@
         <redisson.version>3.20.1</redisson.version>
         <spring.authorization.server.version>1.0.1</spring.authorization.server.version>
         <mysql.connector.version>8.0.32</mysql.connector.version>
+        <mybatis-plus.version>3.5.3.1</mybatis-plus.version>
     </properties>
 
     <dependencies>
@@ -66,6 +68,11 @@
                 <groupId>com.runjian</groupId>
                 <artifactId>rundo-common</artifactId>
                 <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.baomidou</groupId>
+                <artifactId>mybatis-plus-boot-starter</artifactId>
+                <version>${mybatis-plus.version}</version>
             </dependency>
             <dependency>
                 <groupId>com.alibaba</groupId>

@@ -1,0 +1,113 @@
+spring:
+  cloud:
+    nacos:
+      server-addr: ${NACOS_SERVER:124.71.21.11:8848}
+      username: ${NACOS_USERNAME:nacos}
+      password: ${NACOS_PASSWORD:rundo@nacos*2023}
+      discovery:
+        namespace: public
+        group: DEFAULT_GROUP
+      config:
+        namespace: public
+        group: DEFAULT_GROUP
+  config:
+    import:
+      - optional:nacos:${spring.application.name}-${spring.profiles.active}.yml
+  datasource:
+    type: com.alibaba.druid.pool.DruidDataSource
+    # type: com.zaxxer.hikari.HikariDataSource
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: jdbc:mysql://127.0.0.1:3306/rundo_rbac_server?useUnicode=true&characterEncoding=utf-8&allowMultiQueries=true&serverTimezone=Asia/Shanghai
+    username: root
+    password: abc123
+    druid:
+      # 连接池初始化时创建的连接数量
+      initial-size: 5
+      # 连接的最⼩空闲数量
+      min-idle: 5
+      # 最⼤活跃的连接数量
+      max-active: 20
+      max-wait: 60000
+      min-evictable-idle-time-millis: 60000
+      time-between-eviction-runs-millis: 300000
+      validation-query: SELECT 1 FROM DUAL
+      test-while-idle: true
+      test-on-borrow: false
+      test-on-return: false
+      pool-prepared-statements: true
+      max-pool-prepared-statement-per-connection-size: 20
+      filters: stat,log4j
+      use-global-data-source-stat: true
+      stat-view-servlet:
+        enabled: true
+        url-pattern: /druid/*
+        login-username: admin
+        login-password: 111111
+        web-stat-filter:
+          enabled: true
+          url-pattern: /*
+          exclusions: /druid/*, *.js, *.jpeg, *.jpg, *.png, *.gif, *.css
+      filter:
+        stat:
+          merge-sql: true
+          slow-sql-millis: 3000
+          log-slow-sql: true
+  security:
+    oauth2:
+      resourceserver:
+        jwt:
+          issuer-uri: http://127.0.0.1:9000
+  data:
+    redis:
+      host: 127.0.0.1
+      port: 6378
+      database: 0
+      password:
+      timeout: 1800
+      lettuce:
+        pool:
+          max-active: 200
+          max-wait: -1
+          max-idle: 10
+          min-idle: 0
+mybatis-plus:
+  global-config:
+    banner: off
+    db-config:
+      # logic-delete-field是entity的属性名
+      logic-delete-field: deleteFlag
+      # 1 代表已删除，不配置默认是1
+      logic-delete-value: 1
+      # 0 代表未删除，不配置默认是0
+      logic-not-delete-value: 0
+  mapper-locations: classpath*:/mapper/**/*.xml
+  configuration:
+    map-underscore-to-camel-case: true
+    log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
+
+logging:
+  level:
+    root: info
+response:
+  exclude-url: "/auth/swagger-ui,/auth/swagger-resources,/auth/profile,/auth/v2,/auth/v3,/auth/doc.html,/auth/webjars,/auth/druid,/auth/api/v1"
+springfox:
+  documentation:
+    auto-startup: true
+knife4j:
+  enable: true
+  setting:
+    language: zh-CN
+    enable-document-manage: true
+    enable-reload-cache-parameter: true
+    enable-request-cache: true
+    enable-filter-multipart-apis: true
+    enable-debug: true
+    enable-open-api: true
+    enable-group: true
+  openapi:
+    title: 润建视频平台接口文档
+    description: 请先配置token后,在调试接口 !
+    email: 105194@runjian.com
+    concat: jiangyu
+    url: https://docs.runjian.com
+    version: v1.0.0

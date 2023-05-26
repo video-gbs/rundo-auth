@@ -102,11 +102,10 @@ public class CommonResponse<T> implements Serializable {
      * @param code 消息code
      * @param msg  消息
      * @param data 数据
-     * @param <T>
      * @return
      */
     public static <T> CommonResponse<T> create(Integer code, String msg, T data) {
-        return new CommonResponse<T>(code, msg, data);
+        return new CommonResponse<>(code, msg, data);
     }
 
 

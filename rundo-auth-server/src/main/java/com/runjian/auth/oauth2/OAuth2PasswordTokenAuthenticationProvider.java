@@ -1,6 +1,5 @@
 package com.runjian.auth.oauth2;
 
-import com.runjian.auth.domain.entity.UserAuth;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.context.support.MessageSourceAccessor;

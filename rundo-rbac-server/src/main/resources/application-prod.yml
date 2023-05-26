@@ -1,0 +1,16 @@
+spring:
+  cloud:
+    nacos:
+      server-addr: rundo-nacos:8848
+      username: nacos
+      password: rundo@nacos*2023
+      discovery:
+        namespace: prod
+        group: DEFAULT_GROUP
+      config:
+        namespace: prod
+        group: DEFAULT_GROUP
+
+  config:
+    import:
+      - optional:nacos:${spring.application.name}-${spring.profiles.active}.yml
