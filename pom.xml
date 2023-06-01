@@ -19,7 +19,7 @@
         <module>rundo-common</module>
         <module>rundo-auth-gateway</module>
         <module>rundo-auth-resouce</module>
-        <module>rundo-rbac-server</module>
+        <module>rundo-auth-rbac</module>
     </modules>
     <properties>
         <java.version>17</java.version>
@@ -37,6 +37,8 @@
         <spring.authorization.server.version>1.0.1</spring.authorization.server.version>
         <mysql.connector.version>8.0.32</mysql.connector.version>
         <mybatis-plus.version>3.5.3.1</mybatis-plus.version>
+        <mybatis.version>3.0.1</mybatis.version>
+        <pagehelper.version>1.4.6</pagehelper.version>
     </properties>
 
     <dependencies>
@@ -113,6 +115,16 @@
                 <groupId>io.github.yedaxia</groupId>
                 <artifactId>japidocs</artifactId>
                 <version>${japidocs.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.github.pagehelper</groupId>
+                <artifactId>pagehelper-spring-boot-starter</artifactId>
+                <version>${pagehelper.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.mybatis.spring.boot</groupId>
+                <artifactId>mybatis-spring-boot-starter</artifactId>
+                <version>${mybatis.version}</version>
             </dependency>
         </dependencies>
 
