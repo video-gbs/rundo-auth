@@ -1,4 +1,4 @@
-package com.runjian.rbac.entity;
+package com.runjian.rbac.vo.response;
 
 import lombok.Data;
 
@@ -6,10 +6,11 @@ import java.time.LocalDateTime;
 
 /**
  * @author Miracle
- * @date 2023/5/30 14:55
+ * @date 2023/6/2 9:46
  */
 @Data
-public class RoleInfo {
+public class GetRolePageRsp {
+
 
     private Long id;
 
@@ -17,11 +18,6 @@ public class RoleInfo {
      * 角色名称
      */
     private String roleName;
-
-    /**
-     * 角色编码
-     */
-    private String roleCode;
 
     /**
      * 角色描述
@@ -32,11 +28,6 @@ public class RoleInfo {
      * 禁用状态
      */
     private Integer disabled;
-
-    /**
-     * 软删除状态
-     */
-    private Integer deleted;
 
     /**
      * 创建人

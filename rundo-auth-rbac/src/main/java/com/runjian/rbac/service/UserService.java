@@ -4,7 +4,6 @@ import com.github.pagehelper.PageInfo;
 import com.runjian.rbac.vo.response.GetUserPageRsp;
 
 import java.time.LocalDateTime;
-import java.util.List;
 import java.util.Set;
 
 /**
@@ -16,7 +15,7 @@ public interface UserService {
     /**
      * 根据角色Id查询绑定与未绑定的数据
      */
-    PageInfo<GetUserPageRsp> getUserPageByRoleId(int page, int num, Long roleId, String username, Boolean isBinding);
+    PageInfo<GetUserPageRsp> getUserPage(int page, int num, Long roleId, String username, Boolean isBinding);
 
     /**
      * 根据部门层级查询用户

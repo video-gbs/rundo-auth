@@ -23,6 +23,14 @@ public class RoleResourceRel {
      */
     private Long functionId;
 
+    /**
+     * 功能权限
+     */
+    private String authFunc;
+
+    /**
+     * 创建人
+     */
     private String createBy;
 
     /**

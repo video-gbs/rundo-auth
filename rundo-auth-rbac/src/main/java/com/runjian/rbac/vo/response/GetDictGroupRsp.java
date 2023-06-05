@@ -1,17 +1,13 @@
-package com.runjian.rbac.entity;
+package com.runjian.rbac.vo.response;
 
 import lombok.Data;
 
-import java.time.LocalDateTime;
-
 /**
  * @author Miracle
- * @date 2023/5/30 15:03
+ * @date 2023/6/5 10:16
  */
 @Data
-public class DictInfo {
-
-    private Long id;
+public class GetDictGroupRsp {
 
     /**
      * 分组名称
@@ -32,14 +28,5 @@ public class DictInfo {
      * 字典值
      */
     private String itemValue;
-
-    /**
-     * 描述
-     */
-    private String description;
-
-    private LocalDateTime createTime;
-
-    private LocalDateTime updateTime;
 
 }

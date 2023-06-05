@@ -1,4 +1,4 @@
-package com.runjian.rbac.entity;
+package com.runjian.rbac.vo.response;
 
 import lombok.Data;
 
@@ -6,10 +6,10 @@ import java.time.LocalDateTime;
 
 /**
  * @author Miracle
- * @date 2023/5/30 15:03
+ * @date 2023/6/5 10:15
  */
 @Data
-public class DictInfo {
+public class GetDictPageRsp {
 
     private Long id;
 
@@ -41,5 +41,4 @@ public class DictInfo {
     private LocalDateTime createTime;
 
     private LocalDateTime updateTime;
-
 }

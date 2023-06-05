@@ -16,7 +16,7 @@ public class MenuInfo {
     /**
      * 菜单id
      */
-    private Long menuId;
+    private Long menuPid;
 
     /**
      * 菜单排序
@@ -56,7 +56,7 @@ public class MenuInfo {
     /**
      * 层级
      */
-    private Integer level;
+    private String level;
 
     /**
      * 是否隐藏
@@ -68,20 +68,6 @@ public class MenuInfo {
      */
     private Integer disabled;
 
-    /**
-     * 是否删除
-     */
-    private Integer deleted;
-
-    /**
-     * 创建人
-     */
-    private String createBy;
-
-    /**
-     * 修改人
-     */
-    private String updateBy;
 
     private LocalDateTime createTime;
 

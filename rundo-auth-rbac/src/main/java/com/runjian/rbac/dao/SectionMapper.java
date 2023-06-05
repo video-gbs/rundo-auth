@@ -25,7 +25,7 @@ public interface SectionMapper {
     @Insert(" INSERT INTO " + SECTION_TABLE_NAME +
             " (section_pid, section_name, section_sort, leader_name, phone, level, description, create_time, update_time) " +
             " VALUES " +
-            " (#{sectionPid}, #{sectionName}, #{sectionSort}, #{leaderName}, #{phone}, #{level}, #{description}, #{create_time}, #{update_time})")
+            " (#{sectionPid}, #{sectionName}, #{sectionSort}, #{leaderName}, #{phone}, #{level}, #{description}, #{createTime}, #{updateTime})")
     void save(SectionInfo sectionInfo);
 
     @Select("SELECT * FROM " + SECTION_TABLE_NAME +

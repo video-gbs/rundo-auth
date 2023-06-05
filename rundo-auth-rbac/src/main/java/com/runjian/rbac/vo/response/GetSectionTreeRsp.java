@@ -1,6 +1,5 @@
 package com.runjian.rbac.vo.response;
 
-import lombok.AllArgsConstructor;
 import lombok.Data;
 
 import java.util.ArrayList;
@@ -53,7 +52,7 @@ public class GetSectionTreeRsp {
     /**
      * 子节点
      */
-    private List<GetSectionTreeRsp> childNode = new ArrayList<>();
+    private List<GetSectionTreeRsp> childList = new ArrayList<>();
 
     public static GetSectionTreeRsp getRootSectionTree(){
         GetSectionTreeRsp getSectionTreeRsp = new GetSectionTreeRsp();

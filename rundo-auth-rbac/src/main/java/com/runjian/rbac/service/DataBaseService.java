@@ -1,7 +1,6 @@
 package com.runjian.rbac.service;
 
-import com.runjian.rbac.entity.SectionInfo;
-import com.runjian.rbac.entity.UserInfo;
+import com.runjian.rbac.entity.*;
 
 /**
  * @author Miracle
@@ -20,4 +19,21 @@ public interface DataBaseService {
      * @return
      */
     UserInfo getUserInfo(Long id);
+
+    /**
+     * 查询角色
+     */
+    RoleInfo getRoleInfo(Long id);
+
+    /**
+     * 查询字典
+     */
+    DictInfo getDictInfo(Long id);
+
+    /**
+     * 获取菜单
+     * @param id
+     * @return
+     */
+    MenuInfo getMenuInfo(Long id);
 }

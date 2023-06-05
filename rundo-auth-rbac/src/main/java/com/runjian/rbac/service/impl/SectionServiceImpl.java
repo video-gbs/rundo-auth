@@ -36,7 +36,7 @@ public class SectionServiceImpl implements SectionService {
     public GetSectionTreeRsp getSectionTree() {
         List<GetSectionTreeRsp> sectionInfoList = sectionMapper.selectAllByTree();
         GetSectionTreeRsp rootRsp = GetSectionTreeRsp.getRootSectionTree();
-        rootRsp.setChildNode(recursionData(sectionInfoList, rootRsp.getLevel()));
+        rootRsp.setChildList(recursionData(sectionInfoList, rootRsp.getLevel()));
         return rootRsp;
     }
 
@@ -45,7 +45,7 @@ public class SectionServiceImpl implements SectionService {
         for (GetSectionTreeRsp getSectionTreeRsp : next){
             List<GetSectionTreeRsp> sectionTreeRspList = sectionInfoList.stream()
                     .filter(node -> node.getLevel().startsWith(getSectionTreeRsp.getLevel() + MarkConstant.MARK_SPLIT_RAIL + getSectionTreeRsp.getId())).toList();
-            getSectionTreeRsp.setChildNode(recursionData(sectionTreeRspList, getSectionTreeRsp.getLevel() + MarkConstant.MARK_SPLIT_RAIL + getSectionTreeRsp.getId()));
+            getSectionTreeRsp.setChildList(recursionData(sectionTreeRspList, getSectionTreeRsp.getLevel() + MarkConstant.MARK_SPLIT_RAIL + getSectionTreeRsp.getId()));
         }
         return next.stream().sorted(Comparator.comparing(GetSectionTreeRsp::getSectionSort)).toList();
     }

@@ -42,7 +42,7 @@ public class UserServiceImpl implements UserService {
 
 
     @Override
-    public PageInfo<GetUserPageRsp> getUserPageByRoleId(int page, int num, Long roleId, String username, Boolean isBinding) {
+    public PageInfo<GetUserPageRsp> getUserPage(int page, int num, Long roleId, String username, Boolean isBinding) {
         PageHelper.startPage(page, num);
         return new PageInfo<>(userMapper.selectByInRoleIdAndUsername(roleId, username, isBinding));
     }
@@ -99,9 +99,8 @@ public class UserServiceImpl implements UserService {
         userInfo.setUpdateTime(nowTime);
         userMapper.save(userInfo);
 
-        List<UserRoleRel> userRoleRels = convertUserRoleRel(authUser, userInfo.getId(), roleIds, nowTime);
-        if (userRoleRels.size() > 0){
-            userRoleMapper.saveAll(userRoleRels);
+        if (roleIds.size() > 0){
+            userRoleMapper.saveAll(userInfo.getId(), roleIds, authUser, nowTime);
         }
         log.warn(LogTemplate.PROCESS_LOG_MSG_TEMPLATE, "用户服务", "添加用户成功", String.format("用户'%s' 执行添加 用户'%s'", authUser, username));
     }
@@ -125,13 +124,27 @@ public class UserServiceImpl implements UserService {
         userInfo.setDescription(description);
         userInfo.setUpdateTime(nowTime);
 
-        List<Long> existRoleIds = userRoleMapper.selectRoleIdByUserIdAndRoleIds(userId, roleIds);
-        if (existRoleIds.size() > 0){
-            existRoleIds.forEach(roleIds::remove);
-        }
-        List<UserRoleRel> userRoleRels = convertUserRoleRel(authUser, userInfo.getId(), roleIds, nowTime);
-        if (userRoleRels.size() > 0){
-            userRoleMapper.updateAll(userRoleRels);
+        if (Objects.nonNull(roleIds)){
+            if (roleIds.size() == 0){
+                userRoleMapper.deleteAllByUserId(userId);
+            }else {
+                Set<Long> existRoleIds = userRoleMapper.selectRoleIdByUserId(userId);
+                if (existRoleIds.size() > 0){
+                    Set<Long> difference = new HashSet<>(existRoleIds);
+                    // 求交集
+                    difference.retainAll(roleIds);
+                    // 移除交集获得被删除的数据
+                    existRoleIds.removeAll(difference);
+                    // 移除交集获得增加的数据
+                    roleIds.removeAll(difference);
+                    // 删除去除的角色
+                    userRoleMapper.deleteAllByUserIdAndRoleIds(userId, existRoleIds);
+                }
+                // 保存新的角色
+                if (roleIds.size() > 0){
+                    userRoleMapper.saveAll(userInfo.getId(), roleIds, authUser, nowTime);
+                }
+            }
         }
         userMapper.update(userInfo);
         log.warn(LogTemplate.PROCESS_LOG_MSG_TEMPLATE, "用户服务", "修改用户成功", String.format("用户'%s' 执行更新 用户'%s'", authUser, userInfo));
@@ -140,27 +153,11 @@ public class UserServiceImpl implements UserService {
     @Override
     @Transactional(rollbackFor = Exception.class)
     public void batchDeleteUser(String authUser, Set<Long> userIds) {
-        if (userIds.size() > 0){
-            userMapper.batchUpdateDeleted(userIds, CommonEnum.DISABLE.getCode());
-        }else {
+        if (userIds.size() == 0){
             return;
         }
+        userMapper.batchUpdateDeleted(userIds, CommonEnum.DISABLE.getCode());
         log.warn(LogTemplate.PROCESS_LOG_MSG_TEMPLATE, "用户服务", "删除用户成功", String.format("用户'%s' 执行删除 用户'%s'", authUser, userIds));
     }
 
-    private List<UserRoleRel> convertUserRoleRel(String authUser, Long userId, Set<Long> roleIds, LocalDateTime nowTime){
-        if (roleIds.size() > 0){
-            List<UserRoleRel> userRoleRels =new ArrayList<>(roleIds.size());
-            for (Long roleId : roleIds){
-                UserRoleRel userRoleRel = new UserRoleRel();
-                userRoleRel.setRoleId(roleId);
-                userRoleRel.setUserId(userId);
-                userRoleRel.setCreateBy(authUser);
-                userRoleRel.setCreateTime(nowTime);
-                userRoleRels.add(userRoleRel);
-            }
-            return userRoleRels;
-        }
-        return Collections.EMPTY_LIST;
-    }
 }

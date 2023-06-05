@@ -23,6 +23,9 @@ public class RoleFuncRel {
      */
     private Long functionId;
 
+    /**
+     * 创建人
+     */
     private String createBy;
 
     /**
