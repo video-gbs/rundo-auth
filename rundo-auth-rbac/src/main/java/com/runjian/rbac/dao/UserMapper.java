@@ -1,6 +1,5 @@
 package com.runjian.rbac.dao;
 
-import com.github.pagehelper.PageInfo;
 import com.runjian.rbac.dao.relation.UserRoleMapper;
 import com.runjian.rbac.entity.UserInfo;
 import com.runjian.rbac.vo.response.GetUserPageRsp;

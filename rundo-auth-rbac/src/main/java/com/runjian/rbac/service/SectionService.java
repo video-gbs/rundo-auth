@@ -10,29 +10,37 @@ public interface SectionService {
 
     /**
      * 获取部门树
+     * @return GetSectionTreeRsp
      */
     GetSectionTreeRsp getSectionTree();
 
     /**
      * 新增部门节点
+     * @param pid 父id
+     * @param sectionName 部门名称
+     * @param leaderName 领导名称
+     * @param phone 电话号码
      */
     void addSection(Long pid, String sectionName, String leaderName, String phone);
 
     /**
      * 删除部门节点
+     * @param sectionId 部门id
      */
     void deleteSection(Long sectionId);
 
 
     /**
      * 父子移动节点
+     * @param id 部门id
+     * @param pid 父id
      */
     void fsMove(Long id, Long pid);
 
     /**
      * 兄弟移动节点
-     * @param id
-     * @param moveOp
+     * @param id 部门id
+     * @param moveOp 1上移 0下移
      */
     void btMove(Long id, Integer moveOp);
 
