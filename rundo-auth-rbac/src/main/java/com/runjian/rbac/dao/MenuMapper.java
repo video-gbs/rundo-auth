@@ -26,19 +26,24 @@ public interface MenuMapper {
             " WHERE id = #{id}")
     Optional<MenuInfo> selectById(Long id);
 
-    @Select("SELECT * FROM " + MENU_TABLE_NAME +
-            " WHERE level LIKE CONCAT(#{level},'%')")
-    List<GetMenuTreeRsp> selectByNameLikeAndPathLike(String name, String path);
 
     @Select(" <script> " +
-            "SELECT * FROM " + MENU_TABLE_NAME +
-            " WHERE 1=1 " +
-            " AND <if test=\"name != null\" > name = #{name} </if> " +
-            " AND <if test=\"path != null\" > path = #{path} </if> " +
+            " SELECT * FROM " + MENU_TABLE_NAME +
+            " WHERE 1 = 1 " +
+            " AND <if test=\"name != null\" > name LIKE CONCAT('%', #{name}, '%')  </if> " +
+            " AND <if test=\"path != null\" > path LIKE CONCAT('%', #{path}, '%')  </if> " +
             " </script> ")
+    List<GetMenuTreeRsp> selectByNameLikeAndPathLike(String name, String path);
+
+    @Select(" SELECT * FROM " + MENU_TABLE_NAME +
+            " WHERE level LIKE CONCAT(#{level},'%')")
     List<GetMenuTreeRsp> selectAllByLevelLike(String level);
 
-    @Select("SELECT * FROM " + MENU_TABLE_NAME +
+    @Select(" SELECT id FROM " + MENU_TABLE_NAME +
+            " WHERE level LIKE CONCAT(#{level},'%')")
+    Set<Long> selectIdByLevelLike(String level);
+
+    @Select(" SELECT * FROM " + MENU_TABLE_NAME +
             " WHERE menu_pid = #{pid} ")
     Set<Long> selectIdByPid(Long pid);
 

@@ -32,8 +32,7 @@ public interface RoleMapper {
             " AND <if test=\"createBy != null\" > create_by LIKE CONCAT('%', #{createBy}, '%') </if> " +
             " AND <if test=\"createTimeStart != null\" > create_time &gt;= #{createTimeStart} </if> " +
             " AND <if test=\"createTimeEnd != null\" > create_time &lt;= #{createTimeEnd} </if> " +
-            " </script> "
-    )
+            " </script> ")
     List<GetRolePageRsp> selectPageByRoleNameAndCreateByAndCreateTime(int page, int num, String roleName, String createBy, LocalDateTime createTimeStart, LocalDateTime createTimeEnd);
 
     @Select(" <script> " +
@@ -42,19 +41,18 @@ public interface RoleMapper {
             " WHERE rt.deleted !=  1 " +
             " AND <if test=\"userId != null\" > ur.user_id = #{userId} </if> " +
             " AND <if test=\"roleName != null\" > role_name LIKE CONCAT('%', #{roleName}, '%') </if> " +
-            " </script> "
-    )
+            " </script> ")
     List<GetRolePageRsp> selectPageByUserIdAndRoleName(Long userId, String roleName);
 
     @Update(" <script> " +
             " <foreach collection='roleIds' item='item' separator=';'> " +
             " UPDATE " + ROLE_TABLE_NAME +
-            " SET update_time = #{item.updateTime}  " +
+            " SET update_time = #{updateTime}  " +
             " , deleted = #{deleted} " +
-            " WHERE id = #{item.id} "+
+            " WHERE id = #{item} "+
             " </foreach> " +
             " </script> ")
-    void batchUpdateDeleted(Set<Long> roleIds, Integer deleted);
+    void batchUpdateDeleted(Set<Long> roleIds, Integer deleted, LocalDateTime updateTime);
 
     @Select(" SELECT * FROM " + ROLE_TABLE_NAME +
             " WHERE id = #{id} ")

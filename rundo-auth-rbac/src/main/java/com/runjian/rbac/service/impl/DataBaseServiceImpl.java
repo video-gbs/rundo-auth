@@ -3,6 +3,7 @@ package com.runjian.rbac.service.impl;
 import com.runjian.common.config.exception.BusinessErrorEnums;
 import com.runjian.common.config.exception.BusinessException;
 import com.runjian.rbac.dao.*;
+import com.runjian.rbac.dao.ResourceMapper;
 import com.runjian.rbac.entity.*;
 import com.runjian.rbac.service.DataBaseService;
 import lombok.RequiredArgsConstructor;
@@ -27,6 +28,10 @@ public class DataBaseServiceImpl implements DataBaseService {
     private final DictMapper dictMapper;
 
     private final MenuMapper menuMapper;
+
+    private final FuncMapper funcMapper;
+
+    private final ResourceMapper resourceMapper;
 
     @Override
     public SectionInfo getSectionInfo(Long id) {
@@ -71,5 +76,23 @@ public class DataBaseServiceImpl implements DataBaseService {
             throw new BusinessException(BusinessErrorEnums.VALID_NO_OBJECT_FOUND, String.format("菜单 %s 不存在，请刷新后重试", id));
         }
         return menuInfoOp.get();
+    }
+
+    @Override
+    public FuncInfo getFuncInfo(Long id) {
+        Optional<FuncInfo> funcInfoOp = funcMapper.selectById(id);
+        if (funcInfoOp.isEmpty()){
+            throw new BusinessException(BusinessErrorEnums.VALID_NO_OBJECT_FOUND, String.format("功能 %s 不存在，请刷新后重试", id));
+        }
+        return funcInfoOp.get();
+    }
+
+    @Override
+    public ResourceInfo getResourceInfo(Long id) {
+        Optional<ResourceInfo> resourceInfoOp = resourceMapper.selectById(id);
+        if (resourceInfoOp.isEmpty()){
+            throw new BusinessException(BusinessErrorEnums.VALID_NO_OBJECT_FOUND, String.format("资源 %s 不存在，请刷新后重试", id));
+        }
+        return resourceInfoOp.get();
     }
 }

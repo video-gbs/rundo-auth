@@ -1,4 +1,4 @@
-package com.runjian.rbac.entity;
+package com.runjian.rbac.vo.response;
 
 import lombok.Data;
 
@@ -6,10 +6,10 @@ import java.time.LocalDateTime;
 
 /**
  * @author Miracle
- * @date 2023/5/31 10:36
+ * @date 2023/6/6 11:03
  */
 @Data
-public class ResourceInfo {
+public class GetResourcePageRsp {
 
     private Long id;
 
@@ -32,11 +32,6 @@ public class ResourceInfo {
      * 资源value
      */
     private String resourceValue;
-
-    /**
-     * 修改时间
-     */
-    private LocalDateTime updateTime;
 
     /**
      * 创建时间

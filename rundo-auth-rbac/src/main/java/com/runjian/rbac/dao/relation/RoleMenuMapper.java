@@ -21,7 +21,7 @@ public interface RoleMenuMapper {
     String ROLE_MENU_TABLE_NAME = "rbac_role_menu";
 
     @Insert(" <script> " +
-            " INSERT INTO " + ROLE_MENU_TABLE_NAME + "(role_id, menu_id, create_by, create_time) values " +
+            " INSERT INTO " + ROLE_MENU_TABLE_NAME + "(role_id, menu_id, create_by, create_time) VALUES " +
             " <foreach collection='menuIds' item='item' separator=','>(#{roleId}, #{item}, #{createBy}, #{createTime})</foreach> " +
             " </script>")
     void saveAll(Long id, Set<Long> menuIds, String createBy, LocalDateTime createTime);
@@ -38,14 +38,12 @@ public interface RoleMenuMapper {
             " DELETE FROM " + ROLE_MENU_TABLE_NAME +
             " WHERE role_id = #{roleId} " +
             " AND menu_id IN <foreach collection='menuIds' item='item' open='(' separator=',' close=')'> #{item} </foreach> " +
-            " </script>"
-    )
+            " </script>")
     void deleteAllByRoleIdAndMenuIds(Long roleId, Set<Long> menuIds);
 
     @Delete(" <script> " +
             " DELETE FROM " + ROLE_MENU_TABLE_NAME +
             " WHERE menu_id IN <foreach collection='menuIds' item='item' open='(' separator=',' close=')'> #{item} </foreach> " +
-            " </script>"
-    )
+            " </script>")
     void deleteAllByMenuIds(Set<Long> menuIds);
 }

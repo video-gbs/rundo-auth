@@ -43,8 +43,8 @@ public interface SectionMapper {
             " </script>")
     void deleteById(Long sectionId);
 
-    @Select("SELECT * FROM " + SECTION_TABLE_NAME +
-            " WHERE level LIKE CONCAT(#{level},'%')")
+    @Select(" SELECT * FROM " + SECTION_TABLE_NAME +
+            " WHERE level LIKE CONCAT(#{level},'%') ")
     List<SectionInfo> selectAllLikeByLevel(String level);
 
     @Update(" <script> " +
@@ -63,7 +63,7 @@ public interface SectionMapper {
             " </script> ")
     void updateAll(List<SectionInfo> sectionList);
 
-    @Select("SELECT * FROM " + SECTION_TABLE_NAME +
-            " WHERE section_pid = #{sectionPid}")
+    @Select(" SELECT * FROM " + SECTION_TABLE_NAME +
+            " WHERE section_pid = #{sectionPid} ")
     List<SectionInfo> selectChildByPid(Long sectionPid);
 }

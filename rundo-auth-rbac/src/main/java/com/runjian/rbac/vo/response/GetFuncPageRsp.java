@@ -1,15 +1,13 @@
-package com.runjian.rbac.entity;
+package com.runjian.rbac.vo.response;
 
 import lombok.Data;
 
-import java.time.LocalDateTime;
-
 /**
  * @author Miracle
- * @date 2023/5/31 10:24
+ * @date 2023/6/6 9:58
  */
 @Data
-public class FuncInfo {
+public class GetFuncPageRsp {
 
     private Long id;
 
@@ -29,6 +27,11 @@ public class FuncInfo {
     private String funcName;
 
     /**
+     * 服务前缀
+     */
+    private String prefixPath;
+
+    /**
      * 资源路径
      */
     private String path;
@@ -42,10 +45,5 @@ public class FuncInfo {
      * 是否禁用
      */
     private Integer disabled;
-
-    private LocalDateTime createTime;
-
-    private LocalDateTime updateTime;
-
 
 }

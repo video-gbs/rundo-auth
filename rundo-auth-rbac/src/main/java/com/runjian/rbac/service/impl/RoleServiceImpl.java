@@ -183,7 +183,7 @@ public class RoleServiceImpl implements RoleService {
         if (roleIds.size() == 0){
             return;
         }
-        roleMapper.batchUpdateDeleted(roleIds, CommonEnum.DISABLE.getCode());
+        roleMapper.batchUpdateDeleted(roleIds, CommonEnum.DISABLE.getCode(), LocalDateTime.now());
         log.warn(LogTemplate.PROCESS_LOG_MSG_TEMPLATE, "角色服务", "批量删除用户成功", String.format("用户'%s' 执行删除 角色'%s'", authUser, roleIds));
     }
 

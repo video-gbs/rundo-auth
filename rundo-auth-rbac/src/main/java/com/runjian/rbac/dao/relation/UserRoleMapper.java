@@ -32,10 +32,10 @@ public interface UserRoleMapper {
     )
     void deleteAllByUserIdAndRoleIds(Long userId, Set<Long> roleIds);
 
-    @Insert({" <script> " +
-            " INSERT INTO " + USER_ROLE_TABLE_NAME + "(user_id, role_id, create_by, create_time) values " +
+    @Insert(" <script> " +
+            " INSERT INTO " + USER_ROLE_TABLE_NAME + "(user_id, role_id, create_by, create_time) VALUES " +
             " <foreach collection='roleIds' item='item' separator=','>(#{userId}, #{item}, #{createBy}, #{createTime})</foreach> " +
-            " </script>"})
+            " </script>")
     void saveAll(Long userId, Set<Long> roleIds, String createBy, LocalDateTime createTime);
 
     @Select(" SELECT user_id FROM " + USER_ROLE_TABLE_NAME +
@@ -50,9 +50,10 @@ public interface UserRoleMapper {
             " WHERE user_id = #{userId} ")
     void deleteAllByUserId(Long userId);
 
-    @Delete(" DELETE FROM " + USER_ROLE_TABLE_NAME +
+    @Delete(" <script> " +
+            " DELETE FROM " + USER_ROLE_TABLE_NAME +
             " WHERE role_id = #{roleId} " +
-            " AND user_id IN <foreach collection='userIds' item='item' open='(' separator=',' close=')'> #{item} </foreach> "
-    )
+            " AND user_id IN <foreach collection='userIds' item='item' open='(' separator=',' close=')'> #{item} </foreach> " +
+            " </script>")
     void deleteAllByRoleIdAndUserIds(Long roleId, Set<Long> userIds);
 }

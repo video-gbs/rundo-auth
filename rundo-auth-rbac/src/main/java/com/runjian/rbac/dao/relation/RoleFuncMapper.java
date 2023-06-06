@@ -19,10 +19,10 @@ public interface RoleFuncMapper {
 
     String ROLE_FUNC_TABLE_NAME = "rbac_role_func";
 
-    @Insert({" <script> " +
-            " INSERT INTO " + ROLE_FUNC_TABLE_NAME + "(role_id, func_id, create_by, create_time) values " +
+    @Insert(" <script> " +
+            " INSERT INTO " + ROLE_FUNC_TABLE_NAME + "(role_id, func_id, create_by, create_time) VALUES " +
             " <foreach collection='funcIds' item='item' separator=','>(#{roleId}, #{item}, #{createBy}, #{createTime})</foreach> " +
-            " </script>"})
+            " </script>")
     void saveAll(Long roleId, Set<Long> funcIds, String createBy, LocalDateTime createTime);
 
     @Delete(" DELETE FROM " + ROLE_FUNC_TABLE_NAME +
@@ -33,9 +33,10 @@ public interface RoleFuncMapper {
             " WHERE role_id = #{roleId} ")
     Set<Long> selectMenuIdByFuncId(Long roleId);
 
-    @Delete(" DELETE FROM " + ROLE_FUNC_TABLE_NAME +
+    @Delete(" <script> " +
+            " DELETE FROM " + ROLE_FUNC_TABLE_NAME +
             " WHERE role_id = #{roleId} " +
-            " AND func_id IN <foreach collection='funcIds' item='item' open='(' separator=',' close=')'> #{item} </foreach> "
-    )
+            " AND func_id IN <foreach collection='funcIds' item='item' open='(' separator=',' close=')'> #{item} </foreach> "+
+            " </script>")
     void deleteAllByRoleIdAndFuncIds(Long roleId, Set<Long> funcIds);
 }

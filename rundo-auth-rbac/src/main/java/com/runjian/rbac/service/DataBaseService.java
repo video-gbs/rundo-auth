@@ -36,4 +36,19 @@ public interface DataBaseService {
      * @return
      */
     MenuInfo getMenuInfo(Long id);
+
+
+    /**
+     * 获取功能接口信息
+     * @param id
+     * @return
+     */
+    FuncInfo getFuncInfo(Long id);
+
+    /**
+     * 获取资源接口信息
+     * @param id
+     * @return
+     */
+    ResourceInfo getResourceInfo(Long id);
 }

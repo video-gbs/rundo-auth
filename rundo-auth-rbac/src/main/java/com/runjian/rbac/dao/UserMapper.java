@@ -62,7 +62,7 @@ public interface UserMapper {
     @Insert(" INSERT INTO " + USER_TABLE_NAME +
             " (username, password, work_name, phone, work_num, section_id, address, expiry_start_time, expiry_end_time, description, create_time, update_time) " +
             " VALUES " +
-            " (#{username}, #{password}, #{workName}, #{phone}, #{workNum}, #{sectionId}, #{address}, #{expiryStartTime}, #{expiryEndTime}, #{description},#{createTime}, #{updateTime})")
+            " (#{username}, #{password}, #{workName}, #{phone}, #{workNum}, #{sectionId}, #{address}, #{expiryStartTime}, #{expiryEndTime}, #{description},#{createTime}, #{updateTime}) ")
     @Options(useGeneratedKeys = true, keyProperty = "id", keyColumn = "id")
     void save(UserInfo userInfo);
 
