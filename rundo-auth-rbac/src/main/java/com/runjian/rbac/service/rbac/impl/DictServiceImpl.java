@@ -1,16 +1,14 @@
-package com.runjian.rbac.service.impl;
+package com.runjian.rbac.service.rbac.impl;
 
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
-import com.runjian.common.constant.CommonEnum;
 import com.runjian.rbac.dao.DictMapper;
 import com.runjian.rbac.entity.DictInfo;
-import com.runjian.rbac.service.DataBaseService;
-import com.runjian.rbac.service.DictService;
+import com.runjian.rbac.service.rbac.DataBaseService;
+import com.runjian.rbac.service.rbac.DictService;
 import com.runjian.rbac.vo.response.GetDictGroupRsp;
 import com.runjian.rbac.vo.response.GetDictPageRsp;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;

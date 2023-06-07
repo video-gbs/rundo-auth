@@ -1,5 +1,6 @@
 package com.runjian.rbac.dao.relation;
 
+import com.runjian.rbac.dao.UserMapper;
 import com.runjian.rbac.entity.relation.UserRoleRel;
 import org.apache.ibatis.annotations.Delete;
 import org.apache.ibatis.annotations.Insert;
@@ -56,4 +57,9 @@ public interface UserRoleMapper {
             " AND user_id IN <foreach collection='userIds' item='item' open='(' separator=',' close=')'> #{item} </foreach> " +
             " </script>")
     void deleteAllByRoleIdAndUserIds(Long roleId, Set<Long> userIds);
+
+    @Select(" SELECT role_id FROM " + USER_ROLE_TABLE_NAME + " urt " +
+            " LEFT JOIN " + UserMapper.USER_TABLE_NAME + " ut ON ut.id = urt.user_id " +
+            " WHERE ut.username = #{username} ")
+    Set<Long> selectRoleIdByUsername(String username);
 }

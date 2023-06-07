@@ -1,7 +1,8 @@
-package com.runjian.rbac.service;
+package com.runjian.rbac.service.rbac;
 
 import com.github.pagehelper.PageInfo;
 import com.runjian.rbac.vo.response.GetUserPageRsp;
+import com.runjian.rbac.vo.response.GetUserRsp;
 
 import java.time.LocalDateTime;
 import java.util.Set;
@@ -34,6 +35,7 @@ public interface UserService {
      * @return GetUserPageRsp
      */
     PageInfo<GetUserPageRsp> getUserPage(int page, int num, Long sectionId, String username, String workName, Boolean isInclude);
+
 
 
     /**

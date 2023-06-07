@@ -26,9 +26,9 @@ public interface FuncResourceMapper {
     void deleteAllByResourceIds(Set<Long> resourceIds);
 
     @Insert(" INSERT INTO " + FUNC_RESOURCE_TABLE_NAME +
-            " (func_id, resource_key, validated, validated_param, disabled, create_time, update_time) " +
+            " (func_id, resource_key, validated_param, disabled, create_time, update_time) " +
             " VALUES " +
-            " (#{funcId}, #{resourceKey}, #{validated}, #{validatedParam}, #{disabled}, #{disabled}, #{createTime}, #{updateTime})")
+            " (#{funcId}, #{resourceKey}, #{validatedParam}, #{disabled}, #{disabled}, #{createTime}, #{updateTime})")
     void save(FuncResourceRel funcResourceRel);
 
     @Delete(" DELETE FROM " + FUNC_RESOURCE_TABLE_NAME +
@@ -54,9 +54,4 @@ public interface FuncResourceMapper {
             " WHERE id = #{id} ")
     void updateDisabled(FuncResourceRel funcResourceRel);
 
-    @Update(" UPDATE "  + FUNC_RESOURCE_TABLE_NAME +
-            " SET update_time = #{updateTime}, " +
-            " validated = #{validated} " +
-            " WHERE id = #{id} ")
-    void updateValidated(FuncResourceRel funcResourceRel);
 }

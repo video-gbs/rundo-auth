@@ -1,11 +1,11 @@
-package com.runjian.rbac.service.impl;
+package com.runjian.rbac.service.rbac.impl;
 
 import com.runjian.common.config.exception.BusinessErrorEnums;
 import com.runjian.common.config.exception.BusinessException;
 import com.runjian.rbac.dao.*;
 import com.runjian.rbac.dao.ResourceMapper;
 import com.runjian.rbac.entity.*;
-import com.runjian.rbac.service.DataBaseService;
+import com.runjian.rbac.service.rbac.DataBaseService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 

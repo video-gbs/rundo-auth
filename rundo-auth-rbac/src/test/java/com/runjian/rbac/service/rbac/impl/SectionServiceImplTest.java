@@ -1,12 +1,10 @@
-package com.runjian.rbac.service.impl;
+package com.runjian.rbac.service.rbac.impl;
 
-import com.runjian.rbac.service.SectionService;
+import com.runjian.rbac.service.rbac.SectionService;
 import com.runjian.rbac.vo.response.GetSectionTreeRsp;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-
-import static org.junit.jupiter.api.Assertions.*;
 
 /**
  * @author Miracle

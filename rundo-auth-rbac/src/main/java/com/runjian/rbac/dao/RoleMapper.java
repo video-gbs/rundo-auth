@@ -73,4 +73,12 @@ public interface RoleMapper {
             " VALUES " +
             " (#{role_name}, #{role_desc}, #{createTime}, #{updateTime})")
     void save(RoleInfo roleInfo);
+
+    @Select(" <script> " +
+            " SELECT rt.* FROM " + ROLE_TABLE_NAME + " rt " +
+            " <if test=\"userId != null\" > RIGHT JOIN " + UserRoleMapper.USER_ROLE_TABLE_NAME + " ur ON rt.id = ur.role_id </if> " +
+            " WHERE rt.deleted !=  1 " +
+            " AND ur.user_id = #{userId} " +
+            " </script> ")
+    List<RoleInfo> selectByUserId(Long userId);
 }

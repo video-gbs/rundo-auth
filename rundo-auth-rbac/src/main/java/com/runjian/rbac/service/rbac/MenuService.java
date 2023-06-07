@@ -1,4 +1,4 @@
-package com.runjian.rbac.service;
+package com.runjian.rbac.service.rbac;
 
 import com.runjian.rbac.vo.response.GetMenuTreeRsp;
 

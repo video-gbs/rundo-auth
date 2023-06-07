@@ -14,11 +14,23 @@ public class UserRoleRel {
 
     private Long id;
 
+    /**
+     * 用户id
+     */
     private Long userId;
 
+    /**
+     * 角色id
+     */
     private Long roleId;
 
+    /**
+     * 创建人
+     */
     private String createBy;
 
+    /**
+     * 创建时间
+     */
     private LocalDateTime createTime;
 }

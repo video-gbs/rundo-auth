@@ -1,4 +1,4 @@
-package com.runjian.rbac.service.impl;
+package com.runjian.rbac.service.rbac.impl;
 
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
@@ -11,11 +11,10 @@ import com.runjian.rbac.dao.relation.FuncResourceMapper;
 import com.runjian.rbac.entity.FuncInfo;
 import com.runjian.rbac.entity.MenuInfo;
 import com.runjian.rbac.entity.relation.FuncResourceRel;
-import com.runjian.rbac.service.DataBaseService;
-import com.runjian.rbac.service.FuncService;
+import com.runjian.rbac.service.rbac.DataBaseService;
+import com.runjian.rbac.service.rbac.FuncService;
 import com.runjian.rbac.vo.response.GetFuncPageRsp;
 import com.runjian.rbac.vo.response.GetFuncResourceRsp;
-import com.runjian.rbac.vo.response.GetMenuTreeRsp;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -119,29 +118,16 @@ public class FuncServiceImpl implements FuncService {
     }
 
     @Override
-    public void associationResource(Long funcId, String resourceKey, Integer validated, String validateParam, Integer disabled) {
+    public void associationResource(Long funcId, String resourceKey, String validateParam, Integer disabled) {
         LocalDateTime nowTime = LocalDateTime.now();
         FuncResourceRel funcResourceRel = new FuncResourceRel();
         funcResourceRel.setFuncId(funcId);
         funcResourceRel.setResourceKey(resourceKey);
-        funcResourceRel.setValidated(validated);
         funcResourceRel.setValidateParam(validateParam);
         funcResourceRel.setDisabled(disabled);
         funcResourceRel.setUpdateTime(nowTime);
         funcResourceRel.setCreateTime(nowTime);
         funcResourceMapper.save(funcResourceRel);
-    }
-
-    @Override
-    public void updateFuncResourceValidated(Long funcResourceId, Integer validated) {
-        Optional<FuncResourceRel> funcResourceRelOp = funcResourceMapper.selectById(funcResourceId);
-        if (funcResourceRelOp.isEmpty()){
-            throw new BusinessException(BusinessErrorEnums.VALID_NO_OBJECT_FOUND, String.format("关系资源 %s 不存在，请重新刷新", funcResourceId));
-        }
-        FuncResourceRel funcResourceRel = funcResourceRelOp.get();
-        funcResourceRel.setValidated(validated);
-        funcResourceRel.setUpdateTime(LocalDateTime.now());
-        funcResourceMapper.updateValidated(funcResourceRel);
     }
 
     @Override
@@ -157,14 +143,13 @@ public class FuncServiceImpl implements FuncService {
     }
 
     @Override
-    public void updateFuncResource(Long funcResourceId, String resourceKey, Integer validated, String validateParam, Integer disabled) {
+    public void updateFuncResource(Long funcResourceId, String resourceKey, String validateParam, Integer disabled) {
         Optional<FuncResourceRel> funcResourceRelOp = funcResourceMapper.selectById(funcResourceId);
         if (funcResourceRelOp.isEmpty()){
             throw new BusinessException(BusinessErrorEnums.VALID_NO_OBJECT_FOUND, String.format("关系资源 %s 不存在，请重新刷新", funcResourceId));
         }
         FuncResourceRel funcResourceRel = funcResourceRelOp.get();
         funcResourceRel.setResourceKey(resourceKey);
-        funcResourceRel.setValidated(validated);
         funcResourceRel.setValidateParam(validateParam);
         funcResourceRel.setDisabled(disabled);
     }

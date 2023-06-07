@@ -1,11 +1,15 @@
-package com.runjian.rbac.service.impl;
+package com.runjian.rbac.service.rbac.impl;
 
+import com.runjian.common.config.exception.BusinessErrorEnums;
+import com.runjian.common.config.exception.BusinessException;
+import com.runjian.common.constant.CommonEnum;
 import com.runjian.common.constant.MarkConstant;
+import com.runjian.rbac.constant.MenuType;
 import com.runjian.rbac.dao.MenuMapper;
 import com.runjian.rbac.dao.relation.RoleMenuMapper;
 import com.runjian.rbac.entity.MenuInfo;
-import com.runjian.rbac.service.DataBaseService;
-import com.runjian.rbac.service.MenuService;
+import com.runjian.rbac.service.rbac.DataBaseService;
+import com.runjian.rbac.service.rbac.MenuService;
 import com.runjian.rbac.vo.response.GetMenuTreeRsp;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -69,6 +73,9 @@ public class MenuServiceImpl implements MenuService {
     @Override
     public void addMenu(Long menuPid, Integer menuSort, Integer menuType, String path, String component, String name, String icon, String description, Integer hidden, Integer disabled) {
         MenuInfo pMenuInfo = dataBaseService.getMenuInfo(menuPid);
+        if (pMenuInfo.getMenuType().equals(MenuType.ABSTRACT.getCode()) && !menuType.equals(MenuType.ABSTRACT.getCode()) ){
+            throw new BusinessException(BusinessErrorEnums.VALID_ILLEGAL_OPERATION, "不能在抽象的菜单下创建非抽象的菜单");
+        }
         LocalDateTime nowTime = LocalDateTime.now();
         MenuInfo cMenuInfo = new MenuInfo();
         cMenuInfo.setMenuPid(menuPid);

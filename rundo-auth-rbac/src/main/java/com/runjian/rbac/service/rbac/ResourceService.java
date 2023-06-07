@@ -1,4 +1,4 @@
-package com.runjian.rbac.service;
+package com.runjian.rbac.service.rbac;
 
 import com.github.pagehelper.PageInfo;
 import com.runjian.rbac.vo.response.GetResourcePageRsp;

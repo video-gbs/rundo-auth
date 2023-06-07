@@ -1,4 +1,4 @@
-package com.runjian.rbac.service;
+package com.runjian.rbac.service.rbac;
 
 import com.github.pagehelper.PageInfo;
 import com.runjian.rbac.vo.response.GetFuncPageRsp;
@@ -74,14 +74,8 @@ public interface FuncService {
      * @param validateParam 校验参数
      * @param disabled 是否禁用
      */
-    void associationResource(Long funcId, String resourceKey, Integer validated, String validateParam, Integer disabled);
+    void associationResource(Long funcId, String resourceKey, String validateParam, Integer disabled);
 
-    /**
-     * 修改校验状态
-     * @param funcResourceId 功能关联资源id
-     * @param validated 是否校验数据
-     */
-    void updateFuncResourceValidated(Long funcResourceId, Integer validated);
 
     /**
      * 修改禁用状态
@@ -98,7 +92,7 @@ public interface FuncService {
      * @param validateParam 校验参数
      * @param disabled 是否禁用
      */
-    void updateFuncResource(Long funcResourceId, String resourceKey, Integer validated, String validateParam, Integer disabled);
+    void updateFuncResource(Long funcResourceId, String resourceKey, String validateParam, Integer disabled);
 
     /**
      * 删除关联资源

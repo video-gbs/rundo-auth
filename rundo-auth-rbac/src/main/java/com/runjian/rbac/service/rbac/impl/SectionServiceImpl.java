@@ -1,4 +1,4 @@
-package com.runjian.rbac.service.impl;
+package com.runjian.rbac.service.rbac.impl;
 
 import com.runjian.common.config.exception.BusinessErrorEnums;
 import com.runjian.common.config.exception.BusinessException;
@@ -6,8 +6,8 @@ import com.runjian.common.constant.MarkConstant;
 import com.runjian.rbac.dao.SectionMapper;
 import com.runjian.rbac.dao.UserMapper;
 import com.runjian.rbac.entity.SectionInfo;
-import com.runjian.rbac.service.DataBaseService;
-import com.runjian.rbac.service.SectionService;
+import com.runjian.rbac.service.rbac.DataBaseService;
+import com.runjian.rbac.service.rbac.SectionService;
 import com.runjian.rbac.vo.response.GetSectionTreeRsp;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;

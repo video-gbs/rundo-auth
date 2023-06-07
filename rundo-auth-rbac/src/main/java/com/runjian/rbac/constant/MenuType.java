@@ -10,7 +10,7 @@ import lombok.Getter;
 @Getter
 @AllArgsConstructor
 public enum MenuType {
-
+    ABSTRACT(0, "抽象"),
     DIRECTORY(1, "目录"),
     PAGE(2, "页面")
     ;

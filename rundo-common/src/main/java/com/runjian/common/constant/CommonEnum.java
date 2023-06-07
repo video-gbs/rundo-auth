@@ -14,11 +14,12 @@ public enum CommonEnum {
     DISABLE(0, "禁用"),
     ENABLE(1, "启用"),
 
-
-
-
     ;
-    private Integer code;
+    private final Integer code;
 
-    private String msg;
+    private final String msg;
+
+    public static Boolean getBoolean(Integer code){
+        return !code.equals(DISABLE.getCode());
+    }
 }

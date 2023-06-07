@@ -1,4 +1,4 @@
-package com.runjian.rbac.service.impl;
+package com.runjian.rbac.service.rbac.impl;
 
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
@@ -12,8 +12,8 @@ import com.runjian.rbac.dao.relation.RoleMenuMapper;
 import com.runjian.rbac.dao.relation.RoleResourceMapper;
 import com.runjian.rbac.dao.relation.UserRoleMapper;
 import com.runjian.rbac.entity.RoleInfo;
-import com.runjian.rbac.service.DataBaseService;
-import com.runjian.rbac.service.RoleService;
+import com.runjian.rbac.service.rbac.DataBaseService;
+import com.runjian.rbac.service.rbac.RoleService;
 import com.runjian.rbac.vo.response.GetRolePageRsp;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;

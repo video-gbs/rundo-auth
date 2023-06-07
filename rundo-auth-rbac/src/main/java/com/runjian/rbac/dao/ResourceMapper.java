@@ -1,5 +1,6 @@
 package com.runjian.rbac.dao;
 
+import com.runjian.rbac.dao.relation.RoleResourceMapper;
 import com.runjian.rbac.entity.ResourceInfo;
 import com.runjian.rbac.vo.response.GetResourcePageRsp;
 import org.apache.ibatis.annotations.*;
@@ -59,4 +60,12 @@ public interface ResourceMapper {
             " <foreach collection='saveList' item='item' separator=','>(#{groupName}, #{resourceName}, #{resourceKey}, #{item}, #{nowTime}, #{nowTime})</foreach> " +
             " </script>"})
     void batchAdd(String groupName, String resourceName, String resourceKey, Set<String> resourceValues, LocalDateTime nowTime);
+
+    @Select(" <script> " +
+            " SELECT rt.resource_value FROM " + RESOURCE_TABLE_NAME + "rt" +
+            " RIGHT JOIN " + RoleResourceMapper.ROLE_RESOURCE_TABLE_NAME + " rrt ON rrt.resource_id = rt.id " +
+            " WHERE resource_key = #{resourceKey} " +
+            " AND role_id IN <foreach collection='roleIds' item='item' open='(' separator=',' close=')'> #{item} </foreach> " +
+            " </script>")
+    Set<String> selectValueByKeyAndRoleIds(String resourceKey, List<Long> roleIds);
 }

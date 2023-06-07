@@ -8,14 +8,6 @@ public class MarkConstant {
 
     /*********************************设备类型标志*******************************************/
 
-    public static final String REDIS_DEVICE_ONLINE_STATE = "DEVICE_ONLINE_STATE";
-
-    public static final String REDIS_DEVICE_ONLINE_STATE_LOCK = "DEVICE_ONLINE_STATE_LOCK";
-
-
-    public static final String REDIS_CHANNEL_ONLINE_STATE = "CHANNEL_ONLINE_STATE";
-
-    public static final String REDIS_CHANNEL_ONLINE_STATE_LOCK = "REDIS_CHANNEL_ONLINE_STATE_LOCK";
 
     /*********************************标志位分割符号*******************************************/
 
@@ -40,11 +32,9 @@ public class MarkConstant {
 
     /*******************************feign错误解析****************************************/
 
-    public static final String MARK_FEIGN_RESP_START = "[{";
-    public static final String MARK_FEIGN_RESP_END = "}]";
-    public static final String MARK_FEIGN_RESP_CODE = "code";
 
 
-
-
+    public static final String REDIS_AUTH_USER_ROLE = "AUTH_USER_ROLE:";
+    public static final String REDIS_AUTH_FUNC = "AUTH_FUNC";
+    public static final String REDIS_AUTH_RESOURCE_ROLE = "AUTH_RESOURCE_ROLE";
 }
