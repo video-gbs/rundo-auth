@@ -17,7 +17,7 @@ public interface AuthService {
     UserAuthDto getUserAuth(String username);
 
     /**
-     * 获取授权信息
+     * 获取用户授权信息
      * @param username 用户名
      * @param scope 授权体系
      * @param reqPath 访问路径
@@ -25,5 +25,14 @@ public interface AuthService {
      * @param jsonStr 数据体
      * @return
      */
-    DataAuthDto getAuthData(String username, String scope, String reqPath, String reqMethod, String jsonStr);
+    DataAuthDto getAuthDataByUser(String username, String scope, String reqPath, String reqMethod, String jsonStr);
+
+    /**
+     * 获取客户端授权信息
+     * @param scope
+     * @param reqPath
+     * @param reqMethod
+     * @return
+     */
+    DataAuthDto getAuthDataByClient(String scope, String reqPath, String reqMethod);
 }

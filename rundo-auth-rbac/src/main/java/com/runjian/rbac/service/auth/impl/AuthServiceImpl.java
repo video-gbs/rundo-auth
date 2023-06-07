@@ -62,7 +62,7 @@ public class AuthServiceImpl implements AuthService {
     }
 
     @Override
-    public DataAuthDto getAuthData(String username, String scope, String reqPath, String reqMethod, String jsonStr) {
+    public DataAuthDto getAuthDataByUser(String username, String scope, String reqPath, String reqMethod, String jsonStr) {
         DataAuthDto dataAuthDto = new DataAuthDto();
         List<Long> userRoles = cacheService.getUserRole(username);
 
@@ -117,6 +117,26 @@ public class AuthServiceImpl implements AuthService {
                     return dataAuthDto;
                 }
             }
+        }
+        dataAuthDto.setIsAuthorized(true);
+        return dataAuthDto;
+    }
+
+    @Override
+    public DataAuthDto getAuthDataByClient(String scope, String reqPath, String reqMethod) {
+        DataAuthDto dataAuthDto = new DataAuthDto();
+        String funcKey = reqMethod + MarkConstant.MARK_SPLIT_SEMICOLON + reqPath;
+        FuncCacheDto funcCache = cacheService.getFuncCache(funcKey);
+        // 判断是否是保护的参数
+        if (Objects.isNull(funcCache)){
+            dataAuthDto.setIsAuthorized(true);
+            return dataAuthDto;
+        }
+        List<String> scopeList = Arrays.asList(scope.split(","));
+        if (scopeList.isEmpty() || nonIntersection(scopeList, Arrays.asList("all", funcCache.getServiceName()))){
+            dataAuthDto.setMsg(String.format("当前客户端没有功能'%s'的权限", funcKey));
+            dataAuthDto.setIsAuthorized(false);
+            return dataAuthDto;
         }
         dataAuthDto.setIsAuthorized(true);
         return dataAuthDto;

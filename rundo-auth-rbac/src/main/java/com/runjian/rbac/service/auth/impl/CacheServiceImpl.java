@@ -46,7 +46,17 @@ public class CacheServiceImpl implements CacheService {
     }
 
     @Override
+    public void setFuncCache(String methodPath, FuncCacheDto funcCache) {
+        redissonClient.getMap(MarkConstant.REDIS_AUTH_FUNC).put(methodPath, JSONObject.toJSONString(funcCache));
+    }
+
+    @Override
     public List<Long> getResourceRole(String keyValue) {
         return JSONArray.parseArray(redissonClient.getMap(MarkConstant.REDIS_AUTH_RESOURCE_ROLE).get(keyValue).toString()).toList(Long.class);
+    }
+
+    @Override
+    public void setResourceRole(String keyValue, Set<Long> roleIds) {
+        redissonClient.getMap(MarkConstant.REDIS_AUTH_RESOURCE_ROLE).put(keyValue, roleIds);
     }
 }
