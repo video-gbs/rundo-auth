@@ -70,7 +70,6 @@ public interface FuncService {
      * 关联资源
      * @param funcId 功能id
      * @param resourceKey 资源key
-     * @param validated 是否校验
      * @param validateParam 校验参数
      * @param disabled 是否禁用
      */
@@ -88,7 +87,6 @@ public interface FuncService {
      * 修改关联资源
      * @param funcResourceId 功能资源关系id
      * @param resourceKey 资源key
-     * @param validated 是否校验
      * @param validateParam 校验参数
      * @param disabled 是否禁用
      */
