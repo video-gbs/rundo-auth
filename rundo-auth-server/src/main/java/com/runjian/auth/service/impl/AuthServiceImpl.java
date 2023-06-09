@@ -1,7 +1,14 @@
 package com.runjian.auth.service.impl;
 
-import com.runjian.auth.domain.vo.response.AuthorizeData;
+import com.runjian.auth.feign.AuthRbacApi;
+import com.runjian.auth.vo.dto.AuthDataDto;
+import com.runjian.auth.vo.request.PostAuthUserApiReq;
+import com.runjian.auth.vo.response.AuthorizeData;
 import com.runjian.auth.service.AuthService;
+import com.runjian.common.config.exception.BusinessErrorEnums;
+import com.runjian.common.config.exception.BusinessException;
+import com.runjian.common.config.response.CommonResponse;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.oauth2.jwt.Jwt;
@@ -16,18 +23,24 @@ import java.util.Objects;
  */
 @Slf4j
 @Service
+@RequiredArgsConstructor
 public class AuthServiceImpl implements AuthService {
 
+    private final AuthRbacApi authRbacApi;
+
     @Override
-    public AuthorizeData authenticate(Authentication authentication, String reqUrl, String reqMethod, String jsonStr) {
+    public AuthDataDto authenticate(Authentication authentication, String reqPath, String reqMethod, String jsonStr) {
         Jwt principal = (Jwt) authentication.getPrincipal();
         Map<String, Object> claimMap = principal.getClaims();
-        claimMap.get("aud");
         Object scopeOb = claimMap.get("scope");
         String scope = null;
         if (Objects.nonNull(scopeOb)){
             scope = scopeOb.toString();
         }
-        return new AuthorizeData(true, authentication.getName(), claimMap.get("aud").toString(), scope, "111");
+        CommonResponse<AuthDataDto> authDataDtoCommonResponse = authRbacApi.authUserApi(new PostAuthUserApiReq(authentication.getName(), scope, reqMethod, reqPath, jsonStr));
+        if (authDataDtoCommonResponse.isError()){
+            throw new BusinessException(BusinessErrorEnums.FEIGN_REQUEST_BUSINESS_ERROR);
+        }
+        return authDataDtoCommonResponse.getData();
     }
 }

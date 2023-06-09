@@ -2,6 +2,7 @@ package com.runjian.gateway.filter;
 
 import com.alibaba.fastjson2.JSONObject;
 import com.runjian.gateway.config.AuthProperties;
+import com.runjian.gateway.vo.AuthDataDto;
 import org.springframework.cloud.gateway.filter.GatewayFilter;
 import org.springframework.cloud.gateway.filter.GatewayFilterChain;
 import org.springframework.core.Ordered;
@@ -30,6 +31,12 @@ public class AuthFailureFilter implements GatewayFilter, Ordered {
                     return exchange.getResponse().setComplete();
                 }
             }
+        }
+        Object authResponse = exchange.getAttribute(AuthProperties.AUTHORIZATION_AUTH_FAILURE_NAME);
+        AuthDataDto authDataDto = JSONObject.parseObject(JSONObject.toJSONString(authResponse), AuthDataDto.class);
+        if (!authDataDto.getIsAuthorized()){
+            response.setStatusCode(HttpStatus.FORBIDDEN);
+            return response.writeAndFlushWith(Mono.just(ByteBufMono.just(response.bufferFactory().wrap(JSONObject.toJSONString(authDataDto.getMsg()).getBytes()))));
         }
         return chain.filter(exchange);
     }

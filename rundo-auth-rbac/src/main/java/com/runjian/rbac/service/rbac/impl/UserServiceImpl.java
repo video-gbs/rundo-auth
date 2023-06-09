@@ -7,12 +7,15 @@ import com.runjian.common.config.exception.BusinessException;
 import com.runjian.common.constant.CommonEnum;
 import com.runjian.common.constant.LogTemplate;
 import com.runjian.common.constant.MarkConstant;
+import com.runjian.rbac.config.AuthProperties;
 import com.runjian.rbac.dao.UserMapper;
 import com.runjian.rbac.dao.relation.UserRoleMapper;
 import com.runjian.rbac.entity.SectionInfo;
 import com.runjian.rbac.entity.UserInfo;
 import com.runjian.rbac.service.rbac.DataBaseService;
 import com.runjian.rbac.service.rbac.UserService;
+import com.runjian.rbac.utils.AuthUtils;
+import com.runjian.rbac.vo.dto.AuthDataDto;
 import com.runjian.rbac.vo.response.GetUserPageRsp;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -37,8 +40,8 @@ public class UserServiceImpl implements UserService {
     private final DataBaseService dataBaseService;
 
     private final UserRoleMapper userRoleMapper;
-    private final BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
 
+    private final AuthUtils authUtils;
 
     @Override
     public PageInfo<GetUserPageRsp> getUserPage(int page, int num, Long roleId, String username, Boolean isBinding) {
@@ -48,7 +51,15 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public PageInfo<GetUserPageRsp> getUserPage(int page, int num, Long sectionId, String username, String workName, Boolean isInclude) {
-        SectionInfo sectionInfo = dataBaseService.getSectionInfo(sectionId);
+        SectionInfo sectionInfo;
+        if (sectionId.equals(0L)){
+            sectionInfo = new SectionInfo();
+            sectionInfo.setLevel("0");
+            sectionInfo.setId(0L);
+        }else {
+            sectionInfo = dataBaseService.getSectionInfo(sectionId);
+        }
+
         PageHelper.startPage(page, num);
         List<GetUserPageRsp> getUserPageRspList;
         if (isInclude){
@@ -61,20 +72,8 @@ public class UserServiceImpl implements UserService {
 
     @Override
     @Transactional(rollbackFor = Exception.class)
-    public void disabled(String authUser, Long userId, Integer disabled) {
-        UserInfo userInfo = dataBaseService.getUserInfo(userId);
-        if (userInfo.getDisabled().equals(disabled)){
-            return;
-        }
-        userInfo.setDisabled(disabled);
-        userInfo.setUpdateTime(LocalDateTime.now());
-        userMapper.updateDisabled(userInfo);
-        log.warn(LogTemplate.PROCESS_LOG_MSG_TEMPLATE, "用户服务", "执行禁用用户成功", String.format("用户'%s' 执行禁启用 用户'%s', 状态:'%s'", authUser, userInfo.getUsername(), disabled));
-    }
-
-    @Override
-    @Transactional(rollbackFor = Exception.class)
-    public void addUser(String authUser, String username, String password, Long sectionId, LocalDateTime expiryStartTime, LocalDateTime expiryEndTime, String workName, String workNum, String address, String phone, String description, Set<Long> roleIds) {
+    public void addUser(String username, String password, Long sectionId, LocalDateTime expiryStartTime, LocalDateTime expiryEndTime, String workName, String workNum, String address, String phone, String description, Set<Long> roleIds) {
+        AuthDataDto authData = authUtils.getAuthData();
         Optional<UserInfo> userInfoOp = userMapper.selectByUsername(username);
         if (userInfoOp.isPresent()){
             throw new BusinessException(BusinessErrorEnums.VALID_BIND_EXCEPTION_ERROR, String.format("用户名%s已存在，请重新填写", username));
@@ -85,7 +84,7 @@ public class UserServiceImpl implements UserService {
         LocalDateTime nowTime = LocalDateTime.now();
         UserInfo userInfo = new UserInfo();
         userInfo.setUsername(username);
-        userInfo.setPassword(passwordEncoder.encode(password));
+        userInfo.setPassword(AuthProperties.passwordEncoder.encode(password));
         userInfo.setSectionId(sectionId);
         userInfo.setExpiryStartTime(expiryStartTime);
         userInfo.setExpiryEndTime(expiryEndTime);
@@ -96,22 +95,40 @@ public class UserServiceImpl implements UserService {
         userInfo.setDescription(description);
         userInfo.setCreateTime(nowTime);
         userInfo.setUpdateTime(nowTime);
+        userInfo.setCreateBy(authData.getUsername());
         userMapper.save(userInfo);
 
         if (roleIds.size() > 0){
-            userRoleMapper.saveAll(userInfo.getId(), roleIds, authUser, nowTime);
+            userRoleMapper.saveAll(userInfo.getId(), roleIds, authData.getUsername(), nowTime);
         }
-        log.warn(LogTemplate.PROCESS_LOG_MSG_TEMPLATE, "用户服务", "添加用户成功", String.format("用户'%s' 执行添加 用户'%s'", authUser, username));
+        log.warn(LogTemplate.PROCESS_LOG_MSG_TEMPLATE, "用户服务", "添加用户成功", String.format("用户'%s' 执行添加 用户'%s'", authData.getUsername(), username));
     }
 
     @Override
     @Transactional(rollbackFor = Exception.class)
-    public void updateUser(String authUser, Long userId, LocalDateTime expiryEndTime, String password, Long sectionId, String workName, String workNum, String phone, String address, String description, Set<Long> roleIds) {
+    public void updateDisabled(Long userId, Integer disabled) {
+        AuthDataDto authData = authUtils.getAuthData();
+        UserInfo userInfo = dataBaseService.getUserInfo(userId);
+        if (userInfo.getDisabled().equals(disabled)){
+            return;
+        }
+        userInfo.setDisabled(disabled);
+        userInfo.setUpdateTime(LocalDateTime.now());
+        userMapper.updateDisabled(userInfo);
+        log.warn(LogTemplate.PROCESS_LOG_MSG_TEMPLATE, "用户服务", "执行禁用用户成功", String.format("用户'%s' 执行禁启用 用户'%s', 状态:'%s'", authData.getUsername(), userInfo.getUsername(), disabled));
+    }
+
+
+
+    @Override
+    @Transactional(rollbackFor = Exception.class)
+    public void updateUser(Long userId, LocalDateTime expiryEndTime, String password, Long sectionId, String workName, String workNum, String phone, String address, String description, Set<Long> roleIds) {
+        AuthDataDto authData = authUtils.getAuthData();
         UserInfo userInfo = dataBaseService.getUserInfo(userId);
         if (Objects.isNull(password)){
             userInfo.setPassword(null);
         }else {
-            userInfo.setPassword(passwordEncoder.encode(password));
+            userInfo.setPassword(AuthProperties.passwordEncoder.encode(password));
         }
         LocalDateTime nowTime = LocalDateTime.now();
         userInfo.setExpiryEndTime(expiryEndTime);
@@ -141,22 +158,23 @@ public class UserServiceImpl implements UserService {
                 }
                 // 保存新的角色
                 if (roleIds.size() > 0){
-                    userRoleMapper.saveAll(userInfo.getId(), roleIds, authUser, nowTime);
+                    userRoleMapper.saveAll(userInfo.getId(), roleIds, authData.getUsername(), nowTime);
                 }
             }
         }
         userMapper.update(userInfo);
-        log.warn(LogTemplate.PROCESS_LOG_MSG_TEMPLATE, "用户服务", "修改用户成功", String.format("用户'%s' 执行更新 用户'%s'", authUser, userInfo));
+        log.warn(LogTemplate.PROCESS_LOG_MSG_TEMPLATE, "用户服务", "修改用户成功", String.format("用户'%s' 执行更新 用户'%s'", authData.getUsername(), userInfo));
     }
 
     @Override
     @Transactional(rollbackFor = Exception.class)
-    public void batchDeleteUser(String authUser, Set<Long> userIds) {
+    public void batchDeleteUser(Set<Long> userIds) {
         if (userIds.size() == 0){
             return;
         }
+        AuthDataDto authData = authUtils.getAuthData();
         userMapper.batchUpdateDeleted(userIds, CommonEnum.DISABLE.getCode());
-        log.warn(LogTemplate.PROCESS_LOG_MSG_TEMPLATE, "用户服务", "删除用户成功", String.format("用户'%s' 执行删除 用户'%s'", authUser, userIds));
+        log.warn(LogTemplate.PROCESS_LOG_MSG_TEMPLATE, "用户服务", "删除用户成功", String.format("用户'%s' 执行删除 用户'%s'", authData.getUsername(), userIds));
     }
 
 }

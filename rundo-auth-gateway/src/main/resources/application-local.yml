@@ -22,7 +22,7 @@ spring:
           predicates:
             - Path=/auth/**,/oauth2/**
           filters:
-            - AuthSuccess
+            - AuthHeader
             - Auth
             - AuthFailure
         - id: auth-resource
@@ -30,7 +30,7 @@ spring:
           predicates:
             - Path=/api/**
           filters:
-            - AuthSuccess
+            - AuthHeader
             - Auth
             - AuthFailure
         - id: device-control

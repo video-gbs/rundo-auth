@@ -19,14 +19,14 @@ public interface DictService {
      * @param itemName 字典名称
      * @return GetDictPageRsp
      */
-    PageInfo<GetDictPageRsp> getDictPageRsp(int page, int num, String groupName, String itemName);
+    PageInfo<GetDictPageRsp> getDictPage(int page, int num, String groupName, String itemName);
 
     /**
      * 获取字典
-     * @param groupName 分组名称
+     * @param groupCode 分组编码
      * @return GetDictGroupRsp
      */
-    List<GetDictGroupRsp> getDictByGroupName(String groupName);
+    List<GetDictGroupRsp> getDictByGroupName(String groupCode);
 
     /**
      * 增加字典
@@ -53,7 +53,6 @@ public interface DictService {
      * @param itemValue 字典值
      * @param description 描述
      */
-
     void updateDict(Long dictId, String groupName, String groupCode, String itemName, String itemValue, String description);
 
 }

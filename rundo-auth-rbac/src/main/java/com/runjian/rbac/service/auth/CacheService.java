@@ -1,8 +1,9 @@
 package com.runjian.rbac.service.auth;
 
-import com.runjian.rbac.vo.dto.FuncCacheDto;
+import com.runjian.rbac.vo.dto.CacheFuncDto;
 
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 
@@ -29,14 +30,14 @@ public interface CacheService {
      * 获取功能信息
      * @param methodPath 方法路径key
      */
-    FuncCacheDto getFuncCache(String methodPath);
+    CacheFuncDto getFuncCache(String methodPath);
 
     /**
      * 设置功能信息
      * @param methodPath 方法路径key
      * @param funcCache 缓存数据
      */
-    void setFuncCache(String methodPath, FuncCacheDto funcCache);
+    void setFuncCache(String methodPath, CacheFuncDto funcCache);
 
     /**
      * 获取资源的角色信息
@@ -50,5 +51,13 @@ public interface CacheService {
      * @param roleIds 角色id数组
      */
     void setResourceRole(String keyValue, Set<Long> roleIds);
+
+
+    /**
+     * 设置缓存
+     * @param key
+     * @param resources
+     */
+    void setUserResource(String key, Map<String, List<String>> resources);
 
 }

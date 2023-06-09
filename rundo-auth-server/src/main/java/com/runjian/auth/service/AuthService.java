@@ -1,6 +1,7 @@
 package com.runjian.auth.service;
 
-import com.runjian.auth.domain.vo.response.AuthorizeData;
+import com.runjian.auth.vo.dto.AuthDataDto;
+import com.runjian.auth.vo.response.AuthorizeData;
 import org.springframework.security.core.Authentication;
 
 /**
@@ -9,6 +10,6 @@ import org.springframework.security.core.Authentication;
  */
 public interface AuthService {
 
-    AuthorizeData authenticate(Authentication authentication, String reqUrl, String reqMethod, String jsonStr);
+    AuthDataDto authenticate(Authentication authentication, String reqUrl, String reqMethod, String jsonStr);
 
 }

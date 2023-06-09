@@ -37,4 +37,5 @@ public class MarkConstant {
     public static final String REDIS_AUTH_USER_ROLE = "AUTH_USER_ROLE:";
     public static final String REDIS_AUTH_FUNC = "AUTH_FUNC";
     public static final String REDIS_AUTH_RESOURCE_ROLE = "AUTH_RESOURCE_ROLE";
+    public static final String REDIS_AUTH_USER_RESOURCE = "AUTH_USER_RESOURCE:";
 }

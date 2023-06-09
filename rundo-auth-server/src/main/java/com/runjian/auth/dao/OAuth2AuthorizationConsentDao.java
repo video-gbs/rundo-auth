@@ -1,6 +1,6 @@
 package com.runjian.auth.dao;
 
-import com.runjian.auth.domain.entity.OAuth2AuthorizationConsentInfo;
+import com.runjian.auth.entity.OAuth2AuthorizationConsentInfo;
 import org.apache.ibatis.annotations.*;
 import org.springframework.stereotype.Repository;
 

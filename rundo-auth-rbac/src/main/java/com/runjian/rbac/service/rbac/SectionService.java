@@ -21,7 +21,7 @@ public interface SectionService {
      * @param leaderName 领导名称
      * @param phone 电话号码
      */
-    void addSection(Long pid, String sectionName, String leaderName, String phone);
+    void addSection(Long pid, String sectionName, String leaderName, String phone, String description);
 
     /**
      * 删除部门节点

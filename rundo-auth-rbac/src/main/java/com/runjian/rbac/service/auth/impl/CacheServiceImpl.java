@@ -4,19 +4,17 @@ import com.alibaba.fastjson2.JSONArray;
 import com.alibaba.fastjson2.JSONObject;
 import com.runjian.common.constant.MarkConstant;
 import com.runjian.rbac.service.auth.CacheService;
-import com.runjian.rbac.vo.dto.FuncCacheDto;
-import lombok.Data;
+import com.runjian.rbac.vo.dto.CacheFuncDto;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.redisson.api.RList;
+import org.redisson.api.RMap;
 import org.redisson.api.RedissonClient;
 import org.springframework.stereotype.Service;
 
-import java.time.Duration;
-import java.time.temporal.TemporalUnit;
+import java.time.Instant;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
-import java.util.concurrent.TimeUnit;
 
 /**
  * @author Miracle
@@ -41,12 +39,12 @@ public class CacheServiceImpl implements CacheService {
     }
 
     @Override
-    public FuncCacheDto getFuncCache(String methodPath) {
-        return JSONObject.parseObject(redissonClient.getMap(MarkConstant.REDIS_AUTH_FUNC).get(methodPath).toString(), FuncCacheDto.class);
+    public CacheFuncDto getFuncCache(String methodPath) {
+        return JSONObject.parseObject(redissonClient.getMap(MarkConstant.REDIS_AUTH_FUNC).get(methodPath).toString(), CacheFuncDto.class);
     }
 
     @Override
-    public void setFuncCache(String methodPath, FuncCacheDto funcCache) {
+    public void setFuncCache(String methodPath, CacheFuncDto funcCache) {
         redissonClient.getMap(MarkConstant.REDIS_AUTH_FUNC).put(methodPath, JSONObject.toJSONString(funcCache));
     }
 
@@ -58,5 +56,11 @@ public class CacheServiceImpl implements CacheService {
     @Override
     public void setResourceRole(String keyValue, Set<Long> roleIds) {
         redissonClient.getMap(MarkConstant.REDIS_AUTH_RESOURCE_ROLE).put(keyValue, roleIds);
+    }
+
+    @Override
+    public void setUserResource(String username, Map<String, List<String>> resources) {
+        redissonClient.getMap(MarkConstant.REDIS_AUTH_USER_RESOURCE + username).putAll(resources);;
+
     }
 }

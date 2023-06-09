@@ -28,7 +28,7 @@ public class DictServiceImpl implements DictService {
     private final DataBaseService dataBaseService;
 
     @Override
-    public PageInfo<GetDictPageRsp> getDictPageRsp(int page, int num, String groupName, String itemName) {
+    public PageInfo<GetDictPageRsp> getDictPage(int page, int num, String groupName, String itemName) {
         PageHelper.startPage(page, num);
 
         return new PageInfo<>(dictMapper.selectByGroupNameAndItemName(groupName, itemName));

@@ -3,7 +3,7 @@ package com.runjian.auth.config.storage;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.runjian.auth.dao.OAuth2AuthorizationDao;
-import com.runjian.auth.domain.entity.OAuth2AuthorizationInfo;
+import com.runjian.auth.entity.OAuth2AuthorizationInfo;
 import lombok.RequiredArgsConstructor;
 import org.springframework.dao.DataRetrievalFailureException;
 import org.springframework.security.oauth2.core.AuthorizationGrantType;

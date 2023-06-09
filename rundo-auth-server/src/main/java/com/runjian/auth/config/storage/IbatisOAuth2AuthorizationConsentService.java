@@ -1,7 +1,7 @@
 package com.runjian.auth.config.storage;
 
 import com.runjian.auth.dao.OAuth2AuthorizationConsentDao;
-import com.runjian.auth.domain.entity.OAuth2AuthorizationConsentInfo;
+import com.runjian.auth.entity.OAuth2AuthorizationConsentInfo;
 import lombok.RequiredArgsConstructor;
 import org.springframework.dao.DataRetrievalFailureException;
 import org.springframework.security.core.GrantedAuthority;

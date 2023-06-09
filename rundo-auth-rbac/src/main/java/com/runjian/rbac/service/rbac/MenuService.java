@@ -21,10 +21,10 @@ public interface MenuService {
 
     /**
      * 添加菜单
-     * @param menuPid 菜单负id
+     * @param menuPid 菜单父id
      * @param menuSort 菜单排序
      * @param menuType 菜单类型
-     * @param path 跳转url
+     * @param path 跳转路径
      * @param component 前端组件
      * @param name 菜单名称
      * @param icon 菜单图标

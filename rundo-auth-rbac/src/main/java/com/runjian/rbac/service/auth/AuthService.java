@@ -1,7 +1,7 @@
 package com.runjian.rbac.service.auth;
 
-import com.runjian.rbac.vo.dto.DataAuthDto;
-import com.runjian.rbac.vo.dto.UserAuthDto;
+import com.runjian.rbac.vo.dto.AuthDataDto;
+import com.runjian.rbac.vo.dto.AuthUserDto;
 
 /**
  * @author Miracle
@@ -14,7 +14,7 @@ public interface AuthService {
      * @param username 用户名
      * @return
      */
-    UserAuthDto getUserAuth(String username);
+    AuthUserDto getUserAuth(String username);
 
     /**
      * 获取用户授权信息
@@ -23,16 +23,16 @@ public interface AuthService {
      * @param reqPath 访问路径
      * @param reqMethod 访问方式
      * @param jsonStr 数据体
-     * @return
+     * @return AuthDataDto
      */
-    DataAuthDto getAuthDataByUser(String username, String scope, String reqPath, String reqMethod, String jsonStr);
+    AuthDataDto getAuthDataByUser(String username, String scope, String reqPath, String reqMethod, String jsonStr);
 
     /**
      * 获取客户端授权信息
-     * @param scope
-     * @param reqPath
-     * @param reqMethod
-     * @return
+     * @param scope 授权体系
+     * @param reqPath 访问路径
+     * @param reqMethod 访问方式
+     * @return AuthDataDto
      */
-    DataAuthDto getAuthDataByClient(String scope, String reqPath, String reqMethod);
+    AuthDataDto getAuthDataByClient(String scope, String reqPath, String reqMethod);
 }

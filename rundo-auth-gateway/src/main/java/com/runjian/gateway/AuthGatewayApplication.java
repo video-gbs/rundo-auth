@@ -11,7 +11,6 @@ import org.springframework.cloud.context.config.annotation.RefreshScope;
  * @date 2023/4/19 17:39
  */
 @RefreshScope
-//@EnableFeignClients
 @EnableDiscoveryClient
 @SpringBootApplication
 public class AuthGatewayApplication {

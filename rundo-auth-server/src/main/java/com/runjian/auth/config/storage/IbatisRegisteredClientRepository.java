@@ -3,7 +3,7 @@ package com.runjian.auth.config.storage;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.runjian.auth.dao.OAuth2RegisteredClientDao;
-import com.runjian.auth.domain.entity.OAuth2RegisteredClientInfo;
+import com.runjian.auth.entity.OAuth2RegisteredClientInfo;
 import org.springframework.security.oauth2.core.AuthorizationGrantType;
 import org.springframework.security.oauth2.core.ClientAuthenticationMethod;
 import org.springframework.security.oauth2.server.authorization.client.RegisteredClient;

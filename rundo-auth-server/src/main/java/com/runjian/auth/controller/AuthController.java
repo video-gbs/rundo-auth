@@ -1,7 +1,8 @@
 package com.runjian.auth.controller;
 
-import com.runjian.auth.domain.vo.request.PostAuthReq;
-import com.runjian.auth.domain.vo.response.AuthorizeData;
+import com.runjian.auth.vo.dto.AuthDataDto;
+import com.runjian.auth.vo.request.PostAuthReq;
+import com.runjian.auth.vo.response.AuthorizeData;
 import com.runjian.auth.service.AuthService;
 import com.runjian.common.config.response.CommonResponse;
 import com.runjian.common.validator.ValidatorService;
@@ -31,7 +32,7 @@ public class AuthController {
     }
 
     @PostMapping("/request")
-    public CommonResponse<AuthorizeData> authRequest(@RequestBody PostAuthReq req, Authentication authentication){
+    public CommonResponse<AuthDataDto> authRequest(@RequestBody PostAuthReq req, Authentication authentication){
         validatorService.validateRequest(req);
         return CommonResponse.success(authService.authenticate(authentication, req.getReqUrl(), req.getReqMethod(), req.getJsonStr()));
     }

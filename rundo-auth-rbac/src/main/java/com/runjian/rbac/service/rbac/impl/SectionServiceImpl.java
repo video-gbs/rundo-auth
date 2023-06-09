@@ -51,7 +51,7 @@ public class SectionServiceImpl implements SectionService {
     }
 
     @Override
-    public void addSection(Long pid, String sectionName, String leaderName, String phone) {
+    public void addSection(Long pid, String sectionName, String leaderName, String phone, String description) {
         LocalDateTime nowTime = LocalDateTime.now();
         SectionInfo sectionInfo = new SectionInfo();
         sectionInfo.setSectionName(sectionName);
@@ -61,6 +61,7 @@ public class SectionServiceImpl implements SectionService {
         sectionInfo.setSectionSort(System.currentTimeMillis());
         sectionInfo.setCreateTime(nowTime);
         sectionInfo.setUpdateTime(nowTime);
+        sectionInfo.setDescription(description);
         if (pid.equals(0L)){
             sectionInfo.setLevel("0");
         }else {

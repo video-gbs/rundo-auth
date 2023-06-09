@@ -2,7 +2,6 @@ package com.runjian.rbac.service.rbac;
 
 import com.github.pagehelper.PageInfo;
 import com.runjian.rbac.vo.response.GetUserPageRsp;
-import com.runjian.rbac.vo.response.GetUserRsp;
 
 import java.time.LocalDateTime;
 import java.util.Set;
@@ -36,19 +35,8 @@ public interface UserService {
      */
     PageInfo<GetUserPageRsp> getUserPage(int page, int num, Long sectionId, String username, String workName, Boolean isInclude);
 
-
-
-    /**
-     * 禁用启用用户
-     * @param authUser 授权用户
-     * @param userId 用户id
-     * @param disabled 是否禁用
-     */
-    void disabled(String authUser, Long userId, Integer disabled);
-
     /**
      * 新增用户
-     * @param authUser 授权用户
      * @param username 用户名
      * @param password 密码
      * @param sectionId 部门id
@@ -61,13 +49,19 @@ public interface UserService {
      * @param description 描述
      * @param roleIds 角色id数组
      */
-    void addUser(String authUser, String username, String password, Long sectionId, LocalDateTime expiryStartTime, LocalDateTime expiryEndTime,
+    void addUser(String username, String password, Long sectionId, LocalDateTime expiryStartTime, LocalDateTime expiryEndTime,
                  String workName, String workNum, String address, String phone, String description,
                  Set<Long> roleIds);
 
     /**
+     * 禁用启用用户
+     * @param userId 用户id
+     * @param disabled 是否禁用
+     */
+    void updateDisabled(Long userId, Integer disabled);
+
+    /**
      * 编辑用户
-     * @param authUser 授权用户
      * @param userId 用户id
      * @param expiryEndTime 生效结束时间
      * @param password 密码
@@ -79,13 +73,12 @@ public interface UserService {
      * @param description 描述
      * @param roleIds 角色id数组
      */
-    void updateUser(String authUser, Long userId, LocalDateTime expiryEndTime, String password, Long sectionId,
+    void updateUser(Long userId, LocalDateTime expiryEndTime, String password, Long sectionId,
                     String workName, String workNum, String phone, String address, String description, Set<Long> roleIds);
 
     /**
      * 批量删除
-     * @param authUser 授权用户
      * @param userIds 用户id数组
      */
-    void batchDeleteUser(String authUser, Set<Long> userIds);
+    void batchDeleteUser(Set<Long> userIds);
 }

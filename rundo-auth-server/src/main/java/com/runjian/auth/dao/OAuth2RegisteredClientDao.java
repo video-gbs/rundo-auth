@@ -1,7 +1,6 @@
 package com.runjian.auth.dao;
 
-import com.google.common.io.Files;
-import com.runjian.auth.domain.entity.OAuth2RegisteredClientInfo;
+import com.runjian.auth.entity.OAuth2RegisteredClientInfo;
 import org.apache.ibatis.annotations.Insert;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Select;

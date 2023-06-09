@@ -59,3 +59,9 @@ pagehelper:
   reasonable: true
   supportMethodsArguments: true
   params: count=countSql
+
+auth:
+  admin:
+    username: admin
+    password: 123456
+    roleName: 系统管理员
