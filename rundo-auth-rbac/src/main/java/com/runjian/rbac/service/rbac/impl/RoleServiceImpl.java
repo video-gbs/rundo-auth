@@ -14,6 +14,7 @@ import com.runjian.rbac.dao.relation.UserRoleMapper;
 import com.runjian.rbac.entity.RoleInfo;
 import com.runjian.rbac.service.rbac.DataBaseService;
 import com.runjian.rbac.service.rbac.RoleService;
+import com.runjian.rbac.utils.AuthUtils;
 import com.runjian.rbac.vo.response.GetRolePageRsp;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -47,6 +48,8 @@ public class RoleServiceImpl implements RoleService {
 
     private final DataBaseService dataBaseService;
 
+    private final AuthUtils authUtils;
+
     @Override
     public PageInfo<GetRolePageRsp> getRolePage(int page, int num, String roleName, String createBy, LocalDateTime createTimeStart, LocalDateTime createTimeEnd) {
         PageHelper.startPage(page, num);
@@ -60,21 +63,13 @@ public class RoleServiceImpl implements RoleService {
     }
 
     @Override
-    public void disabled(String authUser, Long roleId, Integer disabled) {
-        RoleInfo roleInfo = dataBaseService.getRoleInfo(roleId);
-        roleInfo.setDisabled(disabled);
-        roleInfo.setUpdateTime(LocalDateTime.now());
-        roleMapper.updateDisabled(roleInfo);
-        log.warn(LogTemplate.PROCESS_LOG_MSG_TEMPLATE, "角色服务", "禁用角色成功", String.format("用户'%s' 执行禁用 角色'%s'", authUser, roleInfo));
-    }
-
-    @Override
     @Transactional(rollbackFor = Exception.class)
-    public void addRole(String authUser, String roleName, String roleDesc, Set<Long> menuIds, Set<Long> funcIds, Set<Long> resourceIds) {
+    public void addRole(String roleName, String roleDesc, Set<Long> menuIds, Set<Long> funcIds, Set<Long> resourceIds) {
         Optional<RoleInfo> roleInfoOp = roleMapper.selectByRoleName(roleName);
         if (roleInfoOp.isPresent()){
             throw new BusinessException(BusinessErrorEnums.VALID_BIND_EXCEPTION_ERROR, String.format("角色名 %s 已存在，请重新填写", roleName));
         }
+        String authUser = authUtils.getAuthData().getUsername();
         LocalDateTime nowTime = LocalDateTime.now();
         RoleInfo roleInfo = new RoleInfo();
         roleInfo.setRoleName(roleName);
@@ -100,8 +95,17 @@ public class RoleServiceImpl implements RoleService {
     }
 
     @Override
+    public void updateDisabled(Long roleId, Integer disabled) {
+        RoleInfo roleInfo = dataBaseService.getRoleInfo(roleId);
+        roleInfo.setDisabled(disabled);
+        roleInfo.setUpdateTime(LocalDateTime.now());
+        roleMapper.updateDisabled(roleInfo);
+        log.warn(LogTemplate.PROCESS_LOG_MSG_TEMPLATE, "角色服务", "禁用角色成功", String.format("用户'%s' 执行禁用 角色'%s'", authUtils.getAuthData().getUsername(), roleInfo));
+    }
+
+    @Override
     @Transactional(rollbackFor = Exception.class)
-    public void updateRole(String authUser, Long roleId, String roleName, String roleDesc, Set<Long> menuIds, Set<Long> funcIds, Set<Long> resourceIds) {
+    public void updateRole(Long roleId, String roleName, String roleDesc, Set<Long> menuIds, Set<Long> funcIds, Set<Long> resourceIds) {
         RoleInfo roleInfo = dataBaseService.getRoleInfo(roleId);
         if (!roleName.equals(roleInfo.getRoleName())){
             Optional<RoleInfo> roleInfoOp = roleMapper.selectByRoleName(roleName);
@@ -109,6 +113,7 @@ public class RoleServiceImpl implements RoleService {
                 throw new BusinessException(BusinessErrorEnums.VALID_BIND_EXCEPTION_ERROR, String.format("角色名 %s 已存在，请重新填写", roleName));
             }
         }
+        String authUser = authUtils.getAuthData().getUsername();
         LocalDateTime nowTime = LocalDateTime.now();
         roleInfo.setRoleName(roleName);
         roleInfo.setRoleDesc(roleDesc);
@@ -179,21 +184,22 @@ public class RoleServiceImpl implements RoleService {
 
     @Override
     @Transactional(rollbackFor = Exception.class)
-    public void batchDeleteRoles(String authUser, Set<Long> roleIds) {
+    public void batchDeleteRoles(Set<Long> roleIds) {
         if (roleIds.size() == 0){
             return;
         }
         roleMapper.batchUpdateDeleted(roleIds, CommonEnum.DISABLE.getCode(), LocalDateTime.now());
-        log.warn(LogTemplate.PROCESS_LOG_MSG_TEMPLATE, "角色服务", "批量删除用户成功", String.format("用户'%s' 执行删除 角色'%s'", authUser, roleIds));
+        log.warn(LogTemplate.PROCESS_LOG_MSG_TEMPLATE, "角色服务", "批量删除用户成功", String.format("用户'%s' 执行删除 角色'%s'", authUtils.getAuthData().getUsername(), roleIds));
     }
 
     @Override
     @Transactional(rollbackFor = Exception.class)
-    public void associateUser(String authUser, Long roleId, Set<Long> userIds) {
+    public void associateUser(Long roleId, Set<Long> userIds) {
         RoleInfo roleInfo = dataBaseService.getRoleInfo(roleId);
         if (Objects.isNull(userIds)){
             return;
         }
+        String authUser = authUtils.getAuthData().getUsername();
         if (userIds.size() == 0){
             userRoleMapper.deleteAllByRoleId(roleId);
         }else {

@@ -14,7 +14,7 @@ public class CacheFuncDto {
     /**
      * 服务名称
      */
-    private String serviceName;
+    private String scope;
 
     /**
      * 角色数组

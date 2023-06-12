@@ -56,7 +56,7 @@ public class FuncServiceImpl implements FuncService {
     }
 
     @Override
-    public void addFunc(Long menuId, String serviceName, String funcName, String path, Integer method, Integer disabled) {
+    public void addFunc(Long menuId, String serviceName, String funcName, String scope, String path, Integer method, Integer disabled) {
         Optional<FuncInfo> funcInfoOp = funcMapper.selectByPath(path);
         if (funcInfoOp.isPresent()){
             throw new BusinessException(BusinessErrorEnums.VALID_OBJECT_IS_EXIST, String.format("重复定义的资源路径 %s", path));
@@ -66,11 +66,13 @@ public class FuncServiceImpl implements FuncService {
         funcInfo.setMenuId(menuId);
         funcInfo.setServiceName(serviceName);
         funcInfo.setFuncName(funcName);
+        funcInfo.setScope(scope);
         funcInfo.setPath(path);
         funcInfo.setMethod(method);
         funcInfo.setDisabled(disabled);
         funcInfo.setUpdateTime(nowTime);
         funcInfo.setCreateTime(nowTime);
+
         funcMapper.save(funcInfo);
     }
 
@@ -83,7 +85,7 @@ public class FuncServiceImpl implements FuncService {
     }
 
     @Override
-    public void updateFunc(Long id, Long menuId, String serviceName, String funcName, String path, Integer method, Integer disabled) {
+    public void updateFunc(Long id, Long menuId, String serviceName, String funcName, String scope, String path, Integer method, Integer disabled) {
         FuncInfo funcInfo = dataBaseService.getFuncInfo(id);
         if (!funcInfo.getPath().equals(path)){
             Optional<FuncInfo> funcInfoOp = funcMapper.selectByPath(path);
@@ -97,6 +99,7 @@ public class FuncServiceImpl implements FuncService {
         }
         funcInfo.setServiceName(serviceName);
         funcInfo.setFuncName(funcName);
+        funcInfo.setScope(scope);
         funcInfo.setPath(path);
         funcInfo.setMethod(method);
         funcInfo.setDisabled(disabled);
@@ -118,7 +121,7 @@ public class FuncServiceImpl implements FuncService {
     }
 
     @Override
-    public void associationResource(Long funcId, String resourceKey, String validateParam, Integer disabled) {
+    public void associateResource(Long funcId, String resourceKey, String validateParam, Integer disabled) {
         LocalDateTime nowTime = LocalDateTime.now();
         FuncResourceRel funcResourceRel = new FuncResourceRel();
         funcResourceRel.setFuncId(funcId);

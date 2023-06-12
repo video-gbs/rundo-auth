@@ -70,9 +70,9 @@ public interface ResourceMapper {
     Set<String> selectValueByKeyAndRoleIds(String resourceKey, List<Long> roleIds);
 
     @Select(" <script> " +
-            " SELECT rt.resource_value FROM " + RESOURCE_TABLE_NAME + "rt" +
+            " SELECT rt.* FROM " + RESOURCE_TABLE_NAME + "rt" +
             " RIGHT JOIN " + RoleResourceMapper.ROLE_RESOURCE_TABLE_NAME + " rrt ON rrt.resource_id = rt.id " +
             " WHERE rt.id IN <foreach collection='roleIds' item='item' open='(' separator=',' close=')'> #{item} </foreach> " +
             " </script>")
-    List<ResourceInfo> selectByRoleIds(Set<Long> roleIds);
+    Set<ResourceInfo> selectByRoleIds(Set<Long> roleIds);
 }

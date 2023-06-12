@@ -7,11 +7,9 @@ import com.runjian.rbac.service.auth.CacheService;
 import com.runjian.rbac.vo.dto.CacheFuncDto;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.redisson.api.RMap;
 import org.redisson.api.RedissonClient;
 import org.springframework.stereotype.Service;
 
-import java.time.Instant;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -49,18 +47,24 @@ public class CacheServiceImpl implements CacheService {
     }
 
     @Override
-    public List<Long> getResourceRole(String keyValue) {
-        return JSONArray.parseArray(redissonClient.getMap(MarkConstant.REDIS_AUTH_RESOURCE_ROLE).get(keyValue).toString()).toList(Long.class);
+    public String getResourceLevel(String keyValue) {
+        return redissonClient.getMap(MarkConstant.REDIS_AUTH_RESOURCE_ROLE).get(keyValue).toString();
     }
 
     @Override
-    public void setResourceRole(String keyValue, Set<Long> roleIds) {
-        redissonClient.getMap(MarkConstant.REDIS_AUTH_RESOURCE_ROLE).put(keyValue, roleIds);
+    public void setResourceLevel(String keyValue, String level) {
+        redissonClient.getMap(MarkConstant.REDIS_AUTH_RESOURCE_ROLE).put(keyValue, level);
     }
 
     @Override
-    public void setUserResource(String username, Map<String, List<String>> resources) {
-        redissonClient.getMap(MarkConstant.REDIS_AUTH_USER_RESOURCE + username).putAll(resources);;
+    public List<String> getUserResource(String username, String resourceKey){
+       return redissonClient.getList(MarkConstant.REDIS_AUTH_USER_RESOURCE + username+ MarkConstant.MARK_SPLIT_SEMICOLON + resourceKey).readAll().stream().map(Object::toString).toList();
+    }
 
+    @Override
+    public void setUserResource(String username, Map<String, Set<String>> resourceLevel) {
+        for (Map.Entry<String, Set<String>> entry : resourceLevel.entrySet()){
+            redissonClient.getList(MarkConstant.REDIS_AUTH_USER_RESOURCE + username + MarkConstant.MARK_SPLIT_SEMICOLON + entry.getKey()).addAll(entry.getValue());;
+        }
     }
 }

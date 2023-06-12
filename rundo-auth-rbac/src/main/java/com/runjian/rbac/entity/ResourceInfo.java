@@ -14,6 +14,16 @@ public class ResourceInfo {
     private Long id;
 
     /**
+     * 资源父id
+     */
+    private Long resourcePid;
+
+    /**
+     * 资源类型 1-节点 2-资源
+     */
+    private Integer resourceType;
+
+    /**
      * 分组名称
      */
     private String groupName;
@@ -32,6 +42,11 @@ public class ResourceInfo {
      * 资源value
      */
     private String resourceValue;
+
+    /**
+     * 层级
+     */
+    private String level;
 
     /**
      * 修改时间

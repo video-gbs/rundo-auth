@@ -5,6 +5,9 @@ import com.runjian.common.config.response.CommonResponse;
 import com.runjian.common.validator.ValidatorService;
 import com.runjian.rbac.service.rbac.MenuService;
 import com.runjian.rbac.vo.request.PostMenuReq;
+import com.runjian.rbac.vo.request.PutMenuDisabledReq;
+import com.runjian.rbac.vo.request.PutMenuHiddenReq;
+import com.runjian.rbac.vo.request.PutMenuReq;
 import com.runjian.rbac.vo.response.GetMenuTreeRsp;
 import com.runjian.rbac.vo.response.GetResourcePageRsp;
 import lombok.RequiredArgsConstructor;
@@ -53,4 +56,55 @@ public class MenuController {
                 req.getDisabled());
         return CommonResponse.success();
     }
+
+    /**
+     * 启禁用菜单
+     * @param req 启禁用菜单请求体
+     * @return
+     */
+    @PutMapping("/update/disabled")
+    public CommonResponse<?> updateDisabled(@RequestBody PutMenuDisabledReq req){
+        validatorService.validateRequest(req);
+        menuService.updateDisabled(req.getMenuId(), req.getDisabled());
+        return CommonResponse.success();
+    }
+
+    /**
+     * 隐藏菜单
+     * @param req 菜单隐藏请求体
+     * @return
+     */
+    @PutMapping("/update/hidden")
+    public CommonResponse<?> updateHidden(@RequestBody PutMenuHiddenReq req){
+        validatorService.validateRequest(req);
+        menuService.updateHidden(req.getMenuId(), req.getHidden());
+        return CommonResponse.success();
+    }
+
+    /**
+     * 修改菜单
+     * @param req 修改菜单请求体
+     * @return
+     */
+    @PutMapping("/update")
+    public CommonResponse<?> update(@RequestBody PutMenuReq req){
+        validatorService.validateRequest(req);
+        menuService.updateMenu(req.getId(), req.getMenuPid(), req.getMenuSort(),
+                req.getMenuType(), req.getPath(), req.getComponent(),
+                req.getName(), req.getIcon(), req.getDescription(),
+                req.getHidden(), req.getDisabled());
+        return CommonResponse.success();
+    }
+
+    /**
+     * 删除
+     * @param id 菜单id
+     * @return
+     */
+    @DeleteMapping("/delete")
+    public CommonResponse<?> delete(@RequestParam Long id){
+        menuService.deleteMenu(id);
+        return CommonResponse.success();
+    }
+
 }

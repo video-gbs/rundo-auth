@@ -29,6 +29,11 @@ public class FuncInfo {
     private String funcName;
 
     /**
+     * 范围
+     */
+    private String scope;
+
+    /**
      * 资源路径
      */
     private String path;

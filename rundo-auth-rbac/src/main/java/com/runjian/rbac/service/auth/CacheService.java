@@ -40,24 +40,29 @@ public interface CacheService {
     void setFuncCache(String methodPath, CacheFuncDto funcCache);
 
     /**
-     * 获取资源的角色信息
+     * 获取资源层级关系
      * @param keyValue 资源keyValue
      */
-    List<Long> getResourceRole(String keyValue);
+    String getResourceLevel(String keyValue);
 
     /**
-     * 设置资源角色
+     * 设置资源与资源层级关系
      * @param keyValue 资源keyValue
-     * @param roleIds 角色id数组
+     * @param level 资源层级
      */
-    void setResourceRole(String keyValue, Set<Long> roleIds);
-
+    void setResourceLevel(String keyValue, String level);
 
     /**
-     * 设置缓存
+     * 获取用户资源层级信息
+     * @param username 用户名
+     */
+    List<String> getUserResource(String username, String resourceKey);
+
+    /**
+     * 设置用户资源缓存
      * @param key
      * @param resources
      */
-    void setUserResource(String key, Map<String, List<String>> resources);
+    void setUserResource(String key, Map<String, Set<String>> resources);
 
 }

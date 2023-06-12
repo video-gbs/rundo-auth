@@ -41,6 +41,7 @@ public interface FuncMapper {
             " AND <if test=\"menuId != null\" > menu_id = #{menuId} </if> " +
             " AND <if test=\"serviceName != null\" > service_name = #{serviceName} </if> " +
             " AND <if test=\"funcName != null\" > func_name = #{funcName} </if> " +
+            " AND <if test=\"scope != null\" > scope = #{scope} </if> " +
             " AND <if test=\"path != null\" > path = #{path} </if> " +
             " AND <if test=\"method != null\" > method = #{method} </if> " +
             " AND <if test=\"disabled != null\" > disabled = #{disabled} </if> " +
@@ -62,8 +63,8 @@ public interface FuncMapper {
     List<GetFuncPageRsp> selectAllByMenuIdAndServiceNameLikeAndFuncNameLike(Set<Long> menuIds, String serviceName, String funcName);
 
     @Insert(" INSERT INTO " + FUNC_TABLE_NAME +
-            " (menu_id, service_name, func_name, path, method, disabled, create_time, update_time) " +
+            " (menu_id, service_name, func_name, scope, path, method, disabled, create_time, update_time) " +
             " VALUES " +
-            " (#{menuId}, #{serviceName}, #{funcName}, #{path}, #{method}, #{disabled}, #{createTime}, #{updateTime})")
+            " (#{menuId}, #{serviceName}, #{funcName}, #{scope}, #{path}, #{method}, #{disabled}, #{createTime}, #{updateTime})")
     void save(FuncInfo funcInfo);
 }

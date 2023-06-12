@@ -35,27 +35,24 @@ public interface RoleService {
     PageInfo<GetRolePageRsp> getRolePage(int page, int num, Long userId, String roleName);
 
     /**
+     * 添加角色
+     * @param roleName 角色名称
+     * @param roleDesc 角色描述
+     * @param menuIds 菜单id数组
+     * @param funcIds 功能id数组
+     * @param resourceIds 资源id数组
+     */
+    void addRole(String roleName, String roleDesc, Set<Long> menuIds, Set<Long> funcIds, Set<Long> resourceIds);
+
+    /**
      * 禁用启用用户
-     * @param authUser 授权用户
      * @param roleId 角色id
      * @param disabled 是否禁用
      */
-    void disabled(String authUser, Long roleId, Integer disabled);
-
-    /**
-     * 添加角色
-     * @param authUser 授权用户
-     * @param roleName 角色名称
-     * @param roleDesc 角色描述
-     * @param menuIds 菜单id数组
-     * @param funcIds 功能id数组
-     * @param resourceIds 资源id数组
-     */
-    void addRole(String authUser, String roleName, String roleDesc, Set<Long> menuIds, Set<Long> funcIds, Set<Long> resourceIds);
+    void updateDisabled(Long roleId, Integer disabled);
 
     /**
      * 编辑用户
-     * @param authUser 授权用户
      * @param roleId 角色id
      * @param roleName 角色名称
      * @param roleDesc 角色描述
@@ -63,20 +60,18 @@ public interface RoleService {
      * @param funcIds 功能id数组
      * @param resourceIds 资源id数组
      */
-    void updateRole(String authUser, Long roleId, String roleName, String roleDesc, Set<Long> menuIds, Set<Long> funcIds, Set<Long> resourceIds);
+    void updateRole(Long roleId, String roleName, String roleDesc, Set<Long> menuIds, Set<Long> funcIds, Set<Long> resourceIds);
 
     /**
      * 批量删除角色
-     * @param authUser 授权用户
      * @param roleIds 角色id数组
      */
-    void batchDeleteRoles(String authUser, Set<Long> roleIds);
+    void batchDeleteRoles(Set<Long> roleIds);
 
     /**
      * 关联用户
-     * @param authUser 授权用户
      * @param roleId 角色id
      * @param userIds 用户id数组
      */
-    void associateUser(String authUser, Long roleId, Set<Long> userIds);
+    void associateUser(Long roleId, Set<Long> userIds);
 }
