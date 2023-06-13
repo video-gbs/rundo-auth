@@ -24,11 +24,6 @@ public class ResourceInfo {
     private Integer resourceType;
 
     /**
-     * 分组名称
-     */
-    private String groupName;
-
-    /**
      * 资源名称
      */
     private String resourceName;
@@ -47,6 +42,11 @@ public class ResourceInfo {
      * 层级
      */
     private String level;
+
+    /**
+     * 排序
+     */
+    private Long sort;
 
     /**
      * 修改时间

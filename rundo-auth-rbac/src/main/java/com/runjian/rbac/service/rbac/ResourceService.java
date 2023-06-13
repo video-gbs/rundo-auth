@@ -1,7 +1,6 @@
 package com.runjian.rbac.service.rbac;
 
-import com.github.pagehelper.PageInfo;
-import com.runjian.rbac.vo.response.GetResourcePageRsp;
+import com.runjian.rbac.vo.response.GetResourceTreeRsp;
 
 import java.util.Set;
 
@@ -11,39 +10,51 @@ import java.util.Set;
  */
 public interface ResourceService {
 
+
     /**
-     * 分页查询
-     * @param page 页数
-     * @param num 数量
-     * @param name 资源名字
-     * @param resourceKey 资源组
+     * 获取分组资源树
+     * @param resourceKey
      * @return
      */
-    PageInfo<GetResourcePageRsp> getResourcePage(int page, int num, String name, String resourceKey);
+    GetResourceTreeRsp getResourceTree(String resourceKey, Boolean isIncludeResource);
+
 
     /**
      * 批量添加资源
-     * @param groupName 资源组名称
+     * @param resourcePid 资源父id
+     * @param resourceType 资源类型
      * @param resourceName 资源名称
      * @param resourceKey 资源Key
-     * @param resourceValue 资源value
+     * @param resourceValue 资源value数组
      */
-    void batchAddResource(String groupName, String resourceName, String resourceKey, Set<String> resourceValue);
+    void batchAddResource(Long resourcePid, Integer resourceType, String resourceName, String resourceKey, Set<String> resourceValue);
 
     /**
      * 修改资源
      * @param resourceId 资源id
-     * @param groupName 资源组名称
      * @param resourceName 资源名称
-     * @param resourceKey 资源Key
      * @param resourceValue 资源value
      */
-    void updateResource(Long resourceId, String groupName, String resourceName, String resourceKey, String resourceValue);
+    void updateResource(Long resourceId, String resourceName, String resourceValue);
 
     /**
      * 批量删除
      * @param resourceIds 资源id组
      */
     void batchDelete(Set<Long> resourceIds);
+
+    /**
+     * 父子移动节点
+     * @param id 部门id
+     * @param pid 父id
+     */
+    void fsMove(Long id, Long pid);
+
+    /**
+     * 兄弟移动节点
+     * @param id 部门id
+     * @param moveOp 1上移 0下移
+     */
+    void btMove(Long id, Integer moveOp);
 
 }

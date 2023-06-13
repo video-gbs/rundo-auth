@@ -72,6 +72,16 @@ public class SectionServiceImpl implements SectionService {
     }
 
     @Override
+    public void updateSection(Long id, String sectionName, String leaderName, String phone, String description) {
+        SectionInfo sectionInfo = dataBaseService.getSectionInfo(id);
+        sectionInfo.setSectionName(sectionName);
+        sectionInfo.setLeaderName(leaderName);
+        sectionInfo.setPhone(phone);
+        sectionInfo.setDescription(description);
+        sectionMapper.updateAll(List.of(sectionInfo));
+    }
+
+    @Override
     public void deleteSection(Long sectionId) {
         SectionInfo sectionInfo = dataBaseService.getSectionInfo(sectionId);
         Integer userCount = userMapper.selectCountBySectionId(sectionId);
@@ -87,15 +97,18 @@ public class SectionServiceImpl implements SectionService {
 
     @Override
     public void fsMove(Long id, Long pid) {
+        SectionInfo sectionInfo = dataBaseService.getSectionInfo(id);
         SectionInfo pSectionInfo;
+        String level;
         if (pid.equals(0L)){
             pSectionInfo = new SectionInfo();
             pSectionInfo.setId(0L);
             pSectionInfo.setLevel("0");
+            level = pSectionInfo.getLevel();
         }else {
             pSectionInfo = dataBaseService.getSectionInfo(pid);
+            level = pSectionInfo.getLevel()+ MarkConstant.MARK_SPLIT_RAIL + pSectionInfo.getId();
         }
-        SectionInfo sectionInfo = dataBaseService.getSectionInfo(id);
         if (pSectionInfo.getSectionPid().equals(sectionInfo.getSectionPid())){
             return;
         }
@@ -104,11 +117,11 @@ public class SectionServiceImpl implements SectionService {
         }
         LocalDateTime nowTime = LocalDateTime.now();
         String oldLevel = sectionInfo.getLevel();
+        sectionInfo.setLevel(level);
         sectionInfo.setSectionPid(pid);
-        sectionInfo.setLevel(pSectionInfo.getLevel()+ MarkConstant.MARK_SPLIT_RAIL + pSectionInfo.getId());
         sectionInfo.setSectionSort(nowTime.toInstant(ZoneOffset.of("+8")).toEpochMilli());
         sectionInfo.setUpdateTime(nowTime);
-        List<SectionInfo> childList = sectionMapper.selectAllLikeByLevel(sectionInfo.getLevel() + MarkConstant.MARK_SPLIT_RAIL + sectionInfo.getId());
+        List<SectionInfo> childList = sectionMapper.selectAllLikeByLevel(oldLevel + MarkConstant.MARK_SPLIT_RAIL + sectionInfo.getId());
         for (SectionInfo child : childList){
             child.setUpdateTime(nowTime);
             child.setLevel(sectionInfo.getLevel() + child.getLevel().substring(0, oldLevel.length()));

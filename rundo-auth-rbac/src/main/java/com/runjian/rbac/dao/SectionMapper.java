@@ -54,7 +54,7 @@ public interface SectionMapper {
             " ,<if test=\"item.sectionPid != null\" > section_pid = #{item.sectionPid} </if> " +
             " ,<if test=\"item.sectionName != null\" > section_name = #{item.sectionName} </if> " +
             " ,<if test=\"item.sectionSort != null\" > section_sort = #{item.sectionSort} </if> " +
-            " ,<if test=\"item.level != null\" > section_name = #{item.level} </if> " +
+            " ,<if test=\"item.level != null\" > level = #{item.level} </if> " +
             " , leader_name = #{item.leaderName} " +
             " , phone = #{item.phone}" +
             " , description = #{item.description} " +

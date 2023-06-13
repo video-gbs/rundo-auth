@@ -6,6 +6,7 @@ import com.runjian.rbac.service.rbac.SectionService;
 import com.runjian.rbac.vo.request.PostAddSectionReq;
 import com.runjian.rbac.vo.request.PutSectionBtMoveReq;
 import com.runjian.rbac.vo.request.PutSectionFsMoveReq;
+import com.runjian.rbac.vo.request.PutSectionReq;
 import com.runjian.rbac.vo.response.GetSectionTreeRsp;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -43,6 +44,18 @@ public class SectionController {
     public CommonResponse<?> addSection(@RequestBody PostAddSectionReq req){
         validatorService.validateRequest(req);
         sectionService.addSection(req.getSectionPid(), req.getSectionName(), req.getLeaderName(), req.getPhone(), req.getDescription());
+        return CommonResponse.success();
+    }
+
+    /**
+     * 修改部门
+     * @param req 部门修改请求体
+     * @return
+     */
+    @PutMapping("/update")
+    public CommonResponse<?> updateSection(@RequestBody PutSectionReq req){
+        validatorService.validateRequest(req);
+        sectionService.updateSection(req.getId(), req.getSectionName(), req.getLeaderName(), req.getPhone(), req.getDescription());
         return CommonResponse.success();
     }
 
