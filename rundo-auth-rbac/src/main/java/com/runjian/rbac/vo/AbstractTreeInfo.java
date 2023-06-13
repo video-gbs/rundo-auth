@@ -35,8 +35,8 @@ public abstract class AbstractTreeInfo {
 
     /**
      * 获取子节点
-     * @param treeInfoList
-     * @param level
+     * @param treeInfoList 树信息列表
+     * @param level 层级
      * @return
      */
     public static List<? extends AbstractTreeInfo> recursionData(List<? extends AbstractTreeInfo> treeInfoList, String level){

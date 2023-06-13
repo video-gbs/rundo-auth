@@ -13,7 +13,8 @@ public interface ResourceService {
 
     /**
      * 获取分组资源树
-     * @param resourceKey
+     * @param resourceKey 资源key
+     * @param isIncludeResource 是否包含资源
      * @return
      */
     GetResourceTreeRsp getResourceTree(String resourceKey, Boolean isIncludeResource);

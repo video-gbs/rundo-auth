@@ -28,10 +28,8 @@ public class ResourceController {
 
     /**
      * 分页查询资源
-     * @param page 页数
-     * @param num 数量
-     * @param name 资源名字
      * @param resourceKey 资源组
+     * @param isIncludeResource 是否包含资源数据
      * @return
      */
     @GetMapping("/tree")
