@@ -62,6 +62,10 @@ public class AuthServiceImpl implements AuthService {
         LocalDateTime nowTime = LocalDateTime.now();
         authUserDto.setAccountNonExpired(!nowTime.isBefore(userInfo.getExpiryStartTime()) && !nowTime.isAfter(userInfo.getExpiryEndTime()));
         Set<Long> roleIds = userRoleMapper.selectRoleIdByUserId(userInfo.getId());
+        if (roleIds.size() == 0){
+            authUserDto.setAuthorities(Collections.EMPTY_SET);
+            return authUserDto;
+        }
         authUserDto.setAuthorities(roleIds.stream().map(String::valueOf).collect(Collectors.toSet()));
         cacheService.setUserRole(username, roleIds);
         Set<ResourceInfo> resourceInfos = resourceMapper.selectByRoleIds(roleIds);

@@ -1,6 +1,12 @@
 package com.runjian.auth.feign.fallback;
 
 import com.runjian.auth.feign.AuthRbacApi;
+import com.runjian.auth.vo.dto.AuthDataDto;
+import com.runjian.auth.vo.dto.AuthUserDto;
+import com.runjian.auth.vo.request.PostAuthClientApiReq;
+import com.runjian.auth.vo.request.PostAuthUserApiReq;
+import com.runjian.common.config.exception.BusinessErrorEnums;
+import com.runjian.common.config.response.CommonResponse;
 import org.springframework.cloud.openfeign.FallbackFactory;
 import org.springframework.stereotype.Component;
 
@@ -10,8 +16,24 @@ import org.springframework.stereotype.Component;
  */
 @Component
 public class AuthRbacFallback implements FallbackFactory<AuthRbacApi> {
+
     @Override
     public AuthRbacApi create(Throwable cause) {
-        return null;
+        return new AuthRbacApi() {
+            @Override
+            public CommonResponse<AuthUserDto> getAuthUser(String username) {
+                return CommonResponse.create(BusinessErrorEnums.FEIGN_REQUEST_BUSINESS_ERROR.getErrCode(), cause.getMessage(), null);
+            }
+
+            @Override
+            public CommonResponse<AuthDataDto> authUserApi(PostAuthUserApiReq req) {
+                return CommonResponse.create(BusinessErrorEnums.FEIGN_REQUEST_BUSINESS_ERROR.getErrCode(), cause.getMessage(), null);
+            }
+
+            @Override
+            public CommonResponse<AuthDataDto> authClientApi(PostAuthClientApiReq req) {
+                return CommonResponse.create(BusinessErrorEnums.FEIGN_REQUEST_BUSINESS_ERROR.getErrCode(), cause.getMessage(), null);
+            }
+        };
     }
 }

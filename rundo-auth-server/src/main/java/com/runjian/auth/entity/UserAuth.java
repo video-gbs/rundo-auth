@@ -17,11 +17,6 @@ import java.util.Set;
 public class UserAuth implements UserDetails {
 
     /**
-     * id
-     */
-    private Long id;
-
-    /**
      * 用户名
      */
     private String username;

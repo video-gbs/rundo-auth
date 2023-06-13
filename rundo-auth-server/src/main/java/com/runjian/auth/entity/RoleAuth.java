@@ -10,14 +10,8 @@ import org.springframework.security.core.GrantedAuthority;
  * @date 2023/4/13 9:55
  */
 @Data
-@NoArgsConstructor
 @AllArgsConstructor
 public class RoleAuth implements GrantedAuthority {
-
-    /**
-     * 角色id
-     */
-    private Long id;
 
     /**
      * 角色名称
