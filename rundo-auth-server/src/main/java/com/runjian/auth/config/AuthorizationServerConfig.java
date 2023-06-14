@@ -73,6 +73,10 @@ public class AuthorizationServerConfig {
     }
 
 
+    /**
+     * 异常信息返回
+     * @return
+     */
     public AuthenticationEntryPoint authExceptionEntryPoint(){
         return (request, response, authException) -> {
             response.setStatus(HttpStatus.UNAUTHORIZED.value());
