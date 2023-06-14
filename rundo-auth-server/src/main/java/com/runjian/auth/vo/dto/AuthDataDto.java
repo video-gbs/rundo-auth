@@ -21,6 +21,11 @@ public class AuthDataDto {
     private Boolean isAuthorized;
 
     /**
+     * 是否是超管
+     */
+    private Boolean isAdmin;
+
+    /**
      * 用户名
      */
     private String username;

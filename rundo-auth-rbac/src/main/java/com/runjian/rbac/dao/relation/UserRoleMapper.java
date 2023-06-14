@@ -34,7 +34,8 @@ public interface UserRoleMapper {
     void deleteAllByUserIdAndRoleIds(Long userId, Set<Long> roleIds);
 
     @Insert(" <script> " +
-            " INSERT INTO " + USER_ROLE_TABLE_NAME + "(user_id, role_id, create_by, create_time) VALUES " +
+            " INSERT INTO " + USER_ROLE_TABLE_NAME +
+            " (user_id, role_id, create_by, create_time) VALUES " +
             " <foreach collection='roleIds' item='item' separator=','>(#{userId}, #{item}, #{createBy}, #{createTime})</foreach> " +
             " </script>")
     void saveAll(Long userId, Set<Long> roleIds, String createBy, LocalDateTime createTime);

@@ -17,7 +17,7 @@ spring:
     redis:
       host: ${REDIS_HOST:124.71.20.118}
       port: ${REDIS_PORT:6379}
-      database: ${REDIS_DB:5}
+      database: ${REDIS_DB:6}
       password: ${REDIS_PWD:rundoredis}
       timeout: 10000
   datasource:
@@ -48,7 +48,7 @@ spring:
       # 通过connectProperties属性来打开mergeSql功能；慢SQL记录
       connectionProperties: druid.stat.mergeSql=true;druid.stat.slowSqlMillis=1000
 server:
-  port: 9000
+  port: 9001
 
 mybatis:
   configuration:
@@ -64,4 +64,4 @@ auth:
   admin:
     username: admin
     password: 123456
-    roleName: 系统管理员
+    roleName: admin

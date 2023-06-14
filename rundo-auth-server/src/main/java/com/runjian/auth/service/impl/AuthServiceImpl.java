@@ -41,6 +41,8 @@ public class AuthServiceImpl implements AuthService {
         if (authDataDtoCommonResponse.isError()){
             throw new BusinessException(BusinessErrorEnums.FEIGN_REQUEST_BUSINESS_ERROR);
         }
-        return authDataDtoCommonResponse.getData();
+        AuthDataDto authDataDto = authDataDtoCommonResponse.getData();
+        authDataDto.setClientId(claimMap.get("aud").toString());
+        return authDataDto;
     }
 }

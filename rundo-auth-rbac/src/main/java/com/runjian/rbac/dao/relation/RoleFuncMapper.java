@@ -20,7 +20,8 @@ public interface RoleFuncMapper {
     String ROLE_FUNC_TABLE_NAME = "rbac_role_func";
 
     @Insert(" <script> " +
-            " INSERT INTO " + ROLE_FUNC_TABLE_NAME + "(role_id, func_id, create_by, create_time) VALUES " +
+            " INSERT INTO " + ROLE_FUNC_TABLE_NAME +
+            " (role_id, func_id, create_by, create_time) VALUES " +
             " <foreach collection='funcIds' item='item' separator=','>(#{roleId}, #{item}, #{createBy}, #{createTime})</foreach> " +
             " </script>")
     void saveAll(Long roleId, Set<Long> funcIds, String createBy, LocalDateTime createTime);

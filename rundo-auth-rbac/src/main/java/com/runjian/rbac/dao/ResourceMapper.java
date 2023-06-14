@@ -26,14 +26,6 @@ public interface ResourceMapper {
             " WHERE id = #{id} ")
     Optional<ResourceInfo> selectById(Long id);
 
-    @Select(" <script> " +
-            " SELECT * FROM " + RESOURCE_TABLE_NAME +
-            " WHERE 1 = 1 " +
-            " AND <if test=\"groupName != null\" > group_name LIKE CONCAT('%', #{groupName}, '%') </if> " +
-            " AND <if test=\"resourceKey != null\" > resource_key LIKE CONCAT('%', #{resourceKey}, '%') </if> " +
-            " </script>")
-    List<GetResourcePageRsp> selectByNameAndResourceKeyLike(String groupName, String resourceKey);
-
     @Delete(" <script> " +
             " DELETE FROM " + RESOURCE_TABLE_NAME +
             " WHERE id IN <foreach collection='resourceIds' item='item' open='(' separator=',' close=')'> #{item} </foreach>  " +
@@ -54,30 +46,17 @@ public interface ResourceMapper {
             " </script>")
     Set<String> selectResourceValueByResourceKeyAndResourceValueIn(String resourceKey, Set<String> resourceValues);
 
-    @Insert({" <script> " +
-            " INSERT INTO " + RESOURCE_TABLE_NAME + "(group_name, resource_name, resource_key, resource_value, create_time, update_time) values " +
-            " <foreach collection='saveList' item='item' separator=','>(#{groupName}, #{resourceName}, #{resourceKey}, #{item}, #{nowTime}, #{nowTime})</foreach> " +
-            " </script>"})
-    void batchAdd(String groupName, String resourceName, String resourceKey, Set<String> resourceValues, LocalDateTime nowTime);
-
     @Select(" <script> " +
-            " SELECT rt.resource_value FROM " + RESOURCE_TABLE_NAME + "rt" +
-            " RIGHT JOIN " + RoleResourceMapper.ROLE_RESOURCE_TABLE_NAME + " rrt ON rrt.resource_id = rt.id " +
-            " WHERE resource_key = #{resourceKey} " +
-            " AND rt.id IN <foreach collection='roleIds' item='item' open='(' separator=',' close=')'> #{item} </foreach> " +
-            " </script>")
-    Set<String> selectValueByKeyAndRoleIds(String resourceKey, List<Long> roleIds);
-
-    @Select(" <script> " +
-            " SELECT rt.* FROM " + RESOURCE_TABLE_NAME + "rt" +
+            " SELECT rt.* FROM " + RESOURCE_TABLE_NAME + " rt " +
             " RIGHT JOIN " + RoleResourceMapper.ROLE_RESOURCE_TABLE_NAME + " rrt ON rrt.resource_id = rt.id " +
             " WHERE rt.id IN <foreach collection='roleIds' item='item' open='(' separator=',' close=')'> #{item} </foreach> " +
             " </script>")
     Set<ResourceInfo> selectByRoleIds(Set<Long> roleIds);
 
     @Insert({" <script> " +
-            " INSERT INTO " + RESOURCE_TABLE_NAME + "(resource_pid, resource_type resource_name, resource_key, resource_value, sort, level, create_time, update_time) values " +
-            " <foreach collection='saveList' item='item' separator=','>(#{item.resourcePid}, #{item.resourceType}, #{item.resourceName}, #{item.resourceKey}, #{item.resourceValue}, #{item.sort}, #{item.level}, #{item.createTime}, #{item.updateTime})</foreach> " +
+            " INSERT INTO " + RESOURCE_TABLE_NAME +
+            " (resource_pid, resource_type resource_name, resource_key, resource_value, sort, level, create_time, update_time) values " +
+            " <foreach collection='saveList' item='item' separator=','>(#{item.resourcePid}, #{item.resourceType}, #{item.resourceName}, #{item.resourceKey}, #{item.resourceValue}, #{item.sort}, #{item.level}, #{item.createTime}, #{item.updateTime}) </foreach> " +
             " </script>"})
     void batchAdd(List<ResourceInfo> saveList);
 

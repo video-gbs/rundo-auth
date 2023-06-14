@@ -36,7 +36,7 @@ public class CustomUserDetailsService implements UserDetailsService {
      * 用户端配置
      * @return
      */
-    @Bean
+    //@Bean
     public UserDetailsService userDetailsService(){
         UserDetails userDetails = User.builder()
                 .username("user")

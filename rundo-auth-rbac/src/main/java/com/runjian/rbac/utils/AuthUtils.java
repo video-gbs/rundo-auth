@@ -36,7 +36,7 @@ public class AuthUtils {
         authDataDto.setClientId(request.getHeader("Client-Id"));
         if (!authDataDto.getIsAdmin()){
             authDataDto.setRoleIds(Arrays.stream(request.getHeader("Role-Ids").split(",")).map(Long::parseLong).toList());
-            authDataDto.setResourceKey(request.getHeader("Resource-Key"));
+            authDataDto.setResourceKeyList(Arrays.asList(request.getHeader("Resource-Key").split(",")));
         }
         return authDataDto;
     }

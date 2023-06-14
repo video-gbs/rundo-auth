@@ -2,7 +2,9 @@ package com.runjian.gateway.filter;
 
 import com.alibaba.fastjson2.JSONObject;
 import com.runjian.gateway.config.AuthProperties;
+import com.runjian.gateway.utils.CheckUtils;
 import com.runjian.gateway.vo.AuthDataDto;
+import lombok.RequiredArgsConstructor;
 import org.springframework.cloud.gateway.filter.GatewayFilter;
 import org.springframework.cloud.gateway.filter.GatewayFilterChain;
 import org.springframework.core.Ordered;
@@ -18,25 +20,26 @@ import java.util.Objects;
  * @author Miracle
  * @date 2023/4/23 17:13
  */
+@RequiredArgsConstructor
 public class AuthFailureFilter implements GatewayFilter, Ordered {
+
     @Override
     public Mono<Void> filter(ServerWebExchange exchange, GatewayFilterChain chain) {
         ServerHttpResponse response = exchange.getResponse();
-        if (Objects.nonNull(response.getStatusCode())){
-            if (response.getStatusCode().equals(HttpStatus.UNAUTHORIZED) || response.getStatusCode().equals(HttpStatus.FORBIDDEN)){
-                Object authResponse = exchange.getAttributes().remove(AuthProperties.AUTHORIZATION_AUTH_FAILURE_NAME);
-                if (Objects.nonNull(authResponse)){
-                    return response.writeAndFlushWith(Mono.just(ByteBufMono.just(response.bufferFactory().wrap(JSONObject.toJSONString(authResponse).getBytes()))));
-                }else {
-                    return exchange.getResponse().setComplete();
-                }
+
+        if (response.getStatusCode().equals(HttpStatus.UNAUTHORIZED) || response.getStatusCode().equals(HttpStatus.FORBIDDEN)) {
+            Object authResponse = exchange.getAttributes().remove(AuthProperties.AUTHORIZATION_AUTH_FAILURE_NAME);
+            if (Objects.nonNull(authResponse)) {
+                return response.writeAndFlushWith(Mono.just(ByteBufMono.just(response.bufferFactory().wrap(JSONObject.toJSONString(authResponse).getBytes()))));
+            } else {
+                return exchange.getResponse().setComplete();
             }
         }
+
         Object authResponse = exchange.getAttribute(AuthProperties.AUTHORIZATION_AUTH_FAILURE_NAME);
-        AuthDataDto authDataDto = JSONObject.parseObject(JSONObject.toJSONString(authResponse), AuthDataDto.class);
-        if (!authDataDto.getIsAuthorized()){
+        if (Objects.nonNull(authResponse)) {
             response.setStatusCode(HttpStatus.FORBIDDEN);
-            return response.writeAndFlushWith(Mono.just(ByteBufMono.just(response.bufferFactory().wrap(JSONObject.toJSONString(authDataDto.getMsg()).getBytes()))));
+            return response.writeAndFlushWith(Mono.just(ByteBufMono.just(response.bufferFactory().wrap(JSONObject.toJSONString(authResponse).getBytes()))));
         }
         return chain.filter(exchange);
     }

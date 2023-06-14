@@ -1,6 +1,7 @@
 package com.runjian.auth.feign;
 
 
+import com.runjian.auth.feign.fallback.AuthRbacFallback;
 import com.runjian.auth.vo.dto.AuthUserDto;
 import com.runjian.auth.vo.request.PostAuthClientApiReq;
 import com.runjian.auth.vo.request.PostAuthUserApiReq;
@@ -16,7 +17,7 @@ import com.runjian.auth.vo.dto.AuthDataDto;
  * @author Miracle
  * @date 2023/6/8 17:16
  */
-@FeignClient(value = "auth-rbac", fallbackFactory = AuthRbacApi.class, dismiss404 = true)
+@FeignClient(value = "auth-rbac", fallbackFactory = AuthRbacFallback.class, dismiss404 = true)
 public interface AuthRbacApi {
 
     /**

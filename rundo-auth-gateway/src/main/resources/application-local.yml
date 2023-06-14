@@ -25,6 +25,15 @@ spring:
             - AuthHeader
             - Auth
             - AuthFailure
+        - id: auth-rbac
+          uri: lb://auth-rbac
+          predicates:
+            - Path=/rbac/**
+          filters:
+            - AuthHeader
+            - Auth
+            - AuthFailure
+            - StripPrefix=1
         - id: auth-resource
           uri: lb://auth-resource
           predicates:

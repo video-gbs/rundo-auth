@@ -6,6 +6,7 @@ import com.runjian.gateway.common.BusinessErrorEnums;
 import com.runjian.gateway.common.CommonResponse;
 import com.runjian.gateway.config.AuthProperties;
 import com.runjian.gateway.config.NacosUrlConfig;
+import com.runjian.gateway.utils.CheckUtils;
 import com.runjian.gateway.vo.PostAuthReq;
 import io.netty.buffer.ByteBufAllocator;
 import lombok.RequiredArgsConstructor;
@@ -48,7 +49,7 @@ public class AuthFilter implements GatewayFilter, Ordered {
     public Mono<Void> filter(ServerWebExchange exchange, GatewayFilterChain chain) {
         ServerHttpRequest request = exchange.getRequest();
         URI uri = request.getURI();
-        if (checkPath(uri.getPath(), authProperties.getAuthPrefix())){
+        if (CheckUtils.checkPath(uri.getPath(), authProperties.getAuthPrefix())){
             return chain.filter(exchange);
         }
         String authToken = request.getHeaders().getFirst(AuthProperties.AUTHORIZATION_HEADER_TOKEN);
@@ -91,22 +92,7 @@ public class AuthFilter implements GatewayFilter, Ordered {
 
     }
 
-    private boolean checkPath(String path, String validPath){
-        String[] validPaths = validPath.split("/");
-        String[] paths = path.split("/");
 
-        for (int i = 1; i < validPaths.length; i++){
-            if (validPaths[i].equals("**")){
-                return true;
-            } else if (!validPaths[i].equals(paths[i])) {
-                if (validPaths[i].equals("*")){
-                    continue;
-                }
-                return false;
-            }
-        }
-        return true;
-    }
 
     @Override
     public int getOrder() {

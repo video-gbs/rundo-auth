@@ -20,7 +20,8 @@ public interface RoleResourceMapper {
     String ROLE_RESOURCE_TABLE_NAME = "rbac_role_resource";
 
     @Insert(" <script> " +
-            " INSERT INTO " + ROLE_RESOURCE_TABLE_NAME + "(role_id, resource_id, create_by, create_time) VALUES " +
+            " INSERT INTO " + ROLE_RESOURCE_TABLE_NAME +
+            " (role_id, resource_id, create_by, create_time) VALUES " +
             " <foreach collection='resourceIds' item='item' separator=','>(#{roleId}, #{item}, #{createBy}, #{createTime})</foreach> " +
             " </script>")
     void saveAll(Long roleId, Set<Long> resourceIds, String createBy, LocalDateTime createTime);
