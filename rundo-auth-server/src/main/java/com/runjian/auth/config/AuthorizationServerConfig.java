@@ -1,12 +1,16 @@
 package com.runjian.auth.config;
 
+import com.alibaba.fastjson2.JSONObject;
 import com.runjian.auth.oauth2.OAuth2PasswordTokenAuthenticationProvider;
 import com.runjian.auth.oauth2.OAuth2TokenPasswordAuthenticationConvert;
+import com.runjian.common.config.exception.BusinessErrorEnums;
+import com.runjian.common.config.response.CommonResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.Ordered;
 import org.springframework.core.annotation.Order;
+import org.springframework.http.HttpStatus;
 import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -17,6 +21,7 @@ import org.springframework.security.oauth2.server.authorization.config.annotatio
 import org.springframework.security.oauth2.server.authorization.oidc.OidcProviderConfiguration;
 import org.springframework.security.oauth2.server.authorization.settings.AuthorizationServerSettings;
 import org.springframework.security.oauth2.server.authorization.token.OAuth2TokenCustomizer;
+import org.springframework.security.web.AuthenticationEntryPoint;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.LoginUrlAuthenticationEntryPoint;
 import org.springframework.security.web.util.matcher.RequestMatcher;
@@ -50,7 +55,7 @@ public class AuthorizationServerConfig {
                 token.accessTokenRequestConverter(new OAuth2TokenPasswordAuthenticationConvert())
                         .authenticationProvider(new OAuth2PasswordTokenAuthenticationProvider(authorizationService, http, userDetailsService, passwordEncoder))
         );
-        http.exceptionHandling(exceptions -> exceptions.authenticationEntryPoint(new LoginUrlAuthenticationEntryPoint("/login")));
+        http.exceptionHandling(exceptions -> exceptions.authenticationEntryPoint(authExceptionEntryPoint()));
         http.securityMatcher(endpointsMatcher)
                 .authorizeHttpRequests(authorizeRequests -> authorizeRequests.anyRequest().authenticated())
                 .csrf((csrf) -> {csrf.ignoringRequestMatchers(new RequestMatcher[]{endpointsMatcher});})
@@ -67,4 +72,12 @@ public class AuthorizationServerConfig {
                 .build();
     }
 
+
+    public AuthenticationEntryPoint authExceptionEntryPoint(){
+        return (request, response, authException) -> {
+            response.setStatus(HttpStatus.UNAUTHORIZED.value());
+            response.setHeader("Content-Type", "application/json;charset=UTF-8");
+            response.getWriter().write(JSONObject.toJSONString(CommonResponse.failure(BusinessErrorEnums.USER_LOGIN_ERROR, authException.getMessage())));
+        };
+    }
 }

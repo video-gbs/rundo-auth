@@ -3,6 +3,7 @@ package com.runjian.auth.oauth2;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.context.support.MessageSourceAccessor;
+import org.springframework.security.authentication.AccountStatusUserDetailsChecker;
 import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -12,6 +13,7 @@ import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.SpringSecurityMessageSource;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UserDetailsChecker;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.oauth2.core.*;
@@ -51,6 +53,8 @@ public class OAuth2PasswordTokenAuthenticationProvider implements Authentication
 
     protected MessageSourceAccessor messages = SpringSecurityMessageSource.getAccessor();
 
+    private final UserDetailsChecker userDetailsChecker = new AccountStatusUserDetailsChecker();
+
     private static final OAuth2TokenType ID_TOKEN_TOKEN_TYPE = new OAuth2TokenType(OidcParameterNames.ID_TOKEN);
 
     public OAuth2PasswordTokenAuthenticationProvider(OAuth2AuthorizationService authorizationService, HttpSecurity httpSecurity, UserDetailsService userDetailsService, PasswordEncoder passwordEncoder) {
@@ -78,7 +82,7 @@ public class OAuth2PasswordTokenAuthenticationProvider implements Authentication
 
         UserDetails userDetails =  userDetailsService.loadUserByUsername(oAuth2TokenPasswordAuthenticationToken.getUsername());
 
-
+        userDetailsChecker.check(userDetails);
 
         // 密码校验
         if (!this.passwordEncoder.matches(oAuth2TokenPasswordAuthenticationToken.getPassword(), userDetails.getPassword())) {
@@ -87,8 +91,6 @@ public class OAuth2PasswordTokenAuthenticationProvider implements Authentication
                     .getMessage("AbstractUserDetailsAuthenticationProvider.badCredentials", "Bad credentials"));
         }
         User userAuth = new User(userDetails.getUsername(), "", userDetails.isEnabled(), userDetails.isAccountNonExpired(), userDetails.isCredentialsNonExpired(), userDetails.isAccountNonLocked(), userDetails.getAuthorities());
-
-        // todo 判断用户是否可用、是否过期、是否上锁
 
         UsernamePasswordAuthenticationToken token = new UsernamePasswordAuthenticationToken(userAuth, null, userDetails.getAuthorities());
         OAuth2Authorization authorization = OAuth2Authorization
