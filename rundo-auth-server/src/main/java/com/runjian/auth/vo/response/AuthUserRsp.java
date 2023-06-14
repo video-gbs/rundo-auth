@@ -1,20 +1,15 @@
-package com.runjian.auth.entity;
+package com.runjian.auth.vo.response;
 
-import lombok.AllArgsConstructor;
 import lombok.Data;
-import lombok.NoArgsConstructor;
-import org.springframework.security.core.userdetails.UserDetails;
 
 import java.util.Set;
 
 /**
  * @author Miracle
- * @date 2023/4/13 9:52
+ * @date 2023/6/6 16:12
  */
 @Data
-@NoArgsConstructor
-@AllArgsConstructor
-public class UserAuth implements UserDetails {
+public class AuthUserRsp {
 
     /**
      * 用户名
@@ -59,6 +54,6 @@ public class UserAuth implements UserDetails {
     /**
      * 授权角色
      */
-    private Set<RoleAuth> authorities;
+    private Set<String> authorities;
 
 }

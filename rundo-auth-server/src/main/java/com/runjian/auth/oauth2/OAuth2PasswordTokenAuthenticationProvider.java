@@ -88,6 +88,7 @@ public class OAuth2PasswordTokenAuthenticationProvider implements Authentication
         }
         User userAuth = new User(userDetails.getUsername(), "", userDetails.isEnabled(), userDetails.isAccountNonExpired(), userDetails.isCredentialsNonExpired(), userDetails.isAccountNonLocked(), userDetails.getAuthorities());
 
+        // todo 判断用户是否可用、是否过期、是否上锁
 
         UsernamePasswordAuthenticationToken token = new UsernamePasswordAuthenticationToken(userAuth, null, userDetails.getAuthorities());
         OAuth2Authorization authorization = OAuth2Authorization

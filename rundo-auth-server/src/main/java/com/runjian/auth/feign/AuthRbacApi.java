@@ -2,7 +2,7 @@ package com.runjian.auth.feign;
 
 
 import com.runjian.auth.feign.fallback.AuthRbacFallback;
-import com.runjian.auth.vo.dto.AuthUserDto;
+import com.runjian.auth.vo.response.AuthUserRsp;
 import com.runjian.auth.vo.request.PostAuthClientApiReq;
 import com.runjian.auth.vo.request.PostAuthUserApiReq;
 import com.runjian.common.config.response.CommonResponse;
@@ -11,7 +11,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
-import com.runjian.auth.vo.dto.AuthDataDto;
+import com.runjian.auth.vo.response.AuthDataRsp;
 
 /**
  * @author Miracle
@@ -26,7 +26,7 @@ public interface AuthRbacApi {
      * @return AuthUserDto
      */
     @GetMapping("/auth-rbac/user")
-    CommonResponse<AuthUserDto> getAuthUser(@RequestParam String username);
+    CommonResponse<AuthUserRsp> getAuthUser(@RequestParam String username);
 
     /**
      * 校验用户请求
@@ -34,7 +34,7 @@ public interface AuthRbacApi {
      * @return AuthDataDto
      */
     @PostMapping("/auth-rbac/api/user")
-    CommonResponse<AuthDataDto> authUserApi(@RequestBody PostAuthUserApiReq req);
+    CommonResponse<AuthDataRsp> authUserApi(@RequestBody PostAuthUserApiReq req);
 
     /**
      * 校验客户端请求
@@ -42,5 +42,5 @@ public interface AuthRbacApi {
      * @return AuthDataDto
      */
     @PostMapping("/auth-rbac/api/client")
-    CommonResponse<AuthDataDto> authClientApi(@RequestBody PostAuthClientApiReq req);
+    CommonResponse<AuthDataRsp> authClientApi(@RequestBody PostAuthClientApiReq req);
 }

@@ -29,8 +29,8 @@ public interface UserMapper {
             " LEFT JOIN " + USER_TABLE_NAME + " ut ON ut.section_id = st.id " +
             " WHERE deleted != 1 " +
             " AND st.level LIKE CONCAT(#{sectionLevel}, '%') " +
-            " AND <if test=\"username != null\" > username LIKE CONCAT('%', #{username}, '%') </if> " +
-            " AND <if test=\"workName != null\" > work_name LIKE CONCAT('%', #{workName}, '%') </if> " +
+            " <if test=\"username != null\" > AND username LIKE CONCAT('%', #{username}, '%') </if> " +
+            " <if test=\"workName != null\" > AND work_name LIKE CONCAT('%', #{workName}, '%') </if> " +
             " </script>")
     List<GetUserPageRsp> selectAllUserBySectionLevelLikeAndUsernameAndWorkName(String sectionLevel, String username, String workName);
 
@@ -38,8 +38,8 @@ public interface UserMapper {
             " SELECT * FROM " + USER_TABLE_NAME +
             " WHERE deleted != 1 " +
             " AND section_id = #{sectionId} " +
-            " AND <if test=\"username != null\" > username LIKE CONCAT('%', #{username}, '%') </if> " +
-            " AND <if test=\"workName != null\" > work_name LIKE CONCAT('%', #{workName}, '%') </if> " +
+            " <if test=\"username != null\" > AND username LIKE CONCAT('%', #{username}, '%') </if> " +
+            " <if test=\"workName != null\" > AND work_name LIKE CONCAT('%', #{workName}, '%') </if> " +
             " </script>"
     )
     List<GetUserPageRsp> selectAllUserBySectionIdAndUsernameAndWorkName(Long sectionId, String username, String workName);

@@ -1,35 +1,26 @@
 package com.runjian.gateway.filter;
 
 import com.alibaba.fastjson2.JSONObject;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.runjian.gateway.common.BusinessErrorEnums;
 import com.runjian.gateway.common.CommonResponse;
 import com.runjian.gateway.config.AuthProperties;
 import com.runjian.gateway.config.NacosUrlConfig;
 import com.runjian.gateway.utils.CheckUtils;
 import com.runjian.gateway.vo.PostAuthReq;
-import io.netty.buffer.ByteBufAllocator;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.cloud.gateway.filter.GatewayFilter;
 import org.springframework.cloud.gateway.filter.GatewayFilterChain;
 import org.springframework.core.Ordered;
-import org.springframework.core.io.buffer.DataBufferFactory;
-import org.springframework.core.io.buffer.NettyDataBufferFactory;
-import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.HttpStatusCode;
 import org.springframework.http.server.reactive.ServerHttpRequest;
 import org.springframework.http.server.reactive.ServerHttpResponse;
-import org.springframework.util.LinkedMultiValueMap;
-import org.springframework.web.reactive.function.BodyInserters;
 import org.springframework.web.reactive.function.client.WebClient;
 import org.springframework.web.reactive.function.client.WebClientResponseException;
 import org.springframework.web.server.ServerWebExchange;
 import reactor.core.publisher.Mono;
 import reactor.netty.ByteBufMono;
-
-import java.io.InputStream;
 import java.net.URI;
 import java.util.Objects;
 

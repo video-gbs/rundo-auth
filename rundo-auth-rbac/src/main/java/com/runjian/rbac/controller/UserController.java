@@ -28,6 +28,8 @@ public class UserController {
 
     private final UserService userService;
 
+
+
     /**
      * 角色页面获取绑定或未绑定的数据
      * @param page 页码
@@ -57,7 +59,10 @@ public class UserController {
     @GetMapping("/page")
     public CommonResponse<PageInfo<GetUserPageRsp>> getUserPage(@RequestParam(defaultValue = "1") int page,
                                                                 @RequestParam(defaultValue = "10") int num,
-                                                                @RequestParam Long sectionId, String username, String workName, Boolean isInclude){
+                                                                @RequestParam Long sectionId,
+                                                                String username, String workName,
+                                                                @RequestParam Boolean isInclude){
+
         return CommonResponse.success(userService.getUserPage(page, num, sectionId, username, workName, isInclude));
     }
 

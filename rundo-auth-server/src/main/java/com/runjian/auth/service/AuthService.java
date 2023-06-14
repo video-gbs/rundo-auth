@@ -1,8 +1,7 @@
 package com.runjian.auth.service;
 
-import com.runjian.auth.vo.dto.AuthDataDto;
-import com.runjian.auth.vo.response.AuthorizeData;
-import org.springframework.security.core.Authentication;
+import com.runjian.auth.vo.response.AuthDataRsp;
+
 
 /**
  * @author Miracle
@@ -10,6 +9,6 @@ import org.springframework.security.core.Authentication;
  */
 public interface AuthService {
 
-    AuthDataDto authenticate(Authentication authentication, String reqUrl, String reqMethod, String jsonStr);
+    AuthDataRsp authenticate(String reqUrl, String reqMethod, String jsonStr);
 
 }

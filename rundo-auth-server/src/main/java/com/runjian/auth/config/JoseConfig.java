@@ -44,7 +44,7 @@ public class JoseConfig {
     public static class CustomOAuth2TokenCustomizer implements OAuth2TokenCustomizer<JwtEncodingContext> {
         @Override
         public void customize(JwtEncodingContext context) {
-            // todo 代码未生效，添加一个自定义头
+            // 只在调用/oauth2/introspect时生效
             context.getJwsHeader().header("client-id", context.getRegisteredClient().getClientId());
         }
     }

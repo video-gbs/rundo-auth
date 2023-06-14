@@ -61,6 +61,7 @@ public class AuthProperties {
         this.adminUser.setPassword(passwordEncoder.encode(adminPassword));
         this.adminUser.setUsingMfa(false);
         this.adminUser.setAccountNonLocked(true);
+        this.adminUser.setAccountNonExpired(true);
         this.adminUser.setCredentialsNonExpired(true);
         this.adminUser.setEnabled(true);
         this.adminUser.setAuthorities(Set.of(adminRoleName));

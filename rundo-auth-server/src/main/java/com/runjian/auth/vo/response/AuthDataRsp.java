@@ -1,4 +1,4 @@
-package com.runjian.auth.vo.dto;
+package com.runjian.auth.vo.response;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -13,7 +13,7 @@ import java.util.List;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class AuthDataDto {
+public class AuthDataRsp {
 
     /**
      * 是否授权
@@ -51,5 +51,16 @@ public class AuthDataDto {
     private String resourceKey;
 
 
+    /**
+     * 获取失败返回
+     * @param msg 消息
+     * @return
+     */
+    public static AuthDataRsp getFailureRsp(String msg){
+        AuthDataRsp authDataRsp = new AuthDataRsp();
+        authDataRsp.setMsg(msg);
+        authDataRsp.setIsAuthorized(false);
+        return authDataRsp;
+    }
 
 }

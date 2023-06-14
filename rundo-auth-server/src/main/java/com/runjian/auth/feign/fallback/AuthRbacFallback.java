@@ -1,8 +1,8 @@
 package com.runjian.auth.feign.fallback;
 
 import com.runjian.auth.feign.AuthRbacApi;
-import com.runjian.auth.vo.dto.AuthDataDto;
-import com.runjian.auth.vo.dto.AuthUserDto;
+import com.runjian.auth.vo.response.AuthDataRsp;
+import com.runjian.auth.vo.response.AuthUserRsp;
 import com.runjian.auth.vo.request.PostAuthClientApiReq;
 import com.runjian.auth.vo.request.PostAuthUserApiReq;
 import com.runjian.common.config.exception.BusinessErrorEnums;
@@ -21,17 +21,17 @@ public class AuthRbacFallback implements FallbackFactory<AuthRbacApi> {
     public AuthRbacApi create(Throwable cause) {
         return new AuthRbacApi() {
             @Override
-            public CommonResponse<AuthUserDto> getAuthUser(String username) {
+            public CommonResponse<AuthUserRsp> getAuthUser(String username) {
                 return CommonResponse.create(BusinessErrorEnums.FEIGN_REQUEST_BUSINESS_ERROR.getErrCode(), cause.getMessage(), null);
             }
 
             @Override
-            public CommonResponse<AuthDataDto> authUserApi(PostAuthUserApiReq req) {
+            public CommonResponse<AuthDataRsp> authUserApi(PostAuthUserApiReq req) {
                 return CommonResponse.create(BusinessErrorEnums.FEIGN_REQUEST_BUSINESS_ERROR.getErrCode(), cause.getMessage(), null);
             }
 
             @Override
-            public CommonResponse<AuthDataDto> authClientApi(PostAuthClientApiReq req) {
+            public CommonResponse<AuthDataRsp> authClientApi(PostAuthClientApiReq req) {
                 return CommonResponse.create(BusinessErrorEnums.FEIGN_REQUEST_BUSINESS_ERROR.getErrCode(), cause.getMessage(), null);
             }
         };

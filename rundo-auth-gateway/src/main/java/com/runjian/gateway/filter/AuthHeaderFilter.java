@@ -14,8 +14,6 @@ import org.springframework.stereotype.Component;
 import org.springframework.web.server.ServerWebExchange;
 import reactor.core.publisher.Mono;
 import reactor.netty.ByteBufMono;
-
-import java.util.Collections;
 import java.util.Objects;
 import java.util.stream.Collectors;
 
@@ -35,7 +33,7 @@ public class AuthHeaderFilter implements GatewayFilter, Ordered {
         if (!authDataDto.getIsAuthorized()){
             ServerHttpResponse response = exchange.getResponse();
             response.setStatusCode(HttpStatus.FORBIDDEN);
-            return response.writeAndFlushWith(Mono.just(ByteBufMono.just(response.bufferFactory().wrap(JSONObject.toJSONString(CommonResponse.failure(BusinessErrorEnums.USER_NO_AUTH)).getBytes()))));
+            return response.writeAndFlushWith(Mono.just(ByteBufMono.just(response.bufferFactory().wrap(JSONObject.toJSONString(CommonResponse.failure(BusinessErrorEnums.USER_NO_AUTH, authDataDto.getMsg())).getBytes()))));
         }
         exchange.getRequest().mutate().headers(httpHeaders -> {
             httpHeaders.add("Username", authDataDto.getUsername());

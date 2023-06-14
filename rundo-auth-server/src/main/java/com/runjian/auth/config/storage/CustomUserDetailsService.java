@@ -1,14 +1,11 @@
 package com.runjian.auth.config.storage;
 
-import com.runjian.auth.entity.RoleAuth;
-import com.runjian.auth.entity.UserAuth;
 import com.runjian.auth.feign.AuthRbacApi;
-import com.runjian.auth.vo.dto.AuthUserDto;
+import com.runjian.auth.vo.response.AuthUserRsp;
 import com.runjian.common.config.exception.BusinessErrorEnums;
 import com.runjian.common.config.exception.BusinessException;
 import com.runjian.common.config.response.CommonResponse;
 import lombok.RequiredArgsConstructor;
-import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -16,10 +13,7 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.provisioning.InMemoryUserDetailsManager;
-import org.springframework.security.provisioning.UserDetailsManager;
-
 import java.util.Objects;
-import java.util.stream.Collectors;
 
 /**
  * @author Miracle
@@ -27,7 +21,7 @@ import java.util.stream.Collectors;
  */
 @Configuration
 @RequiredArgsConstructor
-public class CustomUserDetailsService implements UserDetailsService {
+public class CustomUserDetailsService implements UserDetailsService  {
 
     private final PasswordEncoder passwordEncoder;
 
@@ -39,8 +33,8 @@ public class CustomUserDetailsService implements UserDetailsService {
     //@Bean
     public UserDetailsService userDetailsService(){
         UserDetails userDetails = User.builder()
-                .username("user")
-                .password(passwordEncoder.encode("12345678"))
+                .username("admin")
+                .password(passwordEncoder.encode("123456"))
                 .roles("USER")
                 .build();
         return new InMemoryUserDetailsManager(userDetails);
@@ -48,18 +42,22 @@ public class CustomUserDetailsService implements UserDetailsService {
 
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        CommonResponse<AuthUserDto> authUserRsp = authRbacApi.getAuthUser(username);
+        CommonResponse<AuthUserRsp> authUserRsp = authRbacApi.getAuthUser(username);
         if (authUserRsp.isError()){
             throw new BusinessException(BusinessErrorEnums.FEIGN_REQUEST_BUSINESS_ERROR, authUserRsp.getMsg());
         }
-        AuthUserDto authUser = authUserRsp.getData();
+        AuthUserRsp authUser = authUserRsp.getData();
         if (Objects.isNull(authUser)){
-            return null;
+            throw new BusinessException(BusinessErrorEnums.USER_LOGIN_ERROR, "用户或密码错误");
         }
-        return new UserAuth(authUser.getUsername(), authUser.getPassword(),
-                authUser.isEnabled(), authUser.isAccountNonExpired(),
-                authUser.isAccountNonLocked(), authUser.isCredentialsNonExpired(),
-                authUser.isUsingMfa(), authUser.getMfaKey(),
-                authUser.getAuthorities().stream().map(RoleAuth::new).collect(Collectors.toSet()));
+
+        return User.builder().username(authUser.getUsername())
+                .password(authUser.getPassword())
+                .disabled(!authUser.isEnabled())
+                .accountExpired(!authUser.isAccountNonExpired())
+                .accountLocked(!authUser.isAccountNonLocked())
+                .credentialsExpired(!authUser.isCredentialsNonExpired())
+                .roles(authUser.getAuthorities().toArray(String[]::new))
+                .build();
     }
 }
