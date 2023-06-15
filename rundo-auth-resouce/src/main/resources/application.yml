@@ -1,8 +1,0 @@
-spring:
-  messages:
-    basename: messages
-    encoding: UTF-8
-  application:
-    name: auth-resource
-  profiles:
-    active: ${PROFILES_ACTIVE:local}
