@@ -55,8 +55,8 @@ public class AuthorizationServerConfig {
                 token.accessTokenRequestConverter(new OAuth2TokenPasswordAuthenticationConvert())
                         .authenticationProvider(new OAuth2PasswordTokenAuthenticationProvider(authorizationService, http, userDetailsService, passwordEncoder))
         );
-        http.exceptionHandling(exceptions -> exceptions.authenticationEntryPoint(authExceptionEntryPoint()));
-        http.securityMatcher(endpointsMatcher)
+        http.exceptionHandling(exceptions -> exceptions.authenticationEntryPoint(authExceptionEntryPoint()))
+                .securityMatcher(endpointsMatcher)
                 .authorizeHttpRequests(authorizeRequests -> authorizeRequests.anyRequest().authenticated())
                 .csrf((csrf) -> {csrf.ignoringRequestMatchers(new RequestMatcher[]{endpointsMatcher});})
                 .apply(authorizationServerConfigurer)

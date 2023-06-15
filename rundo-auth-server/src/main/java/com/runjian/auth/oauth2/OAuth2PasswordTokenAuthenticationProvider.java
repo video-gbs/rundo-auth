@@ -17,6 +17,7 @@ import org.springframework.security.core.userdetails.UserDetailsChecker;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.oauth2.core.*;
+import org.springframework.security.oauth2.core.endpoint.OAuth2ParameterNames;
 import org.springframework.security.oauth2.core.oidc.OidcIdToken;
 import org.springframework.security.oauth2.core.oidc.OidcScopes;
 import org.springframework.security.oauth2.core.oidc.endpoint.OidcParameterNames;
@@ -72,13 +73,19 @@ public class OAuth2PasswordTokenAuthenticationProvider implements Authentication
                 CustomOauth2AuthenticationProviderUtils.getAuthenticatedClientElseThrowInvalidClient(oAuth2TokenPasswordAuthenticationToken);
         RegisteredClient registeredClient = clientPrincipal.getRegisteredClient();
 
+        if (this.logger.isTraceEnabled()) {
+            this.logger.trace("Retrieved registered client");
+        }
+
+        if (!registeredClient.getAuthorizationGrantTypes().contains(AuthorizationGrantType.PASSWORD)){
+            throw new OAuth2AuthenticationException(OAuth2ErrorCodes.UNAUTHORIZED_CLIENT);
+        }
+
         if (Objects.isNull(tokenGenerator)){
             tokenGenerator = httpSecurity.getSharedObject(OAuth2TokenGenerator.class);
         }
 
-        if (this.logger.isTraceEnabled()) {
-            this.logger.trace("Retrieved registered client");
-        }
+
 
         UserDetails userDetails =  userDetailsService.loadUserByUsername(oAuth2TokenPasswordAuthenticationToken.getUsername());
 

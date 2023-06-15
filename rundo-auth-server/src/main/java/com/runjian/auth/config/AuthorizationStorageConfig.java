@@ -58,31 +58,30 @@ public class AuthorizationStorageConfig {
     @Bean
     public RegisteredClientRepository registeredClientRepository(OAuth2RegisteredClientDao oAuth2RegisteredClientDao) {
         RegisteredClient registeredClient = RegisteredClient.withId(UUID.randomUUID().toString())
-                .clientId("csdn")
-                .clientSecret(passwordEncoder.encode("csdn123"))
+                .clientId("rundo-gbs-view")
+                .clientSecret(passwordEncoder.encode("rundo888"))
                 .clientIdIssuedAt(Instant.now())
                 // 可以基于 basic 的方式和授权服务器进行认证
                 .clientAuthenticationMethod(ClientAuthenticationMethod.CLIENT_SECRET_BASIC)
-                .authorizationGrantType(AuthorizationGrantType.AUTHORIZATION_CODE)
+                //.authorizationGrantType(AuthorizationGrantType.AUTHORIZATION_CODE)
                 .authorizationGrantType(AuthorizationGrantType.REFRESH_TOKEN)
-                .authorizationGrantType(AuthorizationGrantType.CLIENT_CREDENTIALS)
-                .redirectUri("http://127.0.0.1:9000/auth/oauth2")
-                .scope("user.userInfo")
-                .scope("user.photos")
-                .scope(OidcScopes.PROFILE)
-                .scope(OidcScopes.OPENID)
+                .authorizationGrantType(AuthorizationGrantType.PASSWORD)
+                //.redirectUri("http://127.0.0.1:9000/auth/oauth2")
+                .scope("all")
+                //.scope(OidcScopes.PROFILE)
+                //.scope(OidcScopes.OPENID)
                 .clientSettings(ClientSettings.builder()
                         .requireAuthorizationConsent(true)
                         .build())
                 .tokenSettings(TokenSettings.builder()
-                        .accessTokenTimeToLive(Duration.ofDays(1))
-                        .authorizationCodeTimeToLive(Duration.ofMinutes(10))
-                        .refreshTokenTimeToLive(Duration.ofDays(3))
+                        .accessTokenTimeToLive(Duration.ofHours(1))
+                        //.authorizationCodeTimeToLive(Duration.ofMinutes(10))
+                        .refreshTokenTimeToLive(Duration.ofHours(3))
                         .reuseRefreshTokens(false)
                         .build())
                 .build();
         IbatisRegisteredClientRepository ibatisRegisteredClientRepository = new IbatisRegisteredClientRepository(oAuth2RegisteredClientDao, objectMapper);
-        if (null == ibatisRegisteredClientRepository.findByClientId("csdn")) {
+        if (null == ibatisRegisteredClientRepository.findByClientId("rundo-gbs-view")) {
             ibatisRegisteredClientRepository.save(registeredClient);
         }
         return ibatisRegisteredClientRepository;
