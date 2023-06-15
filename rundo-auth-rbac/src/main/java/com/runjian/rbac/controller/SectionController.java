@@ -8,11 +8,13 @@ import com.runjian.rbac.vo.request.PutSectionBtMoveReq;
 import com.runjian.rbac.vo.request.PutSectionFsMoveReq;
 import com.runjian.rbac.vo.request.PutSectionReq;
 import com.runjian.rbac.vo.response.GetSectionTreeRsp;
+import io.github.yedaxia.apidocs.ApiDoc;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.*;
 
 /**
+ * 部门接口
  * @author Miracle
  * @date 2023/6/8 9:41
  */
@@ -31,6 +33,7 @@ public class SectionController {
      * @return
      */
     @GetMapping("/tree")
+    @ApiDoc(result = GetSectionTreeRsp.class)
     public CommonResponse<GetSectionTreeRsp> getSectionTree(){
         return CommonResponse.success(sectionService.getSectionTree());
     }

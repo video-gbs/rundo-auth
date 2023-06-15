@@ -6,6 +6,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
+ * 部门树返回体
  * @author Miracle
  * @date 2023/5/31 14:58
  */

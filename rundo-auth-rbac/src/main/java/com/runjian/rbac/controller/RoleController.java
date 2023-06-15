@@ -1,6 +1,8 @@
 package com.runjian.rbac.controller;
 
 import com.github.pagehelper.PageInfo;
+import com.runjian.common.aspect.annotation.BlankStringValid;
+import com.runjian.common.aspect.annotation.IllegalStringValid;
 import com.runjian.common.config.response.CommonResponse;
 import com.runjian.common.validator.ValidatorService;
 import com.runjian.rbac.service.rbac.RoleService;
@@ -9,6 +11,7 @@ import com.runjian.rbac.vo.request.PostRoleUserAssociateReq;
 import com.runjian.rbac.vo.request.PutRoleDisabledReq;
 import com.runjian.rbac.vo.request.PutRoleReq;
 import com.runjian.rbac.vo.response.GetRolePageRsp;
+import io.github.yedaxia.apidocs.ApiDoc;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.*;
@@ -17,6 +20,7 @@ import java.time.LocalDateTime;
 import java.util.Set;
 
 /**
+ * 角色接口
  * @author Miracle
  * @date 2023/6/8 9:42
  */
@@ -40,7 +44,10 @@ public class RoleController {
      * @param createTimeEnd 创建结束时间
      * @return
      */
+    @BlankStringValid
+    @IllegalStringValid
     @GetMapping("/page")
+    @ApiDoc(result = GetRolePageRsp.class)
     public CommonResponse<PageInfo<GetRolePageRsp>> getRolePage(@RequestParam(defaultValue = "1") int page,
                                                                 @RequestParam(defaultValue = "10") int num,
                                                                 String roleName, String createBy,
@@ -56,7 +63,10 @@ public class RoleController {
      * @param roleName 角色名称
      * @return
      */
+    @BlankStringValid
+    @IllegalStringValid
     @GetMapping("/page/user")
+    @ApiDoc(result = GetRolePageRsp.class)
     public CommonResponse<PageInfo<GetRolePageRsp>> getRolePageByUser(@RequestParam(defaultValue = "1") int page,
                                                                       @RequestParam(defaultValue = "10") int num,
                                                                       @RequestParam Long userId, String roleName){

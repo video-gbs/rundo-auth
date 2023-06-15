@@ -2,6 +2,7 @@ package com.runjian.rbac.utils;
 
 import com.runjian.common.config.exception.BusinessErrorEnums;
 import com.runjian.common.config.exception.BusinessException;
+import com.runjian.common.constant.CommonConstant;
 import com.runjian.rbac.vo.dto.AuthDataDto;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
@@ -39,6 +40,14 @@ public class AuthUtils {
             authDataDto.setResourceKeyList(Arrays.asList(request.getHeader("Resource-Key").split(",")));
         }
         return authDataDto;
+    }
+
+    /**
+     * 获取token
+     * @return
+     */
+    public String getAuthToken(){
+        return request.getHeader(CommonConstant.AUTHORIZATION);
     }
 
 

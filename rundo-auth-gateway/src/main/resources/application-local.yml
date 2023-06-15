@@ -20,11 +20,11 @@ spring:
         - id: auth-server
           uri: lb://auth-server
           predicates:
-            - Path=/auth/**,/oauth2/**
-          filters:
-            - AuthHeader
-            - Auth
-            - AuthFailure
+            - Path=/oauth2/**
+#          filters:
+#            - AuthHeader
+#            - Auth
+#            - AuthFailure
         - id: auth-rbac
           uri: lb://auth-rbac
           predicates:
@@ -72,6 +72,6 @@ server:
   port: 9090
 
 auth:
-  addr: /auth/request
+  addr: /auth-server/request
   prefix: /oauth2/**
   server-name: auth-server

@@ -10,6 +10,7 @@ import java.util.List;
 import java.util.Map;
 
 /**
+ * 授权数据
  * @author Miracle
  * @date 2023/4/24 11:29
  */

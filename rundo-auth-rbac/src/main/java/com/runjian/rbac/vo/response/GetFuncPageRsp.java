@@ -3,6 +3,7 @@ package com.runjian.rbac.vo.response;
 import lombok.Data;
 
 /**
+ * 功能分页返回体
  * @author Miracle
  * @date 2023/6/6 9:58
  */

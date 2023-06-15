@@ -6,6 +6,7 @@ import lombok.Data;
 import org.hibernate.validator.constraints.Range;
 
 /**
+ * 修改功能关联资源禁用状态请求体
  * @author Miracle
  * @date 2023/6/12 17:15
  */

@@ -1,13 +1,17 @@
 package com.runjian.rbac.controller;
 
 import com.github.pagehelper.PageInfo;
+import com.runjian.common.aspect.annotation.BlankStringValid;
+import com.runjian.common.aspect.annotation.IllegalStringValid;
 import com.runjian.common.config.response.CommonResponse;
 import com.runjian.common.validator.ValidatorService;
 import com.runjian.rbac.service.rbac.DictService;
+import com.runjian.rbac.vo.dto.AuthDataDto;
 import com.runjian.rbac.vo.request.PostAddDictReq;
 import com.runjian.rbac.vo.request.PutDictReq;
 import com.runjian.rbac.vo.response.GetDictGroupRsp;
 import com.runjian.rbac.vo.response.GetDictPageRsp;
+import io.github.yedaxia.apidocs.ApiDoc;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.*;
@@ -16,6 +20,7 @@ import java.util.List;
 import java.util.Set;
 
 /**
+ * 字典接口
  * @author Miracle
  * @date 2023/6/8 9:44
  */
@@ -38,7 +43,10 @@ public class DictController {
      * @param itemName 字典名称
      * @return
      */
+    @BlankStringValid
+    @IllegalStringValid
     @GetMapping("/page")
+    @ApiDoc(result = GetDictPageRsp.class)
     public CommonResponse<PageInfo<GetDictPageRsp>> getDictPage(@RequestParam(defaultValue = "1") int page,
                                                                 @RequestParam(defaultValue = "10") int num,
                                                                 String groupName, String itemName){
@@ -51,6 +59,7 @@ public class DictController {
      * @return
      */
     @GetMapping("/group")
+    @ApiDoc(result = GetDictGroupRsp.class)
     public CommonResponse<List<GetDictGroupRsp>> getDictGroup(@RequestParam String groupCode){
         return CommonResponse.success(dictService.getDictByGroupName(groupCode));
     }

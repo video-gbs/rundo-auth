@@ -62,6 +62,10 @@ public interface OAuth2AuthorizationDao {
             " WHERE id = #{id} ")
     void deleteById(String id);
 
+    @Delete(" DELETE FROM " + OAUTH2_AUTHORIZATION_TABLE_NAME +
+            " WHERE principal_name = #{principalName}")
+    void deleteByPrincipalName(String principalName);
+
     @Select(" <script>" +
             " SELECT * FROM " + OAUTH2_AUTHORIZATION_TABLE_NAME +
             " WHERE id = #{id} " +

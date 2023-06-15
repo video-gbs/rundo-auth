@@ -5,6 +5,7 @@ import com.runjian.common.validator.ValidatorService;
 import com.runjian.rbac.service.rbac.ResourceService;
 import com.runjian.rbac.vo.request.*;
 import com.runjian.rbac.vo.response.GetResourceTreeRsp;
+import io.github.yedaxia.apidocs.ApiDoc;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.*;
@@ -12,7 +13,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.Set;
 
 /**
- * 资源
+ * 资源接口
  * @author Miracle
  * @date 2023/6/8 9:43
  */
@@ -33,6 +34,7 @@ public class ResourceController {
      * @return
      */
     @GetMapping("/tree")
+    @ApiDoc(result = GetResourceTreeRsp.class)
     public CommonResponse<GetResourceTreeRsp> getResourcePage(@RequestParam String resourceKey, @RequestParam Boolean isIncludeResource){
         return CommonResponse.success(resourceService.getResourceTree(resourceKey, isIncludeResource));
     }

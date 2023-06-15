@@ -7,6 +7,7 @@ import com.runjian.rbac.service.auth.CacheService;
 import com.runjian.rbac.vo.dto.CacheFuncDto;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.redisson.api.RList;
 import org.redisson.api.RedissonClient;
 import org.springframework.stereotype.Service;
 
@@ -33,7 +34,9 @@ public class CacheServiceImpl implements CacheService {
 
     @Override
     public void setUserRole(String username, Set<Long> roleIds) {
-        redissonClient.getList(MarkConstant.REDIS_AUTH_USER_ROLE + username).addAll(roleIds);
+        RList<Object> rList = redissonClient.getList(MarkConstant.REDIS_AUTH_USER_ROLE + username);
+        rList.clear();
+        rList.addAll(roleIds);
     }
 
     @Override
@@ -64,7 +67,9 @@ public class CacheServiceImpl implements CacheService {
     @Override
     public void setUserResource(String username, Map<String, Set<String>> resourceLevel) {
         for (Map.Entry<String, Set<String>> entry : resourceLevel.entrySet()){
-            redissonClient.getList(MarkConstant.REDIS_AUTH_USER_RESOURCE + username + MarkConstant.MARK_SPLIT_SEMICOLON + entry.getKey()).addAll(entry.getValue());;
+            RList<Object> rList = redissonClient.getList(MarkConstant.REDIS_AUTH_USER_RESOURCE + username + MarkConstant.MARK_SPLIT_SEMICOLON + entry.getKey());
+            rList.clear();
+            rList.addAll(entry.getValue());
         }
     }
 }

@@ -7,6 +7,7 @@ import lombok.NoArgsConstructor;
 import java.util.Set;
 
 /**
+ * 授权用户
  * @author Miracle
  * @date 2023/6/6 16:12
  */

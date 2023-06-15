@@ -65,3 +65,11 @@ auth:
     username: admin
     password: 123456
     roleName: ADMIN
+
+JApiDocs:
+  enable: true
+  docs:
+    path: D:\DevTool\Environment\Nginx\nginx-1.22.0\html
+    version: V1.0.0
+  project:
+    path: D:\Project\Work\Rundo-Video\DevCode\rundo-auth\rundo-auth-rbac

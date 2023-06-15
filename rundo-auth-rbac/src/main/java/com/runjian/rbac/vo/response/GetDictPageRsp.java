@@ -5,6 +5,7 @@ import lombok.Data;
 import java.time.LocalDateTime;
 
 /**
+ * 字典分页返回体
  * @author Miracle
  * @date 2023/6/5 10:15
  */

@@ -1,6 +1,7 @@
 package com.runjian.rbac.controller;
 
-import com.github.pagehelper.PageInfo;
+import com.runjian.common.aspect.annotation.BlankStringValid;
+import com.runjian.common.aspect.annotation.IllegalStringValid;
 import com.runjian.common.config.response.CommonResponse;
 import com.runjian.common.validator.ValidatorService;
 import com.runjian.rbac.service.rbac.MenuService;
@@ -9,7 +10,7 @@ import com.runjian.rbac.vo.request.PutMenuDisabledReq;
 import com.runjian.rbac.vo.request.PutMenuHiddenReq;
 import com.runjian.rbac.vo.request.PutMenuReq;
 import com.runjian.rbac.vo.response.GetMenuTreeRsp;
-import com.runjian.rbac.vo.response.GetResourcePageRsp;
+import io.github.yedaxia.apidocs.ApiDoc;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.*;
@@ -17,6 +18,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 /**
+ * 菜单接口
  * @author Miracle
  * @date 2023/6/8 9:43
  */
@@ -36,7 +38,10 @@ public class MenuController {
      * @param path 菜单地址
      * @return 菜单树
      */
+    @BlankStringValid
+    @IllegalStringValid
     @GetMapping("/page")
+    @ApiDoc(result = GetMenuTreeRsp.class)
     public CommonResponse<List<GetMenuTreeRsp>> getMenuTree(String name, String path){
         menuService.getMenuList(name, path);
         return CommonResponse.success(menuService.getMenuList(name, path));

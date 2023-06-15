@@ -5,12 +5,16 @@ import lombok.Data;
 import java.time.LocalDateTime;
 
 /**
+ * 用户分页返回体
  * @author Miracle
  * @date 2023/6/1 11:38
  */
 @Data
 public class GetUserPageRsp {
 
+    /**
+     * 主键id
+     */
     private Long id;
 
     /**

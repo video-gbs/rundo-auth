@@ -1,12 +1,16 @@
 package com.runjian.rbac.controller;
 
 import com.github.pagehelper.PageInfo;
+import com.runjian.common.aspect.annotation.BlankStringValid;
+import com.runjian.common.aspect.annotation.IllegalStringValid;
 import com.runjian.common.config.response.CommonResponse;
 import com.runjian.common.validator.ValidatorService;
 import com.runjian.rbac.service.rbac.FuncService;
 import com.runjian.rbac.vo.request.*;
+import com.runjian.rbac.vo.response.GetDictGroupRsp;
 import com.runjian.rbac.vo.response.GetFuncPageRsp;
 import com.runjian.rbac.vo.response.GetFuncResourceRsp;
+import io.github.yedaxia.apidocs.ApiDoc;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.*;
@@ -14,6 +18,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 /**
+ * 功能接口
  * @author Miracle
  * @date 2023/6/8 9:43
  */
@@ -38,7 +43,10 @@ public class FuncController {
      * @param isInclude 是否包含下级节点
      * @return
      */
+    @BlankStringValid
+    @IllegalStringValid
     @GetMapping("/page")
+    @ApiDoc(result = GetFuncPageRsp.class)
     public CommonResponse<PageInfo<GetFuncPageRsp>> getFuncPage(@RequestParam(defaultValue = "1") int page,
                                                                 @RequestParam(defaultValue = "10") int num,
                                                                 @RequestParam Long menuId,

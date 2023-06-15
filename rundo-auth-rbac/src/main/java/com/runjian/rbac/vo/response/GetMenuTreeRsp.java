@@ -7,6 +7,7 @@ import lombok.Data;
 import java.util.List;
 
 /**
+ * 菜单树返回体
  * @author Miracle
  * @date 2023/6/5 11:46
  */

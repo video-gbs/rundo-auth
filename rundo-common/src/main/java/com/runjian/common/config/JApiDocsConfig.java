@@ -3,14 +3,16 @@ package com.runjian.common.config;
 import io.github.yedaxia.apidocs.Docs;
 import io.github.yedaxia.apidocs.DocsConfig;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
 
 /**
  * @author Miracle
  * @date 2022/7/11 16:10
  */
-//@Configuration
-//@ConditionalOnProperty(name = "JApiDocs.enable", havingValue = "true")
+@Configuration
+@ConditionalOnProperty(name = "JApiDocs.enable", havingValue = "true")
 public class JApiDocsConfig {
 
     @Value("${spring.application.name}")

@@ -10,8 +10,10 @@ import com.runjian.rbac.dao.UserMapper;
 import com.runjian.rbac.dao.relation.UserRoleMapper;
 import com.runjian.rbac.entity.ResourceInfo;
 import com.runjian.rbac.entity.UserInfo;
+import com.runjian.rbac.feign.AuthServerApi;
 import com.runjian.rbac.service.auth.AuthService;
 import com.runjian.rbac.service.auth.CacheService;
+import com.runjian.rbac.utils.AuthUtils;
 import com.runjian.rbac.vo.dto.AuthDataDto;
 import com.runjian.rbac.vo.dto.CacheFuncDto;
 import com.runjian.rbac.vo.dto.AuthUserDto;
@@ -41,6 +43,10 @@ public class AuthServiceImpl implements AuthService {
     private final ResourceMapper resourceMapper;
 
     private final AuthProperties authProperties;
+
+    private final AuthUtils authUtils;
+
+    private final AuthServerApi authServerApi;
 
     @Override
     public AuthUserDto getUserAuth(String username) {
@@ -216,9 +222,13 @@ public class AuthServiceImpl implements AuthService {
         return authDataDto;
     }
 
+    @Override
+    public void logout() {
+        authServerApi.logout(authUtils.getAuthToken());
+    }
+
     /**
      * 判断两个数组存在交集
-     *
      * @param aList 数组a
      * @param bList 数组b
      * @return 布尔
