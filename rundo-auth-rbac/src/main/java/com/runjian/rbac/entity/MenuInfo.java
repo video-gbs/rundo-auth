@@ -21,7 +21,7 @@ public class MenuInfo {
     /**
      * 菜单排序
      */
-    private Integer menuSort;
+    private Integer sort;
 
     /**
      * 菜单类型
@@ -57,6 +57,11 @@ public class MenuInfo {
      * 层级
      */
     private String level;
+
+    /**
+     * 层级数
+     */
+    private Integer levelNum;
 
     /**
      * 是否隐藏

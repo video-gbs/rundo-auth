@@ -44,10 +44,6 @@ public class AuthServiceImpl implements AuthService {
 
     private final AuthProperties authProperties;
 
-    private final AuthUtils authUtils;
-
-    private final AuthServerApi authServerApi;
-
     @Override
     public AuthUserDto getUserAuth(String username) {
         if (authProperties.getAdminUsername().equals(username)) {
@@ -222,10 +218,7 @@ public class AuthServiceImpl implements AuthService {
         return authDataDto;
     }
 
-    @Override
-    public void logout() {
-        authServerApi.logout(authUtils.getAuthToken());
-    }
+
 
     /**
      * 判断两个数组存在交集

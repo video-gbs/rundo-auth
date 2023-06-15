@@ -19,13 +19,13 @@ public interface SectionMapper {
 
     String SECTION_TABLE_NAME = "rbac_section";
 
-    @Select("SELECT id, section_pid, section_name, section_sort, leader_name, phone, level, description FROM " + SECTION_TABLE_NAME)
+    @Select("SELECT id, section_pid, section_name, sort, leader_name, phone, level, description FROM " + SECTION_TABLE_NAME)
     List<GetSectionTreeRsp> selectAllByTree();
 
     @Insert(" INSERT INTO " + SECTION_TABLE_NAME +
-            " (section_pid, section_name, section_sort, leader_name, phone, level, description, create_time, update_time) " +
+            " (section_pid, section_name, sort, leader_name, phone, level, description, create_time, update_time) " +
             " VALUES " +
-            " (#{sectionPid}, #{sectionName}, #{sectionSort}, #{leaderName}, #{phone}, #{level}, #{description}, #{createTime}, #{updateTime})")
+            " (#{sectionPid}, #{sectionName}, #{sort}, #{leaderName}, #{phone}, #{level}, #{description}, #{createTime}, #{updateTime})")
     void save(SectionInfo sectionInfo);
 
     @Select("SELECT * FROM " + SECTION_TABLE_NAME +
@@ -53,7 +53,7 @@ public interface SectionMapper {
             " SET update_time = #{item.updateTime}  " +
             " ,<if test=\"item.sectionPid != null\" > section_pid = #{item.sectionPid} </if> " +
             " ,<if test=\"item.sectionName != null\" > section_name = #{item.sectionName} </if> " +
-            " ,<if test=\"item.sectionSort != null\" > section_sort = #{item.sectionSort} </if> " +
+            " ,<if test=\"item.sort != null\" > sort = #{item.sort} </if> " +
             " ,<if test=\"item.level != null\" > level = #{item.level} </if> " +
             " , leader_name = #{item.leaderName} " +
             " , phone = #{item.phone}" +

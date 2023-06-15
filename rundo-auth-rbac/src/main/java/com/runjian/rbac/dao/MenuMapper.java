@@ -66,16 +66,16 @@ public interface MenuMapper {
     void updateHidden(MenuInfo menuInfo);
 
     @Insert(" INSERT INTO " + MENU_TABLE_NAME +
-            " (menu_pid, menu_sort, menu_type, path, component, name, icon, description, level, hidden, disabled, create_time, update_time) " +
+            " (menu_pid, sort, menu_type, path, component, name, icon, description, level, hidden, disabled, create_time, update_time) " +
             " VALUES " +
-            " (#{menuPid}, #{menuSort}, #{menuType}, #{path}, #{component}, #{name}, #{icon}, #{description}, #{level}, #{hidden}, #{disabled}, #{createTime}, #{updateTime})")
+            " (#{menuPid}, #{sort}, #{menuType}, #{path}, #{component}, #{name}, #{icon}, #{description}, #{level}, #{hidden}, #{disabled}, #{createTime}, #{updateTime})")
     void save(MenuInfo menuInfo);
 
     @Update(" UPDATE "  + MENU_TABLE_NAME +
             " SET update_time = #{updateTime}, " +
             " , <if test=\"menuPid != null\" > menu_pid = #{menuPid} </if> " +
-            " , <if test=\"menu_sort != null\" > menuSort = #{menu_sort} </if> " +
-            " , <if test=\"menu_type != null\" > menuType = #{menu_type} </if> " +
+            " , <if test=\"sort != null\" > sort = #{sort} </if> " +
+            " , <if test=\"menu_type != null\" > menu_type = #{menu_type} </if> " +
             " , <if test=\"level != null\" > level = #{level} </if> " +
             " , <if test=\"hidden != null\" > hidden = #{hidden} </if> " +
             " , <if test=\"disabled != null\" > disabled = #{disabled} </if> " +
@@ -86,4 +86,8 @@ public interface MenuMapper {
             " , description = #{description} " +
             " WHERE id = #{id} ")
     void update(MenuInfo menuInfo);
+
+    List<GetMenuTreeRsp> selectAllByUsernameAndLevelNum(String username, Integer levelNumStart);
+
+    List<GetMenuTreeRsp> selectAllByLevelLikeAndLevelNum(List<String> pLevelList, Integer levelNumEnd);
 }

@@ -26,7 +26,7 @@ public class SectionInfo {
     /**
      * 部门排序
      */
-    private Long sectionSort;
+    private Long sort;
 
     /**
      * 负责人名称

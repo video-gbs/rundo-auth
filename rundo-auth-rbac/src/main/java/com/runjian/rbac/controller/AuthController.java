@@ -62,13 +62,5 @@ public class AuthController {
         return CommonResponse.success(authService.getAuthDataByClient(req.getScope(), req.getReqPath(), req.getReqMethod()));
     }
 
-    /**
-     * 登出系统
-     * @return
-     */
-    @DeleteMapping("/logout")
-    public CommonResponse<?> logout(){
-        authService.logout();
-        return CommonResponse.success();
-    }
+
 }

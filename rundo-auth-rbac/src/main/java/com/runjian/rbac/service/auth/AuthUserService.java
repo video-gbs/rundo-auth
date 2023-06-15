@@ -1,0 +1,32 @@
+package com.runjian.rbac.service.auth;
+
+import com.runjian.rbac.vo.response.GetMenuTreeRsp;
+import com.runjian.rbac.vo.response.GetUserRsp;
+
+import java.util.List;
+
+/**
+ * @author Miracle
+ * @date 2023/6/15 17:32
+ */
+public interface AuthUserService {
+
+    /**
+     * 登出
+     */
+    void logout();
+
+    /**
+     * 获取用户基础信息
+     * @return GetUserRsp
+     */
+    GetUserRsp getUser();
+
+    /**
+     * 通过层级获取菜单树
+     * @param levelNumStart 开始层级
+     * @param levelNumEnd 结束层级
+     * @return
+     */
+    List<GetMenuTreeRsp> getMenu(Integer levelNumStart, Integer levelNumEnd);
+}

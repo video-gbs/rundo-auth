@@ -47,4 +47,6 @@ public interface RoleMenuMapper {
             " WHERE menu_id IN <foreach collection='menuIds' item='item' open='(' separator=',' close=')'> #{item} </foreach> " +
             " </script>")
     void deleteAllByMenuIds(Set<Long> menuIds);
+
+    Set<Long> selectMenuIdByRoleIds(List<Long> roleIds);
 }

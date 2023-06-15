@@ -1,5 +1,6 @@
 package com.runjian.rbac.vo.response;
 
+import com.runjian.rbac.vo.AbstractTreeInfo;
 import lombok.Data;
 
 import java.util.ArrayList;
@@ -11,9 +12,8 @@ import java.util.List;
  * @date 2023/5/31 14:58
  */
 @Data
-public class GetSectionTreeRsp {
+public class GetSectionTreeRsp extends AbstractTreeInfo {
 
-    private Long id;
 
     /**
      * 部门父id
@@ -28,7 +28,7 @@ public class GetSectionTreeRsp {
     /**
      * 部门排序
      */
-    private Long sectionSort;
+    private Long sort;
 
     /**
      * 负责人名称
@@ -50,17 +50,13 @@ public class GetSectionTreeRsp {
      */
     private String description;
 
-    /**
-     * 子节点
-     */
-    private List<GetSectionTreeRsp> childList = new ArrayList<>();
 
     public static GetSectionTreeRsp getRootSectionTree(){
         GetSectionTreeRsp getSectionTreeRsp = new GetSectionTreeRsp();
         getSectionTreeRsp.setId(0L);
         getSectionTreeRsp.setSectionPid(null);
         getSectionTreeRsp.setSectionName("根节点");
-        getSectionTreeRsp.setSectionSort(0L);
+        getSectionTreeRsp.setSort(0L);
         getSectionTreeRsp.setLeaderName("ADMIN");
         getSectionTreeRsp.setPhone(null);
         getSectionTreeRsp.setLevel("0");

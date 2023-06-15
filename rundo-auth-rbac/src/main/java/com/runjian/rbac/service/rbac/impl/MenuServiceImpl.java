@@ -2,7 +2,6 @@ package com.runjian.rbac.service.rbac.impl;
 
 import com.runjian.common.config.exception.BusinessErrorEnums;
 import com.runjian.common.config.exception.BusinessException;
-import com.runjian.common.constant.CommonEnum;
 import com.runjian.common.constant.MarkConstant;
 import com.runjian.rbac.constant.MenuType;
 import com.runjian.rbac.dao.MenuMapper;
@@ -10,6 +9,7 @@ import com.runjian.rbac.dao.relation.RoleMenuMapper;
 import com.runjian.rbac.entity.MenuInfo;
 import com.runjian.rbac.service.rbac.DataBaseService;
 import com.runjian.rbac.service.rbac.MenuService;
+import com.runjian.rbac.vo.AbstractTreeInfo;
 import com.runjian.rbac.vo.response.GetMenuTreeRsp;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -34,7 +34,6 @@ public class MenuServiceImpl implements MenuService {
 
     private final DataBaseService dataBaseService;
 
-
     @Override
     public List<GetMenuTreeRsp> getMenuList(String name, String path) {
         if (Objects.nonNull(name) || Objects.nonNull(path)){
@@ -50,43 +49,47 @@ public class MenuServiceImpl implements MenuService {
             }).toList();
             rootMenuTreeList.forEach(root -> {
                 String level = root.getLevel() + MarkConstant.MARK_SPLIT_RAIL + root.getId();
-                root.setChildList(recursionData(menuMapper.selectAllByLevelLike(level), level));
+                root.setChildList(root.recursionData(menuMapper.selectAllByLevelLike(level), level));
             });
             return rootMenuTreeList;
         }else {
             GetMenuTreeRsp rootMenuTree = GetMenuTreeRsp.getRootMenuTree();
-            rootMenuTree.setChildList(recursionData(menuMapper.selectAll(), rootMenuTree.getLevel()));
+            rootMenuTree.setChildList(rootMenuTree.recursionData(menuMapper.selectAll(), rootMenuTree.getLevel()));
             return List.of(rootMenuTree);
         }
     }
 
-    private List<GetMenuTreeRsp> recursionData(List<GetMenuTreeRsp> menuInfoList, String level){
-        List<GetMenuTreeRsp> next = menuInfoList.stream().filter(menuInfo -> menuInfo.getLevel().equals(level)).toList();
-        for (GetMenuTreeRsp getMenuTreeRsp : next){
-            List<GetMenuTreeRsp> menuTreeRspList = menuInfoList.stream()
-                    .filter(node -> node.getLevel().startsWith(getMenuTreeRsp.getLevel() + MarkConstant.MARK_SPLIT_RAIL + getMenuTreeRsp.getId())).toList();
-            getMenuTreeRsp.setChildList(recursionData(menuTreeRspList, getMenuTreeRsp.getLevel() + MarkConstant.MARK_SPLIT_RAIL + getMenuTreeRsp.getId()));
-        }
-        return next.stream().sorted(Comparator.comparing(GetMenuTreeRsp::getMenuSort)).toList();
-    }
 
     @Override
     public void addMenu(Long menuPid, Integer menuSort, Integer menuType, String path, String component, String name, String icon, String description, Integer hidden, Integer disabled) {
-        MenuInfo pMenuInfo = dataBaseService.getMenuInfo(menuPid);
+        MenuInfo pMenuInfo;
+        if (menuPid.equals(0L)){
+            pMenuInfo = new MenuInfo();
+            pMenuInfo.setLevelNum(0);
+            pMenuInfo.setLevel("0");
+        }else {
+            pMenuInfo = dataBaseService.getMenuInfo(menuPid);
+        }
+
         if (pMenuInfo.getMenuType().equals(MenuType.ABSTRACT.getCode()) && !menuType.equals(MenuType.ABSTRACT.getCode()) ){
             throw new BusinessException(BusinessErrorEnums.VALID_ILLEGAL_OPERATION, "不能在抽象的菜单下创建非抽象的菜单");
         }
         LocalDateTime nowTime = LocalDateTime.now();
         MenuInfo cMenuInfo = new MenuInfo();
         cMenuInfo.setMenuPid(menuPid);
-        cMenuInfo.setMenuSort(menuSort);
+        cMenuInfo.setSort(menuSort);
         cMenuInfo.setMenuType(menuType);
         cMenuInfo.setPath(path);
         cMenuInfo.setComponent(component);
         cMenuInfo.setName(name);
         cMenuInfo.setIcon(icon);
         cMenuInfo.setDescription(description);
-        cMenuInfo.setLevel(pMenuInfo.getLevel() + MarkConstant.MARK_SPLIT_RAIL + pMenuInfo.getId());
+        if (menuPid.equals(0L)){
+            cMenuInfo.setLevel(pMenuInfo.getLevel());
+        }else {
+            cMenuInfo.setLevel(pMenuInfo.getLevel() + MarkConstant.MARK_SPLIT_RAIL + pMenuInfo.getId());
+        }
+        cMenuInfo.setLevelNum(pMenuInfo.getLevelNum() + 1);
         cMenuInfo.setHidden(hidden);
         cMenuInfo.setDisabled(disabled);
         cMenuInfo.setCreateTime(nowTime);
@@ -114,11 +117,18 @@ public class MenuServiceImpl implements MenuService {
     public void updateMenu(Long id, Long menuPid, Integer menuSort, Integer menuType, String path, String component, String name, String icon, String description, Integer hidden, Integer disabled) {
         MenuInfo cMenuInfo = dataBaseService.getMenuInfo(id);
         if (!cMenuInfo.getMenuPid().equals(menuPid)){
-            MenuInfo pMenuInfo = dataBaseService.getMenuInfo(menuPid);
+            MenuInfo pMenuInfo;
             cMenuInfo.setMenuPid(menuPid);
-            cMenuInfo.setLevel(pMenuInfo.getLevel() + MarkConstant.MARK_SPLIT_RAIL + pMenuInfo.getId());
+            if (menuPid.equals(0L)){
+                cMenuInfo.setLevel("0");
+                cMenuInfo.setLevelNum(1);
+            }else {
+                pMenuInfo = dataBaseService.getMenuInfo(menuPid);
+                cMenuInfo.setLevel(pMenuInfo.getLevel() + MarkConstant.MARK_SPLIT_RAIL + pMenuInfo.getId());
+                cMenuInfo.setLevelNum(pMenuInfo.getLevelNum() + 1);
+            }
         }
-        cMenuInfo.setMenuSort(menuSort);
+        cMenuInfo.setSort(menuSort);
         cMenuInfo.setMenuType(menuType);
         cMenuInfo.setPath(path);
         cMenuInfo.setComponent(component);
@@ -140,4 +150,5 @@ public class MenuServiceImpl implements MenuService {
         roleMenuMapper.deleteAllByMenuIds(menuIds);
         menuMapper.deleteAll(menuIds);
     }
+
 }

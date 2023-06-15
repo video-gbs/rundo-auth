@@ -37,11 +37,7 @@ public interface UserService {
     PageInfo<GetUserPageRsp> getUserPage(int page, int num, Long sectionId, String username, String workName, Boolean isInclude);
 
 
-    /**
-     * 获取用户基础信息
-     * @return GetUserRsp
-     */
-    GetUserRsp getUser();
+
 
     /**
      * 新增用户

@@ -41,7 +41,7 @@ public class ResourceServiceImpl implements ResourceService {
     public GetResourceTreeRsp getResourceTree(String resourceKey, Boolean isIncludeResource) {
         List<GetResourceTreeRsp> resourceInfoList = resourceMapper.selectAllByResourceKeyAndResourceType(resourceKey, isIncludeResource);
         GetResourceTreeRsp root = GetResourceTreeRsp.getRoot(resourceKey);
-        root.setChildList(AbstractTreeInfo.recursionData(resourceInfoList, root.getLevel()));
+        root.setChildList(root.recursionData(resourceInfoList, root.getLevel()));
         return root;
     }
 

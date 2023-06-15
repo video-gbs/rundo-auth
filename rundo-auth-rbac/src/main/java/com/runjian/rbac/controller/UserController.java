@@ -77,15 +77,7 @@ public class UserController {
         return CommonResponse.success(userService.getUserPage(page, num, sectionId, username, workName, isInclude));
     }
 
-    /**
-     * 获取用户信息
-     * @return GetUserRsp
-     */
-    @GetMapping("/data")
-    @ApiDoc(result = GetUserRsp.class)
-    public CommonResponse<GetUserRsp> getUser(){
-        return CommonResponse.success(userService.getUser());
-    }
+
 
     /**
      * 新增用户

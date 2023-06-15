@@ -36,8 +36,5 @@ public interface AuthService {
      */
     AuthDataDto getAuthDataByClient(String scope, String reqPath, String reqMethod);
 
-    /**
-     * 登出
-     */
-    void logout();
+
 }

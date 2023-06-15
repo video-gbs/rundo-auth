@@ -36,18 +36,8 @@ public class SectionServiceImpl implements SectionService {
     public GetSectionTreeRsp getSectionTree() {
         List<GetSectionTreeRsp> sectionInfoList = sectionMapper.selectAllByTree();
         GetSectionTreeRsp rootRsp = GetSectionTreeRsp.getRootSectionTree();
-        rootRsp.setChildList(recursionData(sectionInfoList, rootRsp.getLevel()));
+        rootRsp.setChildList(rootRsp.recursionData(sectionInfoList, rootRsp.getLevel()));
         return rootRsp;
-    }
-
-    private List<GetSectionTreeRsp> recursionData(List<GetSectionTreeRsp> sectionInfoList, String level){
-        List<GetSectionTreeRsp> next = sectionInfoList.stream().filter(sectionInfo -> sectionInfo.getLevel().equals(level)).toList();
-        for (GetSectionTreeRsp getSectionTreeRsp : next){
-            List<GetSectionTreeRsp> sectionTreeRspList = sectionInfoList.stream()
-                    .filter(node -> node.getLevel().startsWith(getSectionTreeRsp.getLevel() + MarkConstant.MARK_SPLIT_RAIL + getSectionTreeRsp.getId())).toList();
-            getSectionTreeRsp.setChildList(recursionData(sectionTreeRspList, getSectionTreeRsp.getLevel() + MarkConstant.MARK_SPLIT_RAIL + getSectionTreeRsp.getId()));
-        }
-        return next.stream().sorted(Comparator.comparing(GetSectionTreeRsp::getSectionSort)).toList();
     }
 
     @Override
@@ -58,7 +48,7 @@ public class SectionServiceImpl implements SectionService {
         sectionInfo.setSectionPid(pid);
         sectionInfo.setLeaderName(leaderName);
         sectionInfo.setPhone(phone);
-        sectionInfo.setSectionSort(System.currentTimeMillis());
+        sectionInfo.setSort(System.currentTimeMillis());
         sectionInfo.setCreateTime(nowTime);
         sectionInfo.setUpdateTime(nowTime);
         sectionInfo.setDescription(description);
@@ -119,7 +109,7 @@ public class SectionServiceImpl implements SectionService {
         String oldLevel = sectionInfo.getLevel();
         sectionInfo.setLevel(level);
         sectionInfo.setSectionPid(pid);
-        sectionInfo.setSectionSort(nowTime.toInstant(ZoneOffset.of("+8")).toEpochMilli());
+        sectionInfo.setSort(nowTime.toInstant(ZoneOffset.of("+8")).toEpochMilli());
         sectionInfo.setUpdateTime(nowTime);
         List<SectionInfo> childList = sectionMapper.selectAllLikeByLevel(oldLevel + MarkConstant.MARK_SPLIT_RAIL + sectionInfo.getId());
         for (SectionInfo child : childList){
@@ -137,7 +127,7 @@ public class SectionServiceImpl implements SectionService {
         if (brotherList.size() == 1){
             return;
         }
-        brotherList.sort(Comparator.comparing(SectionInfo::getSectionSort));
+        brotherList.sort(Comparator.comparing(SectionInfo::getSort));
         for (int i = 0; i < brotherList.size(); i++){
             SectionInfo pointData = brotherList.get(i);
             if (pointData.getId().equals(id)){
@@ -156,9 +146,9 @@ public class SectionServiceImpl implements SectionService {
                     throw new BusinessException(BusinessErrorEnums.VALID_ILLEGAL_OPERATION, "未知的移动操作");
                 }
                 LocalDateTime nowTime = LocalDateTime.now();
-                Long oldSort = brother.getSectionSort();
-                brother.setSectionSort(pointData.getSectionSort());
-                pointData.setSectionSort(oldSort);
+                Long oldSort = brother.getSort();
+                brother.setSort(pointData.getSort());
+                pointData.setSort(oldSort);
                 brother.setUpdateTime(nowTime);
                 pointData.setUpdateTime(nowTime);
                 sectionMapper.updateAll(Arrays.asList(brother, pointData));

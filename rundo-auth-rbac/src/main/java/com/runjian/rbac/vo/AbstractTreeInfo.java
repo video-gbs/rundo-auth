@@ -39,7 +39,7 @@ public abstract class AbstractTreeInfo {
      * @param level 层级
      * @return
      */
-    public static List<? extends AbstractTreeInfo> recursionData(List<? extends AbstractTreeInfo> treeInfoList, String level){
+    public List<? extends AbstractTreeInfo> recursionData(List<? extends AbstractTreeInfo> treeInfoList, String level){
         List<? extends AbstractTreeInfo> next = treeInfoList.stream().filter(menuInfo -> menuInfo.getLevel().equals(level)).toList();
 
         for (AbstractTreeInfo treeNode : next){

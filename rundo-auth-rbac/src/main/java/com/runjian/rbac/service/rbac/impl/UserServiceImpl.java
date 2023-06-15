@@ -80,31 +80,6 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public GetUserRsp getUser() {
-        AuthDataDto authData = authUtils.getAuthData();
-        GetUserRsp getUserRsp = new GetUserRsp();
-        getUserRsp.setUsername(authData.getUsername());
-        if (authData.getIsAdmin()){
-            getUserRsp.setRoleNames(Set.of("超级系统管理员"));
-            getUserRsp.setWorkName(authData.getUsername());
-            getUserRsp.setSectionName("系统管理");
-            return getUserRsp;
-        }
-        Optional<UserInfo> userInfoOp = userMapper.selectByUsername(authData.getUsername());
-        if (userInfoOp.isEmpty()){
-            throw new BusinessException(BusinessErrorEnums.VALID_NO_OBJECT_FOUND, String.format("用户%s不存在", authData.getUsername()));
-        }
-        UserInfo userInfo = userInfoOp.get();
-        getUserRsp.setWorkName(userInfo.getWorkName());
-        getUserRsp.setWorkNum(userInfo.getWorkNum());
-        getUserRsp.setPhone(userInfo.getPhone());
-        getUserRsp.setExpiryEndTime(userInfo.getExpiryEndTime());
-        getUserRsp.setRoleNames(roleMapper.selectByUserId(userInfo.getId()).stream().map(RoleInfo::getRoleName).collect(Collectors.toSet()));
-        getUserRsp.setSectionName(dataBaseService.getSectionInfo(userInfo.getId()).getSectionName());
-        return getUserRsp;
-    }
-
-    @Override
     @Transactional(rollbackFor = Exception.class)
     public void addUser(String username, String password, Long sectionId, LocalDateTime expiryStartTime, LocalDateTime expiryEndTime, String workName, String workNum, String address, String phone, String description, Set<Long> roleIds) {
         AuthDataDto authData = authUtils.getAuthData();
