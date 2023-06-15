@@ -10,10 +10,8 @@ import com.runjian.rbac.dao.UserMapper;
 import com.runjian.rbac.dao.relation.UserRoleMapper;
 import com.runjian.rbac.entity.ResourceInfo;
 import com.runjian.rbac.entity.UserInfo;
-import com.runjian.rbac.feign.AuthServerApi;
-import com.runjian.rbac.service.auth.AuthService;
+import com.runjian.rbac.service.auth.AuthSystemService;
 import com.runjian.rbac.service.auth.CacheService;
-import com.runjian.rbac.utils.AuthUtils;
 import com.runjian.rbac.vo.dto.AuthDataDto;
 import com.runjian.rbac.vo.dto.CacheFuncDto;
 import com.runjian.rbac.vo.dto.AuthUserDto;
@@ -32,7 +30,7 @@ import java.util.stream.Collectors;
 @Slf4j
 @Service
 @RequiredArgsConstructor
-public class AuthServiceImpl implements AuthService {
+public class AuthSystemServiceImpl implements AuthSystemService {
 
     private final UserMapper userMapper;
 

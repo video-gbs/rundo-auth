@@ -69,7 +69,7 @@ public class GetMenuTreeRsp extends AbstractTreeInfo {
         GetMenuTreeRsp getMenuTreeRsp = new GetMenuTreeRsp();
         getMenuTreeRsp.setId(0L);
         getMenuTreeRsp.setMenuPid(null);
-        getMenuTreeRsp.setSort(0);
+        getMenuTreeRsp.setSort(0L);
         getMenuTreeRsp.setMenuType(MenuType.DIRECTORY.getCode());
         getMenuTreeRsp.setLevel("0");
         getMenuTreeRsp.setName("根节点");

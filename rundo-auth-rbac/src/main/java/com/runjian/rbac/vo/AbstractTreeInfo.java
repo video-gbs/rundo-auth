@@ -26,7 +26,7 @@ public abstract class AbstractTreeInfo {
     /**
      * 排序
      */
-    private Integer sort;
+    private Long sort;
 
     /**
      * 孩子节点

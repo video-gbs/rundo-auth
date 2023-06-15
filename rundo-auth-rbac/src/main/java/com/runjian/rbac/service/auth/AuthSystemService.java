@@ -7,7 +7,7 @@ import com.runjian.rbac.vo.dto.AuthUserDto;
  * @author Miracle
  * @date 2023/6/6 16:02
  */
-public interface AuthService {
+public interface AuthSystemService {
 
     /**
      * 获取授权用户

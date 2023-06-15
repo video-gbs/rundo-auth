@@ -26,11 +26,6 @@ public class GetSectionTreeRsp extends AbstractTreeInfo {
     private String sectionName;
 
     /**
-     * 部门排序
-     */
-    private Long sort;
-
-    /**
      * 负责人名称
      */
     private String leaderName;

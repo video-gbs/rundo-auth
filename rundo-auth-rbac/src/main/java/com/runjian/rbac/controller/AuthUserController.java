@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 /**
+ * 获取权限数据接口
  * @author Miracle
  * @date 2023/6/15 17:43
  */
