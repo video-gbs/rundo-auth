@@ -42,8 +42,7 @@ public class MenuController {
     @IllegalStringValid
     @GetMapping("/tree")
     @ApiDoc(result = GetMenuTreeRsp.class)
-    public CommonResponse<List<GetMenuTreeRsp>> getMenuTree(String name, String path){
-        menuService.getMenuList(name, path);
+    public CommonResponse<GetMenuTreeRsp> getMenuTree(String name, String path){
         return CommonResponse.success(menuService.getMenuList(name, path));
     }
 

@@ -7,6 +7,7 @@ import org.apache.ibatis.annotations.Select;
 import org.springframework.stereotype.Repository;
 
 import java.time.LocalDateTime;
+import java.util.List;
 import java.util.Set;
 
 /**
@@ -32,7 +33,7 @@ public interface RoleResourceMapper {
 
     @Select(" SELECT resource_id FROM " + ROLE_RESOURCE_TABLE_NAME +
             " WHERE role_id = #{roleId} ")
-    Set<Long> selectResourceIdByResourceId(Long roleId);
+    Set<Long> selectResourceIdByRoleId(Long roleId);
 
     @Delete(" <script> " +
             " DELETE FROM " + ROLE_RESOURCE_TABLE_NAME +
@@ -40,4 +41,10 @@ public interface RoleResourceMapper {
             " AND resource_id IN <foreach collection='resourceIds' item='item' open='(' separator=',' close=')'> #{item} </foreach> " +
             " </script>")
     void deleteAllByRoleIdAndResourceIds(Long roleId, Set<Long> resourceIds);
+
+    @Select(" <script> " +
+            " SELECT *  FROM " + ROLE_RESOURCE_TABLE_NAME +
+            " WHERE role_id IN <foreach collection='roleIds' item='item' open='(' separator=',' close=')'> #{item} </foreach> " +
+            " </script>")
+    Set<Long> selectResourceIdByRoleIds(List<Long> roleIds);
 }

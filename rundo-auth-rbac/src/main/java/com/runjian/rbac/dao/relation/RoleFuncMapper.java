@@ -7,6 +7,7 @@ import org.apache.ibatis.annotations.Select;
 import org.springframework.stereotype.Repository;
 
 import java.time.LocalDateTime;
+import java.util.List;
 import java.util.Set;
 
 /**
@@ -32,7 +33,7 @@ public interface RoleFuncMapper {
 
     @Select(" SELECT menu_id FROM " + ROLE_FUNC_TABLE_NAME +
             " WHERE role_id = #{roleId} ")
-    Set<Long> selectMenuIdByFuncId(Long roleId);
+    Set<Long> selectFuncIdByRoleId(Long roleId);
 
     @Delete(" <script> " +
             " DELETE FROM " + ROLE_FUNC_TABLE_NAME +
@@ -40,4 +41,10 @@ public interface RoleFuncMapper {
             " AND func_id IN <foreach collection='funcIds' item='item' open='(' separator=',' close=')'> #{item} </foreach> "+
             " </script>")
     void deleteAllByRoleIdAndFuncIds(Long roleId, Set<Long> funcIds);
+
+    @Select(" <script> " +
+            " SELECT func_id FROM " + ROLE_FUNC_TABLE_NAME +
+            " WHERE role_id IN <foreach collection='roleIds' item='item' open='(' separator=',' close=')'> #{item} </foreach> "+
+            " </script>")
+    List<Long> selectFuncIdByRoleIds(List<Long> roleIds);
 }

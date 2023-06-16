@@ -86,4 +86,12 @@ public interface ResourceMapper {
             " WHERE resource_pid = #{resourcePid} " +
             " </script>")
     List<ResourceInfo> selectChildByPid(Long resourcePid);
+
+    @Select(" <script> " +
+            " SELECT * FROM " + RESOURCE_TABLE_NAME +
+            " WHERE resource_id IN <foreach collection='resourceIds' item='item' open='(' separator=',' close=')'> #{item} </foreach> " +
+            " AND resource_key = #{resourceKey} " +
+            " AND <if test=\"isIncludeResource = false\" > resource_type = 1 </if> " +
+            " </script>")
+    List<GetResourceTreeRsp> selectAllByResourceKeyAndResourceTypeAndResourceIdsIn(String resourceKey, Boolean isIncludeResource, Set<Long> resourceIds);
 }

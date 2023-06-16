@@ -18,6 +18,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
 import java.util.*;
+import java.util.stream.Collectors;
 
 /**
  * @author Miracle
@@ -35,28 +36,46 @@ public class MenuServiceImpl implements MenuService {
     private final DataBaseService dataBaseService;
 
     @Override
-    public List<GetMenuTreeRsp> getMenuList(String name, String path) {
-        if (Objects.nonNull(name) || Objects.nonNull(path)){
-            List<GetMenuTreeRsp> getMenuTreeRspList = menuMapper.selectByNameLikeAndPathLike(name, path);
-            List<GetMenuTreeRsp> rootMenuTreeList = getMenuTreeRspList.stream().filter(getMenuTreeRsp -> {
-                if (getMenuTreeRsp.getLevel().equals("0")) {
-                    return true;
-                }
-                for (GetMenuTreeRsp child : getMenuTreeRspList) {
-                    return !getMenuTreeRsp.getLevel().startsWith(child.getLevel() + MarkConstant.MARK_SPLIT_RAIL + child.getId());
-                }
-                return true;
-            }).toList();
-            rootMenuTreeList.forEach(root -> {
-                String level = root.getLevel() + MarkConstant.MARK_SPLIT_RAIL + root.getId();
-                root.setChildList(root.recursionData(menuMapper.selectAllByLevelLike(level), level));
-            });
-            return rootMenuTreeList;
-        }else {
-            GetMenuTreeRsp rootMenuTree = GetMenuTreeRsp.getRootMenuTree();
-            rootMenuTree.setChildList(rootMenuTree.recursionData(menuMapper.selectAll(), rootMenuTree.getLevel()));
-            return List.of(rootMenuTree);
+    public GetMenuTreeRsp getMenuList(String name, String path) {
+//        if (Objects.nonNull(name) || Objects.nonNull(path)){
+//            List<GetMenuTreeRsp> getMenuTreeRspList = menuMapper.selectByNameLikeAndPathLike(name, path);
+//            List<GetMenuTreeRsp> rootMenuTreeList = getMenuTreeRspList.stream().filter(getMenuTreeRsp -> {
+//                if (getMenuTreeRsp.getLevel().equals("0")) {
+//                    return true;
+//                }
+//                for (GetMenuTreeRsp child : getMenuTreeRspList) {
+//                    return !getMenuTreeRsp.getLevel().startsWith(child.getLevel() + MarkConstant.MARK_SPLIT_RAIL + child.getId());
+//                }
+//                return true;
+//            }).toList();
+//            rootMenuTreeList.forEach(root -> {
+//                String level = root.getLevel() + MarkConstant.MARK_SPLIT_RAIL + root.getId();
+//                root.setChildList(root.recursionData(menuMapper.selectAllByLevelLike(level), level));
+//            });
+//            return rootMenuTreeList;
+//        }else {
+//            GetMenuTreeRsp rootMenuTree = GetMenuTreeRsp.getRootMenuTree();
+//            rootMenuTree.setChildList(rootMenuTree.recursionData(menuMapper.selectAll(), rootMenuTree.getLevel()));
+//            return List.of(rootMenuTree);
+//        }
+
+        List<GetMenuTreeRsp> getMenuTreeRspList = menuMapper.selectByNameLikeAndPathLike(name, path);
+        GetMenuTreeRsp rootMenuTree = GetMenuTreeRsp.getRootMenuTree();
+        if (getMenuTreeRspList.size() == 0){
+            return rootMenuTree;
         }
+        if(Objects.nonNull(name) || Objects.nonNull(path)){
+            Set<String> levels = getMenuTreeRspList.stream().map(AbstractTreeInfo::getLevel).collect(Collectors.toSet());
+            Set<Long> ids = new HashSet<>();
+            for (String level : levels){
+                ids.addAll(Arrays.stream(level.split(MarkConstant.MARK_SPLIT_RAIL)).map(Long::parseLong).toList());
+            }
+            List<GetMenuTreeRsp> pMenuTreeRspList = menuMapper.selectAllByIds(ids);
+            rootMenuTree.setChildList(rootMenuTree.recursionData(pMenuTreeRspList, rootMenuTree.getLevel()));
+            return rootMenuTree;
+        }
+        rootMenuTree.setChildList(rootMenuTree.recursionData(getMenuTreeRspList, rootMenuTree.getLevel()));
+        return rootMenuTree;
     }
 
 

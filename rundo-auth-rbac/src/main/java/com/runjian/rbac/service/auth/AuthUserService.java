@@ -1,6 +1,8 @@
 package com.runjian.rbac.service.auth;
 
+import com.runjian.rbac.vo.response.GetFuncRsp;
 import com.runjian.rbac.vo.response.GetMenuTreeRsp;
+import com.runjian.rbac.vo.response.GetResourceTreeRsp;
 import com.runjian.rbac.vo.response.GetUserRsp;
 
 import java.util.List;
@@ -29,4 +31,18 @@ public interface AuthUserService {
      * @return
      */
     List<GetMenuTreeRsp> getMenu(Integer levelNumStart, Integer levelNumEnd);
+
+    /**
+     * 通过菜单id获取功能列表
+     * @param menuId 菜单id
+     * @return
+     */
+    List<GetFuncRsp> getFunc(Integer menuId);
+
+    /**
+     * 获取资源
+     * @param resourceKey 资源key
+     * @param isIncludeResource 是否包含资源
+     */
+    GetResourceTreeRsp getResource(String resourceKey, Boolean isIncludeResource);
 }

@@ -4,6 +4,7 @@ package com.runjian.rbac.dao;
 import com.github.pagehelper.PageInfo;
 import com.runjian.rbac.entity.FuncInfo;
 import com.runjian.rbac.vo.response.GetFuncPageRsp;
+import com.runjian.rbac.vo.response.GetFuncRsp;
 import org.apache.ibatis.annotations.*;
 import org.springframework.stereotype.Repository;
 
@@ -67,4 +68,17 @@ public interface FuncMapper {
             " VALUES " +
             " (#{menuId}, #{serviceName}, #{funcName}, #{scope}, #{path}, #{method}, #{disabled}, #{createTime}, #{updateTime})")
     void save(FuncInfo funcInfo);
+
+    @Select(" <script> " +
+            " SELECT * FROM " + FUNC_TABLE_NAME +
+            " WHERE id IN <foreach collection='funcIds' item='item' open='(' separator=',' close=')'> #{item} </foreach> " +
+            " AND menu_id = #{menuId} </if> " +
+            " </script>")
+    List<GetFuncRsp> selectAllByMenuIdAndFuncIds(Integer menuId, List<Long> funcIds);
+
+    @Select(" <script> " +
+            " SELECT * FROM " + FUNC_TABLE_NAME +
+            " WHERE menu_id = #{menuId} </if> " +
+            " </script>")
+    List<GetFuncRsp> selectAllByMenuId(Integer menuId);
 }

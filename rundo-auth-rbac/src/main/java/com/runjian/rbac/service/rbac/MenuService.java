@@ -16,11 +16,7 @@ public interface MenuService {
      * @param path 菜单地址
      * @return 菜单树
      */
-    List<GetMenuTreeRsp> getMenuList(String name, String path);
-
-
-
-
+    GetMenuTreeRsp getMenuList(String name, String path);
 
     /**
      * 添加菜单

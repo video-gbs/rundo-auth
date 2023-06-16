@@ -143,7 +143,7 @@ public class RoleServiceImpl implements RoleService {
             if (funcIds.size() == 0){
                 roleFuncMapper.deleteAllByRoleId(roleId);
             }else {
-                Set<Long> existFuncIds = roleFuncMapper.selectMenuIdByFuncId(roleId);
+                Set<Long> existFuncIds = roleFuncMapper.selectFuncIdByRoleId(roleId);
                 if (existFuncIds.size() > 0){
                     Set<Long> difference = new HashSet<>(existFuncIds);
                     difference.retainAll(funcIds);
@@ -163,7 +163,7 @@ public class RoleServiceImpl implements RoleService {
             if (resourceIds.size() == 0){
                 roleResourceMapper.deleteAllByRoleId(roleId);
             }else {
-                Set<Long> existSourceIds = roleResourceMapper.selectResourceIdByResourceId(roleId);
+                Set<Long> existSourceIds = roleResourceMapper.selectResourceIdByRoleId(roleId);
                 if (existSourceIds.size() > 0){
                     Set<Long> difference = new HashSet<>(existSourceIds);
                     difference.retainAll(resourceIds);

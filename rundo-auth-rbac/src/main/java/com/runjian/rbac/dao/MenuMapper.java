@@ -87,7 +87,26 @@ public interface MenuMapper {
             " WHERE id = #{id} ")
     void update(MenuInfo menuInfo);
 
-    List<GetMenuTreeRsp> selectAllByUsernameAndLevelNum(String username, Integer levelNumStart);
 
-    List<GetMenuTreeRsp> selectAllByLevelLikeAndLevelNum(List<String> pLevelList, Integer levelNumEnd);
+    @Select(" <script> " +
+            " SELECT * FROM " + MENU_TABLE_NAME +
+            " WHERE id IN <foreach collection='ids' item='item' open='(' separator=',' close=')'> #{item} </foreach>  " +
+            " </script> ")
+    List<GetMenuTreeRsp> selectAllByIds(Set<Long> ids);
+
+
+    @Select(" <script> " +
+            " SELECT * FROM " + MENU_TABLE_NAME +
+            " WHERE level_num &gt;= #{levelNumStart} " +
+            " <if test=\"levelNumEnd != null\" > AND level_num &lt;= #{levelNumEnd} </if> " +
+            " </script> ")
+    List<GetMenuTreeRsp> selectAllByLevelNumStartAndLevelNumEnd(Integer levelNumStart, Integer levelNumEnd);
+
+    @Select(" <script> " +
+            " SELECT * FROM " + MENU_TABLE_NAME +
+            " WHERE id IN <foreach collection='menuIds' item='item' open='(' separator=',' close=')'> #{item} </foreach> " +
+            " AND level_num &gt;= #{levelNumStart} " +
+            " <if test=\"levelNumEnd != null\" > AND level_num &lt;= #{levelNumEnd} </if> " +
+            " </script> ")
+    List<GetMenuTreeRsp> selectAllByLevelNumStartAndLevelNumEndAndMenuIdsIn(Integer levelNumStart, Integer levelNumEnd, Set<Long> menuIds);
 }

@@ -52,6 +52,11 @@ public class GetMenuTreeRsp extends AbstractTreeInfo {
     private String description;
 
     /**
+     * 层级数
+     */
+    private Integer levelNum;
+
+    /**
      * 是否隐藏
      */
     private Integer hidden;
