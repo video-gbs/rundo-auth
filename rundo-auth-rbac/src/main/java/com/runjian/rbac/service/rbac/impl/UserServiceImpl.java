@@ -15,6 +15,9 @@ import com.runjian.rbac.dao.relation.UserRoleMapper;
 import com.runjian.rbac.entity.RoleInfo;
 import com.runjian.rbac.entity.SectionInfo;
 import com.runjian.rbac.entity.UserInfo;
+import com.runjian.rbac.feign.AuthServerApi;
+import com.runjian.rbac.service.auth.AuthSystemService;
+import com.runjian.rbac.service.auth.CacheService;
 import com.runjian.rbac.service.rbac.DataBaseService;
 import com.runjian.rbac.service.rbac.UserService;
 import com.runjian.rbac.utils.AuthUtils;
@@ -46,11 +49,11 @@ public class UserServiceImpl implements UserService {
 
     private final UserRoleMapper userRoleMapper;
 
-    private final RoleMapper roleMapper;
-
-    private final SectionMapper sectionMapper;
-
     private final AuthUtils authUtils;
+
+    private final AuthServerApi authServerApi;
+
+    private final CacheService cacheService;
 
     @Override
     public PageInfo<GetUserPageRsp> getUserPage(int page, int num, Long roleId, String username, Boolean isBinding) {
@@ -124,6 +127,12 @@ public class UserServiceImpl implements UserService {
         userInfo.setDisabled(disabled);
         userInfo.setUpdateTime(LocalDateTime.now());
         userMapper.updateDisabled(userInfo);
+        if (disabled.equals(CommonEnum.DISABLE.getCode())){
+            // 强制下线
+            authServerApi.signOut(userInfo.getUsername());
+            // 移除缓存
+            cacheService.removeUserRole(userInfo.getUsername());
+        }
         log.warn(LogTemplate.PROCESS_LOG_MSG_TEMPLATE, "用户服务", "执行禁用用户成功", String.format("用户'%s' 执行禁启用 用户'%s', 状态:'%s'", authData.getUsername(), userInfo.getUsername(), disabled));
     }
 
@@ -149,7 +158,7 @@ public class UserServiceImpl implements UserService {
         userInfo.setDescription(description);
         userInfo.setUpdateTime(nowTime);
 
-        if (Objects.nonNull(roleIds)){
+        if (Objects.nonNull(roleIds) && new HashSet<>(authData.getRoleIds()).containsAll(roleIds)){
             if (roleIds.size() == 0){
                 userRoleMapper.deleteAllByUserId(userId);
             }else {
@@ -170,6 +179,8 @@ public class UserServiceImpl implements UserService {
                     userRoleMapper.saveAll(userInfo.getId(), roleIds, authData.getUsername(), nowTime);
                 }
             }
+            // 刷新缓存
+            cacheService.setUserRole(userInfo.getUsername(), roleIds);
         }
         userMapper.update(userInfo);
         log.warn(LogTemplate.PROCESS_LOG_MSG_TEMPLATE, "用户服务", "修改用户成功", String.format("用户'%s' 执行更新 用户'%s'", authData.getUsername(), userInfo));
@@ -183,6 +194,13 @@ public class UserServiceImpl implements UserService {
         }
         AuthDataDto authData = authUtils.getAuthData();
         userMapper.batchUpdateDeleted(userIds, CommonEnum.DISABLE.getCode());
+        for (Long userId : userIds){
+            UserInfo userInfo = dataBaseService.getUserInfo(userId);
+            // 强制下线
+            authServerApi.signOut(userInfo.getUsername());
+            // 移除缓存
+            cacheService.removeUserRole(userInfo.getUsername());
+        }
         log.warn(LogTemplate.PROCESS_LOG_MSG_TEMPLATE, "用户服务", "删除用户成功", String.format("用户'%s' 执行删除 用户'%s'", authData.getUsername(), userIds));
     }
 

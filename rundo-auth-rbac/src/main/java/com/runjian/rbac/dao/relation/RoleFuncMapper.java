@@ -31,7 +31,7 @@ public interface RoleFuncMapper {
             " WHERE role_id = #{roleId} ")
     void deleteAllByRoleId(Long roleId);
 
-    @Select(" SELECT menu_id FROM " + ROLE_FUNC_TABLE_NAME +
+    @Select(" SELECT func_id FROM " + ROLE_FUNC_TABLE_NAME +
             " WHERE role_id = #{roleId} ")
     Set<Long> selectFuncIdByRoleId(Long roleId);
 
@@ -47,4 +47,8 @@ public interface RoleFuncMapper {
             " WHERE role_id IN <foreach collection='roleIds' item='item' open='(' separator=',' close=')'> #{item} </foreach> "+
             " </script>")
     List<Long> selectFuncIdByRoleIds(List<Long> roleIds);
+
+    @Select(" SELECT role_id FROM " + ROLE_FUNC_TABLE_NAME +
+            " WHERE func_id = #{funcId} ")
+    List<Long> selectRoleIdsByFuncId(Long funcId);
 }

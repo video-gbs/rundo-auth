@@ -94,4 +94,10 @@ public interface ResourceMapper {
             " AND <if test=\"isIncludeResource = false\" > resource_type = 1 </if> " +
             " </script>")
     List<GetResourceTreeRsp> selectAllByResourceKeyAndResourceTypeAndResourceIdsIn(String resourceKey, Boolean isIncludeResource, Set<Long> resourceIds);
+
+    @Select(" <script> " +
+            " SELECT * FROM " + RESOURCE_TABLE_NAME +
+            " WHERE resource_id IN <foreach collection='resourceIds' item='item' open='(' separator=',' close=')'> #{item} </foreach> " +
+            " </script>")
+    List<ResourceInfo> selectAllByResourceIds(Set<Long> resourceIds);
 }

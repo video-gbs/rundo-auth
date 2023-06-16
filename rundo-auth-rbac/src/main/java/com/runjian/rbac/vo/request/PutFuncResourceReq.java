@@ -35,10 +35,4 @@ public class PutFuncResourceReq {
     @Size(max = 250, message = "校验参数过长")
     private String validateParam;
 
-    /**
-     * 禁用状态
-     */
-    @NotNull(message = "禁用状态不能为空")
-    @Range(min = 0, max = 1, message = "非法禁用状态")
-    private Integer disabled;
 }

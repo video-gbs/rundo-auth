@@ -1,6 +1,7 @@
 package com.runjian.rbac.dao.relation;
 
 import com.runjian.rbac.entity.relation.FuncResourceRel;
+import com.runjian.rbac.vo.dto.CacheFuncDto;
 import com.runjian.rbac.vo.response.GetFuncResourceRsp;
 import org.apache.ibatis.annotations.*;
 import org.springframework.stereotype.Repository;
@@ -40,6 +41,10 @@ public interface FuncResourceMapper {
             " WHERE func_id = #{funcId} ")
     List<GetFuncResourceRsp> selectByFuncId(Long funcId);
 
+    @Select(" SELECT resource_key,validate_param FROM " + FUNC_RESOURCE_TABLE_NAME +
+            " WHERE func_id = #{funcId} ")
+    List<CacheFuncDto.FuncResourceData> selectFuncResourceDataByFuncId(Long funcId);
+
     @Select(" SELECT * FROM " + FUNC_RESOURCE_TABLE_NAME +
             " WHERE id = #{funcResourceId} ")
     Optional<FuncResourceRel> selectById(Long funcResourceId);
@@ -54,4 +59,10 @@ public interface FuncResourceMapper {
             " WHERE id = #{id} ")
     void updateDisabled(FuncResourceRel funcResourceRel);
 
+    @Update(" UPDATE "  + FUNC_RESOURCE_TABLE_NAME +
+            " SET update_time = #{updateTime}, " +
+            " resource_key = #{resourceKey} " +
+            " validate_param = #{validateParam} " +
+            " WHERE id = #{id} ")
+    void update(FuncResourceRel funcResourceRel);
 }

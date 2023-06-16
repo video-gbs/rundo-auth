@@ -152,6 +152,7 @@ public class SectionServiceImpl implements SectionService {
                 brother.setUpdateTime(nowTime);
                 pointData.setUpdateTime(nowTime);
                 sectionMapper.updateAll(Arrays.asList(brother, pointData));
+                return;
             }
         }
     }

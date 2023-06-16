@@ -1,6 +1,5 @@
 package com.runjian.rbac.service.auth.impl;
 
-import com.alibaba.fastjson2.JSONArray;
 import com.alibaba.fastjson2.JSONObject;
 import com.runjian.common.constant.MarkConstant;
 import com.runjian.rbac.service.auth.CacheService;
@@ -40,6 +39,11 @@ public class CacheServiceImpl implements CacheService {
     }
 
     @Override
+    public void removeUserRole(String username) {
+        redissonClient.getList(MarkConstant.REDIS_AUTH_USER_ROLE + username).clear();
+    }
+
+    @Override
     public CacheFuncDto getFuncCache(String methodPath) {
         return JSONObject.parseObject(redissonClient.getMap(MarkConstant.REDIS_AUTH_FUNC).get(methodPath).toString(), CacheFuncDto.class);
     }
@@ -50,6 +54,11 @@ public class CacheServiceImpl implements CacheService {
     }
 
     @Override
+    public void removeFuncCache(String methodPath) {
+        redissonClient.getMap(MarkConstant.REDIS_AUTH_FUNC).remove(methodPath);
+    }
+
+    @Override
     public String getResourceLevel(String keyValue) {
         return redissonClient.getMap(MarkConstant.REDIS_AUTH_RESOURCE_ROLE).get(keyValue).toString();
     }
@@ -57,6 +66,11 @@ public class CacheServiceImpl implements CacheService {
     @Override
     public void setResourceLevel(String keyValue, String level) {
         redissonClient.getMap(MarkConstant.REDIS_AUTH_RESOURCE_ROLE).put(keyValue, level);
+    }
+
+    @Override
+    public void removeResourceLevel(String keyValue) {
+        redissonClient.getMap(MarkConstant.REDIS_AUTH_RESOURCE_ROLE).remove(keyValue);
     }
 
     @Override

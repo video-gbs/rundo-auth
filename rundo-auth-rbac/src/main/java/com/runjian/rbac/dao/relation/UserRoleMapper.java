@@ -63,4 +63,8 @@ public interface UserRoleMapper {
             " LEFT JOIN " + UserMapper.USER_TABLE_NAME + " ut ON ut.id = urt.user_id " +
             " WHERE ut.username = #{username} ")
     Set<Long> selectRoleIdByUsername(String username);
+
+    @Select(" SELECT user_id FROM " + USER_ROLE_TABLE_NAME +
+            " WHERE role_id IN <foreach collection='userIds' item='item' open='(' separator=',' close=')'> #{item} </foreach> ")
+    Set<Long> selectUserIdByRoleIds(Set<Long> roleIds);
 }

@@ -64,10 +64,4 @@ public class PutFuncReq {
     @Range(min = 1, max = 8, message = "非法请求方法")
     private Integer method;
 
-    /**
-     * 是否禁用
-     */
-    @NotNull(message = "是否禁用不能为空")
-    @Range(min = 0, max = 1, message = "非法禁用选项")
-    private Integer disabled;
 }

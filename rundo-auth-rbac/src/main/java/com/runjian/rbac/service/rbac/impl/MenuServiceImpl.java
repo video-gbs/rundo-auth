@@ -37,28 +37,6 @@ public class MenuServiceImpl implements MenuService {
 
     @Override
     public GetMenuTreeRsp getMenuList(String name, String path) {
-//        if (Objects.nonNull(name) || Objects.nonNull(path)){
-//            List<GetMenuTreeRsp> getMenuTreeRspList = menuMapper.selectByNameLikeAndPathLike(name, path);
-//            List<GetMenuTreeRsp> rootMenuTreeList = getMenuTreeRspList.stream().filter(getMenuTreeRsp -> {
-//                if (getMenuTreeRsp.getLevel().equals("0")) {
-//                    return true;
-//                }
-//                for (GetMenuTreeRsp child : getMenuTreeRspList) {
-//                    return !getMenuTreeRsp.getLevel().startsWith(child.getLevel() + MarkConstant.MARK_SPLIT_RAIL + child.getId());
-//                }
-//                return true;
-//            }).toList();
-//            rootMenuTreeList.forEach(root -> {
-//                String level = root.getLevel() + MarkConstant.MARK_SPLIT_RAIL + root.getId();
-//                root.setChildList(root.recursionData(menuMapper.selectAllByLevelLike(level), level));
-//            });
-//            return rootMenuTreeList;
-//        }else {
-//            GetMenuTreeRsp rootMenuTree = GetMenuTreeRsp.getRootMenuTree();
-//            rootMenuTree.setChildList(rootMenuTree.recursionData(menuMapper.selectAll(), rootMenuTree.getLevel()));
-//            return List.of(rootMenuTree);
-//        }
-
         List<GetMenuTreeRsp> getMenuTreeRspList = menuMapper.selectByNameLikeAndPathLike(name, path);
         GetMenuTreeRsp rootMenuTree = GetMenuTreeRsp.getRootMenuTree();
         if (getMenuTreeRspList.size() == 0){

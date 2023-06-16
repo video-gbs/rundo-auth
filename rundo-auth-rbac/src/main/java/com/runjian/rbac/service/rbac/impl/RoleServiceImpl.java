@@ -6,15 +6,24 @@ import com.runjian.common.config.exception.BusinessErrorEnums;
 import com.runjian.common.config.exception.BusinessException;
 import com.runjian.common.constant.CommonEnum;
 import com.runjian.common.constant.LogTemplate;
+import com.runjian.common.constant.MarkConstant;
+import com.runjian.rbac.constant.MethodType;
+import com.runjian.rbac.dao.FuncMapper;
 import com.runjian.rbac.dao.RoleMapper;
+import com.runjian.rbac.dao.UserMapper;
 import com.runjian.rbac.dao.relation.RoleFuncMapper;
 import com.runjian.rbac.dao.relation.RoleMenuMapper;
 import com.runjian.rbac.dao.relation.RoleResourceMapper;
 import com.runjian.rbac.dao.relation.UserRoleMapper;
+import com.runjian.rbac.entity.FuncInfo;
 import com.runjian.rbac.entity.RoleInfo;
+import com.runjian.rbac.entity.UserInfo;
+import com.runjian.rbac.feign.AuthServerApi;
+import com.runjian.rbac.service.auth.CacheService;
 import com.runjian.rbac.service.rbac.DataBaseService;
 import com.runjian.rbac.service.rbac.RoleService;
 import com.runjian.rbac.utils.AuthUtils;
+import com.runjian.rbac.vo.dto.CacheFuncDto;
 import com.runjian.rbac.vo.response.GetRolePageRsp;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -22,10 +31,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
-import java.util.HashSet;
-import java.util.Objects;
-import java.util.Optional;
-import java.util.Set;
+import java.util.*;
 
 /**
  * @author Miracle
@@ -49,6 +55,10 @@ public class RoleServiceImpl implements RoleService {
     private final DataBaseService dataBaseService;
 
     private final AuthUtils authUtils;
+
+    private final CacheService cacheService;
+
+    private final FuncMapper funcMapper;
 
     @Override
     public PageInfo<GetRolePageRsp> getRolePage(int page, int num, String roleName, String createBy, LocalDateTime createTimeStart, LocalDateTime createTimeEnd) {
@@ -100,6 +110,17 @@ public class RoleServiceImpl implements RoleService {
         roleInfo.setDisabled(disabled);
         roleInfo.setUpdateTime(LocalDateTime.now());
         roleMapper.updateDisabled(roleInfo);
+        Set<Long> userIds = userRoleMapper.selectUserIdByRoleId(roleId);
+        for (Long userId : userIds){
+            UserInfo userInfo = dataBaseService.getUserInfo(userId);
+            Set<Long> roleIds = userRoleMapper.selectRoleIdByUserId(userId);
+            if (disabled.equals(CommonEnum.DISABLE.getCode())){
+                roleIds.remove(roleId);
+            }else {
+                roleIds.add(roleId);
+            }
+            cacheService.setUserRole(userInfo.getUsername(), roleIds);
+        }
         log.warn(LogTemplate.PROCESS_LOG_MSG_TEMPLATE, "角色服务", "禁用角色成功", String.format("用户'%s' 执行禁用 角色'%s'", authUtils.getAuthData().getUsername(), roleInfo));
     }
 
@@ -140,10 +161,13 @@ public class RoleServiceImpl implements RoleService {
         }
 
         if (Objects.nonNull(funcIds)){
+            Set<Long> existFuncIds = roleFuncMapper.selectFuncIdByRoleId(roleId);
+            List<FuncInfo> delFuncInfoList = null;
+            List<FuncInfo> addFuncInfoList = null;
             if (funcIds.size() == 0){
                 roleFuncMapper.deleteAllByRoleId(roleId);
+                delFuncInfoList = funcMapper.selectAllByIds(existFuncIds);
             }else {
-                Set<Long> existFuncIds = roleFuncMapper.selectFuncIdByRoleId(roleId);
                 if (existFuncIds.size() > 0){
                     Set<Long> difference = new HashSet<>(existFuncIds);
                     difference.retainAll(funcIds);
@@ -151,10 +175,31 @@ public class RoleServiceImpl implements RoleService {
                     funcIds.removeAll(difference);
                     if (existFuncIds.size() > 0){
                         roleFuncMapper.deleteAllByRoleIdAndFuncIds(roleId, existFuncIds);
+                        delFuncInfoList = funcMapper.selectAllByIds(existFuncIds);
                     }
                 }
                 if (funcIds.size() > 0){
                     roleFuncMapper.saveAll(roleId, funcIds, authUser, nowTime);
+                    addFuncInfoList = funcMapper.selectAllByIds(funcIds);
+
+                }
+            }
+            // 功能缓存角色删除处理
+            if (Objects.nonNull(delFuncInfoList)){
+                for (FuncInfo funcInfo : delFuncInfoList){
+                    String key = MethodType.getByCode(funcInfo.getMethod()) + MarkConstant.MARK_SPLIT_SEMICOLON + funcInfo.getPath();
+                    CacheFuncDto funcCache = cacheService.getFuncCache(key);
+                    funcCache.getRoleIds().remove(roleId);
+                    cacheService.setFuncCache(key, funcCache);
+                }
+            }
+            // 功能缓存角色添加处理
+            if (Objects.nonNull(addFuncInfoList)){
+                for (FuncInfo funcInfo : addFuncInfoList){
+                    String key = MethodType.getByCode(funcInfo.getMethod()) + MarkConstant.MARK_SPLIT_SEMICOLON + funcInfo.getPath();
+                    CacheFuncDto funcCache = cacheService.getFuncCache(key);
+                    funcCache.getRoleIds().add(roleId);
+                    cacheService.setFuncCache(key, funcCache);
                 }
             }
         }
@@ -189,6 +234,11 @@ public class RoleServiceImpl implements RoleService {
             return;
         }
         roleMapper.batchUpdateDeleted(roleIds, CommonEnum.DISABLE.getCode(), LocalDateTime.now());
+        Set<Long> userIds = userRoleMapper.selectUserIdByRoleIds(roleIds);
+        for (Long userId : userIds){
+            UserInfo userInfo = dataBaseService.getUserInfo(userId);
+            cacheService.setUserRole(userInfo.getUsername(), userRoleMapper.selectRoleIdByUserId(userId));
+        }
         log.warn(LogTemplate.PROCESS_LOG_MSG_TEMPLATE, "角色服务", "批量删除用户成功", String.format("用户'%s' 执行删除 角色'%s'", authUtils.getAuthData().getUsername(), roleIds));
     }
 
@@ -200,8 +250,10 @@ public class RoleServiceImpl implements RoleService {
             return;
         }
         String authUser = authUtils.getAuthData().getUsername();
+        boolean isUpdate = false;
         if (userIds.size() == 0){
             userRoleMapper.deleteAllByRoleId(roleId);
+            isUpdate = true;
         }else {
             Set<Long> existUserIds = userRoleMapper.selectUserIdByRoleId(roleId);
             if (existUserIds.size() > 0){
@@ -215,11 +267,20 @@ public class RoleServiceImpl implements RoleService {
                 // 删除去除的角色
                 if (existUserIds.size() > 0){
                     userRoleMapper.deleteAllByRoleIdAndUserIds(roleId, existUserIds);
+                    isUpdate = true;
                 }
             }
             // 保存新的角色
             if (userIds.size() > 0){
                 userRoleMapper.saveAll(roleId, userIds, authUser, LocalDateTime.now());
+                isUpdate = true;
+            }
+        }
+        // 判断是否有更新
+        if (isUpdate){
+            for (Long userId : userIds){
+                UserInfo userInfo = dataBaseService.getUserInfo(userId);
+                cacheService.setUserRole(userInfo.getUsername(), userRoleMapper.selectRoleIdByUserId(userId));
             }
         }
         log.warn(LogTemplate.PROCESS_LOG_MSG_TEMPLATE, "角色服务", "角色关联用户", String.format("用户'%s' 执行角色'%s' 关联用户 用户'%s'", authUser, roleInfo.getRoleName(), userIds));

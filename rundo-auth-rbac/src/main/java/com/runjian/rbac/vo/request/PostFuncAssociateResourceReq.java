@@ -34,10 +34,4 @@ public class PostFuncAssociateResourceReq {
      */
     private String validateParam;
 
-    /**
-     * 是否禁用
-     */
-    @NotNull(message = "禁用状态不能为空")
-    @Range(min = 0, max = 1, message = "非法禁用状态")
-    private Integer disabled;
 }

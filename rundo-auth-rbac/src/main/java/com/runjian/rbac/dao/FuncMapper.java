@@ -79,4 +79,14 @@ public interface FuncMapper {
     @Select(" SELECT * FROM " + FUNC_TABLE_NAME +
             " WHERE menu_id = #{menuId} ")
     List<GetFuncRsp> selectAllByMenuId(Integer menuId);
+
+    @Select(" SELECT * FROM " + FUNC_TABLE_NAME +
+            " WHERE path = #{path} AND method = #{method}")
+    Optional<FuncInfo> selectByPathAndMethod(Integer method, String path);
+
+    @Select(" <script> " +
+            " SELECT * FROM " + FUNC_TABLE_NAME +
+            " WHERE id IN <foreach collection='funcIds' item='item' open='(' separator=',' close=')'> #{item} </foreach> " +
+            " </script>")
+    List<FuncInfo> selectAllByIds(Set<Long> funIds);
 }

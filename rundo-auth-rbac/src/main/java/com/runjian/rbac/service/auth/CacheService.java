@@ -27,6 +27,12 @@ public interface CacheService {
     void setUserRole(String username, Set<Long> roleIds);
 
     /**
+     * 删除缓存
+     * @param username 用户
+     */
+    void removeUserRole(String username);
+
+    /**
      * 获取功能信息
      * @param methodPath 方法路径key
      */
@@ -38,6 +44,12 @@ public interface CacheService {
      * @param funcCache 缓存数据
      */
     void setFuncCache(String methodPath, CacheFuncDto funcCache);
+
+    /**
+     * 移除功能缓存
+     * @param methodPath 方法路径key
+     */
+    void removeFuncCache(String methodPath);
 
     /**
      * 获取资源层级关系
@@ -53,6 +65,12 @@ public interface CacheService {
     void setResourceLevel(String keyValue, String level);
 
     /**
+     * 移除资源与资源层级关系
+     * @param keyValue 资源keyValue
+     */
+    void removeResourceLevel(String keyValue);
+
+    /**
      * 获取用户资源层级信息
      * @param username 用户名
      */
@@ -64,5 +82,6 @@ public interface CacheService {
      * @param resources
      */
     void setUserResource(String key, Map<String, Set<String>> resources);
+
 
 }

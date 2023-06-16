@@ -7,6 +7,7 @@ import com.runjian.rbac.constant.ResourceType;
 import com.runjian.rbac.dao.relation.FuncResourceMapper;
 import com.runjian.rbac.dao.ResourceMapper;
 import com.runjian.rbac.entity.ResourceInfo;
+import com.runjian.rbac.service.auth.CacheService;
 import com.runjian.rbac.service.rbac.DataBaseService;
 import com.runjian.rbac.service.rbac.ResourceService;
 import com.runjian.rbac.vo.AbstractTreeInfo;
@@ -34,6 +35,8 @@ public class ResourceServiceImpl implements ResourceService {
     private final FuncResourceMapper funcResourceMapper;
 
     private final DataBaseService dataBaseService;
+
+    private final CacheService cacheService;
 
 
 
@@ -80,6 +83,7 @@ public class ResourceServiceImpl implements ResourceService {
             }else {
                 resourceInfo.setLevel(pResourceInfo.getLevel() + MarkConstant.MARK_SPLIT_RAIL + pResourceInfo.getId());
             }
+            cacheService.setResourceLevel(resourceInfo.getResourceKey() + MarkConstant.MARK_SPLIT_SEMICOLON + resourceInfo.getResourceValue(), resourceInfo.getLevel());
         }
         resourceMapper.batchAdd(resourceInfoList);
     }
@@ -87,10 +91,13 @@ public class ResourceServiceImpl implements ResourceService {
     @Override
     public void updateResource(Long resourceId, String resourceName, String resourceValue) {
         ResourceInfo resourceInfo = dataBaseService.getResourceInfo(resourceId);
+        String key = resourceInfo.getResourceKey() + MarkConstant.MARK_SPLIT_SEMICOLON + resourceInfo.getResourceValue();
+        cacheService.removeResourceLevel(key);
         resourceInfo.setResourceName(resourceName);
         resourceInfo.setResourceValue(resourceValue);
         resourceInfo.setUpdateTime(LocalDateTime.now());
         resourceMapper.update(resourceInfo);
+        cacheService.setResourceLevel(key, resourceInfo.getLevel());
     }
 
     @Override
@@ -98,6 +105,10 @@ public class ResourceServiceImpl implements ResourceService {
     public void batchDelete(Set<Long> resourceIds) {
         if (resourceIds.size() == 0){
             return;
+        }
+        List<ResourceInfo> resourceInfoList = resourceMapper.selectAllByResourceIds(resourceIds);
+        for (ResourceInfo resourceInfo : resourceInfoList){
+            cacheService.removeResourceLevel(resourceInfo.getResourceKey() + MarkConstant.MARK_SPLIT_SEMICOLON + resourceInfo.getResourceValue());
         }
         funcResourceMapper.deleteAllByResourceIds(resourceIds);
         resourceMapper.batchDelete(resourceIds);
@@ -133,10 +144,12 @@ public class ResourceServiceImpl implements ResourceService {
         resourceInfo.setResourcePid(pid);
         resourceInfo.setSort(nowTime.toInstant(ZoneOffset.of("+8")).toEpochMilli());
         resourceInfo.setUpdateTime(nowTime);
+        cacheService.setResourceLevel(resourceInfo.getResourceKey() + MarkConstant.MARK_SPLIT_SEMICOLON + resourceInfo.getResourceValue(), resourceInfo.getLevel());
         List<ResourceInfo> childList = resourceMapper.selectAllLikeByLevel(oldLevel + MarkConstant.MARK_SPLIT_RAIL + resourceInfo.getId());
         for (ResourceInfo child : childList){
             child.setUpdateTime(nowTime);
             child.setLevel(resourceInfo.getLevel() + child.getLevel().substring(0, oldLevel.length()));
+            cacheService.setResourceLevel(child.getResourceKey() + MarkConstant.MARK_SPLIT_SEMICOLON + child.getResourceValue(), child.getLevel());
         }
         childList.add(resourceInfo);
         resourceMapper.updateAll(childList);
@@ -174,6 +187,7 @@ public class ResourceServiceImpl implements ResourceService {
                 brother.setUpdateTime(nowTime);
                 pointData.setUpdateTime(nowTime);
                 resourceMapper.updateAll(Arrays.asList(brother, pointData));
+                return;
             }
         }
     }
