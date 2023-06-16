@@ -43,7 +43,7 @@ public interface RoleResourceMapper {
     void deleteAllByRoleIdAndResourceIds(Long roleId, Set<Long> resourceIds);
 
     @Select(" <script> " +
-            " SELECT *  FROM " + ROLE_RESOURCE_TABLE_NAME +
+            " SELECT resource_id FROM " + ROLE_RESOURCE_TABLE_NAME +
             " WHERE role_id IN <foreach collection='roleIds' item='item' open='(' separator=',' close=')'> #{item} </foreach> " +
             " </script>")
     Set<Long> selectResourceIdByRoleIds(List<Long> roleIds);

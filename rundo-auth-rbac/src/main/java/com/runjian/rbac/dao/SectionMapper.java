@@ -28,7 +28,7 @@ public interface SectionMapper {
             " (#{sectionPid}, #{sectionName}, #{sort}, #{leaderName}, #{phone}, #{level}, #{description}, #{createTime}, #{updateTime})")
     void save(SectionInfo sectionInfo);
 
-    @Select("SELECT * FROM " + SECTION_TABLE_NAME +
+    @Select(" SELECT * FROM " + SECTION_TABLE_NAME +
             " WHERE id = #{sectionId}")
     Optional<SectionInfo> selectById(Long sectionId);
 

@@ -40,7 +40,7 @@ public interface RoleMapper {
             " <if test=\"userId != null\" > RIGHT JOIN " + UserRoleMapper.USER_ROLE_TABLE_NAME + " ur ON rt.id = ur.role_id </if> " +
             " WHERE rt.deleted !=  1 " +
             " AND <if test=\"userId != null\" > ur.user_id = #{userId} </if> " +
-            " AND <if test=\"roleName != null\" > role_name LIKE CONCAT('%', #{roleName}, '%') </if> " +
+            " AND <if test=\"roleName != null\" > rt.role_name LIKE CONCAT('%', #{roleName}, '%') </if> " +
             " </script> ")
     List<GetRolePageRsp> selectPageByUserIdAndRoleName(Long userId, String roleName);
 

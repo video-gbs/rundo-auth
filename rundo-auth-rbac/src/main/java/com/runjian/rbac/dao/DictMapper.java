@@ -39,7 +39,7 @@ public interface DictMapper {
 
     @Update(" UPDATE "  + DICT_TABLE_NAME +
             " SET update_time = #{updateTime}, " +
-            " AND <if test=\"groupName != null\" > groupName = #{groupName} </if> " +
+            " AND <if test=\"groupName != null\" > group_name = #{groupName} </if> " +
             " AND <if test=\"groupCode != null\" > group_code = #{groupCode} </if> " +
             " AND <if test=\"itemName != null\" > item_name = #{itemName} </if> " +
             " AND <if test=\"itemValue != null\" > item_value = #{itemValue} </if> " +

@@ -48,5 +48,9 @@ public interface RoleMenuMapper {
             " </script>")
     void deleteAllByMenuIds(Set<Long> menuIds);
 
+    @Select(" <script> " +
+            " SELECT menu_id FROM " + ROLE_MENU_TABLE_NAME +
+            " WHERE role_id IN <foreach collection='roleIds' item='item' open='(' separator=',' close=')'> #{item} </foreach> " +
+            " </script>")
     Set<Long> selectMenuIdByRoleIds(List<Long> roleIds);
 }

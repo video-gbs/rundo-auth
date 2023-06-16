@@ -60,7 +60,7 @@ public interface FuncMapper {
             " WHERE menu_id IN <foreach collection='menuIds' item='item' open='(' separator=',' close=')'> #{item} </foreach> " +
             " AND <if test=\"serviceName != null\" > service_name LIKE CONCAT('%', #{serviceName}, '%') </if> " +
             " AND <if test=\"funcName != null\" > func_name LIKE CONCAT('%', #{funcName}, '%') </if> " +
-            " </script>")
+            " </script> ")
     List<GetFuncPageRsp> selectAllByMenuIdAndServiceNameLikeAndFuncNameLike(Set<Long> menuIds, String serviceName, String funcName);
 
     @Insert(" INSERT INTO " + FUNC_TABLE_NAME +
@@ -72,13 +72,11 @@ public interface FuncMapper {
     @Select(" <script> " +
             " SELECT * FROM " + FUNC_TABLE_NAME +
             " WHERE id IN <foreach collection='funcIds' item='item' open='(' separator=',' close=')'> #{item} </foreach> " +
-            " AND menu_id = #{menuId} </if> " +
+            " AND menu_id = #{menuId} " +
             " </script>")
     List<GetFuncRsp> selectAllByMenuIdAndFuncIds(Integer menuId, List<Long> funcIds);
 
-    @Select(" <script> " +
-            " SELECT * FROM " + FUNC_TABLE_NAME +
-            " WHERE menu_id = #{menuId} </if> " +
-            " </script>")
+    @Select(" SELECT * FROM " + FUNC_TABLE_NAME +
+            " WHERE menu_id = #{menuId} ")
     List<GetFuncRsp> selectAllByMenuId(Integer menuId);
 }

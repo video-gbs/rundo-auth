@@ -29,8 +29,8 @@ public interface UserMapper {
             " LEFT JOIN " + USER_TABLE_NAME + " ut ON ut.section_id = st.id " +
             " WHERE deleted != 1 " +
             " AND st.level LIKE CONCAT(#{sectionLevel}, '%') " +
-            " <if test=\"username != null\" > AND username LIKE CONCAT('%', #{username}, '%') </if> " +
-            " <if test=\"workName != null\" > AND work_name LIKE CONCAT('%', #{workName}, '%') </if> " +
+            " <if test=\"username != null\" > AND ut.username LIKE CONCAT('%', #{username}, '%') </if> " +
+            " <if test=\"workName != null\" > AND ut.work_name LIKE CONCAT('%', #{workName}, '%') </if> " +
             " </script>")
     List<GetUserPageRsp> selectAllUserBySectionLevelLikeAndUsernameAndWorkName(String sectionLevel, String username, String workName);
 
@@ -73,10 +73,11 @@ public interface UserMapper {
             " AND <if test=\"workName != null\" > work_name = #{workName} </if> " +
             " AND <if test=\"phone != null\" > phone = #{phone} </if> " +
             " AND <if test=\"workNum != null\" > work_num = #{workNum} </if> " +
+            " AND <if test=\"sectionId != null\" > section_id = #{sectionId} </if> " +
             " AND <if test=\"address != null\" > address = #{address} </if> " +
-            " AND <if test=\"expiryStartTime != null\" > work_name = #{expiryStartTime} </if> " +
-            " AND <if test=\"workName != null\" > work_name = #{workName} </if> " +
+            " AND <if test=\"expiryStartTime != null\" > expiry_start_time = #{expiryStartTime} </if> " +
             " AND <if test=\"description != null\" > description = #{description} </if> " +
+            " AND <if test=\"disabled != null\" > disabled = #{disabled} </if> " +
             " WHERE id = #{id} " +
             " </script> ")
     void update(UserInfo userInfo);
@@ -95,9 +96,9 @@ public interface UserMapper {
             " SELECT ut.* FROM " + UserRoleMapper.USER_ROLE_TABLE_NAME + " ur" +
             " LEFT JOIN " + USER_TABLE_NAME + " ut ON " + " ur.user_id = ut.id" +
             " WHERE " +
-            " <if test=\"username != null\" > username LIKE CONCAT('%', #{username}, '%')  AND </if> " +
-            " <if test=\"isBinding == true\" > role_id = #{roleId} </if> " +
-            " <if test=\"isBinding == false\" > role_id != #{roleId} </if> " +
+            " <if test=\"username != null\" > ut.username LIKE CONCAT('%', #{username}, '%')  AND </if> " +
+            " <if test=\"isBinding == true\" > rt.role_id = #{roleId} </if> " +
+            " <if test=\"isBinding == false\" > rt.role_id != #{roleId} </if> " +
             " </script>")
     List<GetUserPageRsp> selectByInRoleIdAndUsername(Long roleId, String username, Boolean isBinding);
 }
