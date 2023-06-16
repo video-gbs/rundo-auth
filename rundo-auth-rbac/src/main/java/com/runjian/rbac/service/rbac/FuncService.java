@@ -31,7 +31,6 @@ public interface FuncService {
      * @param funcName 功能名称
      * @param path 访问地址
      * @param method 方法
-     * @param disabled 是否禁用
      */
     void addFunc(Long menuId, String serviceName, String funcName, String scope, String path, Integer method);
 
@@ -50,7 +49,6 @@ public interface FuncService {
      * @param funcName 功能名称
      * @param path 访问地址
      * @param method 方法
-     * @param disabled 是否禁用
      */
     void updateFunc(Long id, Long menuId, String serviceName, String funcName, String scope, String path, Integer method);
 
@@ -87,7 +85,6 @@ public interface FuncService {
      * @param funcResourceId 功能资源关系id
      * @param resourceKey 资源key
      * @param validateParam 校验参数
-     * @param disabled 是否禁用
      */
     void updateFuncResource(Long funcResourceId, String resourceKey, String validateParam);
 
