@@ -49,11 +49,13 @@ public class AuthorizationServerConfig {
         // 授权服务器配置
         OAuth2AuthorizationServerConfigurer authorizationServerConfigurer =
                 new OAuth2AuthorizationServerConfigurer();
+
         RequestMatcher endpointsMatcher = authorizationServerConfigurer.getEndpointsMatcher();
 
         authorizationServerConfigurer.tokenEndpoint(token ->
                 token.accessTokenRequestConverter(new OAuth2TokenPasswordAuthenticationConvert())
                         .authenticationProvider(new OAuth2PasswordTokenAuthenticationProvider(authorizationService, http, userDetailsService, passwordEncoder))
+                        .accessTokenResponseHandler(new CustomAuthenticationSuccessHandler())
         );
         http.exceptionHandling(exceptions -> exceptions.authenticationEntryPoint(authExceptionEntryPoint()))
                 .securityMatcher(endpointsMatcher)
