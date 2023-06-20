@@ -44,9 +44,14 @@ public class MenuServiceImpl implements MenuService {
         }
         if(Objects.nonNull(name) || Objects.nonNull(path)){
             Set<String> levels = getMenuTreeRspList.stream().map(AbstractTreeInfo::getLevel).collect(Collectors.toSet());
+
             Set<Long> ids = new HashSet<>();
             for (String level : levels){
                 ids.addAll(Arrays.stream(level.split(MarkConstant.MARK_SPLIT_RAIL)).map(Long::parseLong).toList());
+            }
+            if (ids.size() == 1){
+                rootMenuTree.setChildList(getMenuTreeRspList);
+                return rootMenuTree;
             }
             List<GetMenuTreeRsp> pMenuTreeRspList = menuMapper.selectAllByIds(ids);
             rootMenuTree.setChildList(rootMenuTree.recursionData(pMenuTreeRspList, rootMenuTree.getLevel()));
@@ -64,6 +69,7 @@ public class MenuServiceImpl implements MenuService {
             pMenuInfo = new MenuInfo();
             pMenuInfo.setLevelNum(0);
             pMenuInfo.setLevel("0");
+            pMenuInfo.setMenuType(1);
         }else {
             pMenuInfo = dataBaseService.getMenuInfo(menuPid);
         }

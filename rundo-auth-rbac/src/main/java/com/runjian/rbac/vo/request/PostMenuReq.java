@@ -19,7 +19,7 @@ public class PostMenuReq {
      * 菜单父id
      */
     @NotNull(message = "菜单父id不能为空")
-    @Min(value = 1, message = "菜单id不能为空")
+    @Min(value = 0, message = "菜单id父不能为空")
     private Long menuPid;
 
     /**

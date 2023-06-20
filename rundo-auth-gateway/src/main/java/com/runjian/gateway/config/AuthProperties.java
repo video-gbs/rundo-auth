@@ -18,6 +18,8 @@ public class AuthProperties {
 
     public final static String AUTHORIZATION_HEADER_TOKEN = "Authorization";
 
+    public final static String REQUEST_BODY_NAME = "bodyData";
+
     /**
      * 鉴权地址
      */

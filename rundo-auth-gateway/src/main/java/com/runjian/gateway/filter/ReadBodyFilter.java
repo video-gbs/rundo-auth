@@ -1,24 +1,21 @@
 package com.runjian.gateway.filter;
 
-import com.alibaba.fastjson2.JSONObject;
+import com.runjian.gateway.config.AuthProperties;
 import org.springframework.cloud.gateway.filter.GatewayFilterChain;
 import org.springframework.cloud.gateway.filter.GlobalFilter;
 import org.springframework.core.Ordered;
 import org.springframework.core.io.buffer.DataBuffer;
 import org.springframework.core.io.buffer.DataBufferUtils;
 import org.springframework.http.HttpHeaders;
-import org.springframework.http.HttpMethod;
 import org.springframework.http.server.reactive.ServerHttpRequest;
+import org.springframework.http.server.reactive.ServerHttpRequestDecorator;
 import org.springframework.stereotype.Component;
 import org.springframework.web.server.ServerWebExchange;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
-import java.io.UnsupportedEncodingException;
-import java.nio.charset.Charset;
-import java.nio.charset.StandardCharsets;
-
 /**
+ * 读取body数据
  * @author Miracle
  * @date 2023/4/24 16:20
  */
@@ -34,14 +31,32 @@ public class ReadBodyFilter implements GlobalFilter, Ordered {
 
         if (hasBody){
             // 从请求体中获取参数
+//            return DataBufferUtils.join(exchange.getRequest().getBody())
+//                    .flatMap(dataBuffer ->{
+//                        byte[] bytes = new byte[dataBuffer.readableByteCount()];
+//                        dataBuffer.read(bytes);
+//                        exchange.getAttributes().put("bodyData", new String(bytes, StandardCharsets.UTF_8));
+//                        return chain.filter(exchange);
+//                    });
             return DataBufferUtils.join(exchange.getRequest().getBody())
-                    .flatMap(dataBuffer ->{
-                        byte[] bytes = new byte[dataBuffer.readableByteCount()];
-                        dataBuffer.read(bytes);
-                        exchange.getAttributes().put("bodyData", new String(bytes, StandardCharsets.UTF_8));
-                        return chain.filter(exchange);
+                    .flatMap(dataBuffer -> {
+                        DataBufferUtils.retain(dataBuffer);
+                        Flux<DataBuffer> cachedFlux = Flux
+                                .defer(() -> Flux.just(dataBuffer.slice(0, dataBuffer.readableByteCount())));
+                        ServerHttpRequest mutatedRequest = new ServerHttpRequestDecorator(
+                                exchange.getRequest()) {
+                            @Override
+                            public Flux<DataBuffer> getBody() {
+                                return cachedFlux;
+                            }
+
+                        };
+                        exchange.getAttributes().put(AuthProperties.REQUEST_BODY_NAME, cachedFlux);
+
+                        return chain.filter(exchange.mutate().request(mutatedRequest).build());
                     });
         }
+
 
         return chain.filter(exchange);
     }

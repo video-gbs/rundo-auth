@@ -30,8 +30,8 @@ public interface MenuMapper {
     @Select(" <script> " +
             " SELECT * FROM " + MENU_TABLE_NAME +
             " WHERE 1 = 1 " +
-            " AND <if test=\"name != null\" > name LIKE CONCAT('%', #{name}, '%')  </if> " +
-            " AND <if test=\"path != null\" > path LIKE CONCAT('%', #{path}, '%')  </if> " +
+            " <if test=\"name != null\" > AND name LIKE CONCAT('%', #{name}, '%')  </if> " +
+            " <if test=\"path != null\" > AND path LIKE CONCAT('%', #{path}, '%')  </if> " +
             " </script> ")
     List<GetMenuTreeRsp> selectByNameLikeAndPathLike(String name, String path);
 
@@ -66,9 +66,9 @@ public interface MenuMapper {
     void updateHidden(MenuInfo menuInfo);
 
     @Insert(" INSERT INTO " + MENU_TABLE_NAME +
-            " (menu_pid, sort, menu_type, path, component, name, icon, description, level, hidden, disabled, create_time, update_time) " +
+            " (menu_pid, sort, menu_type, path, component, name, icon, description, level, level_num, hidden, disabled, create_time, update_time) " +
             " VALUES " +
-            " (#{menuPid}, #{sort}, #{menuType}, #{path}, #{component}, #{name}, #{icon}, #{description}, #{level}, #{hidden}, #{disabled}, #{createTime}, #{updateTime})")
+            " (#{menuPid}, #{sort}, #{menuType}, #{path}, #{component}, #{name}, #{icon}, #{description}, #{level}, #{levelNum}, #{hidden}, #{disabled}, #{createTime}, #{updateTime})")
     void save(MenuInfo menuInfo);
 
     @Update(" UPDATE "  + MENU_TABLE_NAME +

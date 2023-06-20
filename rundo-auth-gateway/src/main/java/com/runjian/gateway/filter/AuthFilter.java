@@ -9,9 +9,12 @@ import com.runjian.gateway.utils.CheckUtils;
 import com.runjian.gateway.vo.PostAuthReq;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.bouncycastle.util.Strings;
 import org.springframework.cloud.gateway.filter.GatewayFilter;
 import org.springframework.cloud.gateway.filter.GatewayFilterChain;
 import org.springframework.core.Ordered;
+import org.springframework.core.io.buffer.DataBuffer;
+import org.springframework.core.io.buffer.DataBufferUtils;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.HttpStatusCode;
 import org.springframework.http.server.reactive.ServerHttpRequest;
@@ -19,10 +22,12 @@ import org.springframework.http.server.reactive.ServerHttpResponse;
 import org.springframework.web.reactive.function.client.WebClient;
 import org.springframework.web.reactive.function.client.WebClientResponseException;
 import org.springframework.web.server.ServerWebExchange;
+import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 import reactor.netty.ByteBufMono;
 import java.net.URI;
 import java.util.Objects;
+import java.util.concurrent.atomic.AtomicReference;
 
 /**
  * @author Miracle
@@ -50,7 +55,14 @@ public class AuthFilter implements GatewayFilter, Ordered {
             response.setStatusCode(HttpStatusCode.valueOf(BusinessErrorEnums.USER_AUTH_ERROR.getState()));
             return response.writeAndFlushWith(Mono.just(ByteBufMono.just(response.bufferFactory().wrap(JSONObject.toJSONString(CommonResponse.failure(BusinessErrorEnums.USER_AUTH_ERROR)).getBytes()))));
         }
-        PostAuthReq postAuthReq = new PostAuthReq(uri.getPath(), exchange.getRequest().getMethod().name(), exchange.getAttribute("bodyData"));
+        Flux<DataBuffer> bodyData = exchange.getAttribute(AuthProperties.REQUEST_BODY_NAME);
+        PostAuthReq postAuthReq;
+        if (Objects.nonNull(bodyData)){
+            String raw = toRaw(bodyData);
+            postAuthReq = new PostAuthReq(uri.getPath(), exchange.getRequest().getMethod().name(), JSONObject.toJSONString(raw));
+        }else {
+            postAuthReq = new PostAuthReq(uri.getPath(), exchange.getRequest().getMethod().name(), null);
+        }
 
         return WebClient.builder()
                 .baseUrl(nacosUrlConfig.getServiceIpPort(authProperties.getAuthServerName()))
@@ -83,10 +95,19 @@ public class AuthFilter implements GatewayFilter, Ordered {
 
     }
 
-
-
     @Override
     public int getOrder() {
         return HIGHEST_PRECEDENCE + 1;
+    }
+
+    private static String toRaw(Flux<DataBuffer> body) {
+        AtomicReference<String> rawRef = new AtomicReference<>();
+        body.subscribe(buffer -> {
+            byte[] bytes = new byte[buffer.readableByteCount()];
+            buffer.read(bytes);
+            DataBufferUtils.release(buffer);
+            rawRef.set(Strings.fromUTF8ByteArray(bytes));
+        });
+        return rawRef.get();
     }
 }
