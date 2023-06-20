@@ -7,6 +7,7 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.io.Serial;
 import java.io.Serializable;
 
 /**
@@ -18,6 +19,7 @@ import java.io.Serializable;
 @NoArgsConstructor
 public class CommonResponse<T> implements Serializable {
 
+    @Serial
     private static final long serialVersionUID = 1L;
 
     /**
@@ -37,14 +39,9 @@ public class CommonResponse<T> implements Serializable {
 
     /**
      * 检查异常是否为指定类型异常
-     * @param checkError 检查的异常
-     * @param msg 消息
      */
     public Boolean isError(){
-        if (code != BusinessErrorEnums.SUCCESS.getErrCode()){
-            return true;
-        }
-        return false;
+        return code != BusinessErrorEnums.SUCCESS.getErrCode();
     }
 
     /**
