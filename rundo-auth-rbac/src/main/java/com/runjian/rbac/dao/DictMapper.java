@@ -37,21 +37,23 @@ public interface DictMapper {
     void batchDeleted(Set<Long> dictIds);
 
 
-    @Update(" UPDATE "  + DICT_TABLE_NAME +
-            " SET update_time = #{updateTime}, " +
-            " AND <if test=\"groupName != null\" > group_name = #{groupName} </if> " +
-            " AND <if test=\"groupCode != null\" > group_code = #{groupCode} </if> " +
-            " AND <if test=\"itemName != null\" > item_name = #{itemName} </if> " +
-            " AND <if test=\"itemValue != null\" > item_value = #{itemValue} </if> " +
-            " AND <if test=\"description != null\" > description = #{description} </if> " +
-            " WHERE id = #{id} ")
+    @Update(" <script> " +
+            " UPDATE "  + DICT_TABLE_NAME +
+            " SET update_time = #{updateTime} " +
+            " <if test=\"groupName != null\" > , group_name = #{groupName} </if> " +
+            " <if test=\"groupCode != null\" > , group_code = #{groupCode} </if> " +
+            " <if test=\"itemName != null\" > , item_name = #{itemName} </if> " +
+            " <if test=\"itemValue != null\" > , item_value = #{itemValue} </if> " +
+            " <if test=\"description != null\" > , description = #{description} </if> " +
+            " WHERE id = #{id} " +
+            " </script>")
     void update(DictInfo dictInfo);
 
     @Select(" <script> " +
             " SELECT * FROM " + DICT_TABLE_NAME +
             " WHERE 1=1 " +
-            " AND <if test=\"groupName != null\" > group_name LIKE CONCAT('%', #{groupName}, '%') </if> " +
-            " AND <if test=\"itemName != null\" > item_name LIKE CONCAT('%', #{itemName}, '%') </if> " +
+            " <if test=\"groupName != null\" > AND group_name LIKE CONCAT('%', #{groupName}, '%') </if> " +
+            " <if test=\"itemName != null\" > AND item_name LIKE CONCAT('%', #{itemName}, '%') </if> " +
             " </script>")
     List<GetDictPageRsp> selectByGroupNameAndItemName(String groupName, String itemName);
 

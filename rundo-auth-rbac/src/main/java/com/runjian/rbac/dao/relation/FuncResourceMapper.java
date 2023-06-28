@@ -22,7 +22,7 @@ public interface FuncResourceMapper {
 
     @Delete(" <script> " +
             " DELETE FROM " + FUNC_RESOURCE_TABLE_NAME +
-            " WHERE resource_id IN <foreach collection='resourceIds' item='item' open='(' separator=',' close=')'> #{item} </foreach> " +
+            " WHERE id IN <foreach collection='resourceIds' item='item' open='(' separator=',' close=')'> #{item} </foreach> " +
             " </script>")
     void deleteAllByResourceIds(Set<Long> resourceIds);
 

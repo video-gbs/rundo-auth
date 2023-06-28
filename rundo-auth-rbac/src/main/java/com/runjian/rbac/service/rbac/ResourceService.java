@@ -2,6 +2,7 @@ package com.runjian.rbac.service.rbac;
 
 import com.runjian.rbac.vo.response.GetResourceTreeRsp;
 
+import java.util.Map;
 import java.util.Set;
 
 /**
@@ -24,11 +25,10 @@ public interface ResourceService {
      * 批量添加资源
      * @param resourcePid 资源父id
      * @param resourceType 资源类型
-     * @param resourceName 资源名称
      * @param resourceKey 资源Key
-     * @param resourceValue 资源value数组
+     * @param resourceMap 资源value数组
      */
-    void batchAddResource(Long resourcePid, Integer resourceType, String resourceName, String resourceKey, Set<String> resourceValue);
+    void batchAddResource(Long resourcePid, Integer resourceType, String resourceKey, Map<String, String> resourceMap);
 
     /**
      * 修改资源

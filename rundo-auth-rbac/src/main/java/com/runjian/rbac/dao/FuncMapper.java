@@ -37,16 +37,18 @@ public interface FuncMapper {
             " WHERE path = #{path} ")
     Optional<FuncInfo> selectByPath(String path);
 
-    @Update(" UPDATE "  + FUNC_TABLE_NAME +
-            " SET update_time = #{updateTime}, " +
-            " AND <if test=\"menuId != null\" > menu_id = #{menuId} </if> " +
-            " AND <if test=\"serviceName != null\" > service_name = #{serviceName} </if> " +
-            " AND <if test=\"funcName != null\" > func_name = #{funcName} </if> " +
-            " AND <if test=\"scope != null\" > scope = #{scope} </if> " +
-            " AND <if test=\"path != null\" > path = #{path} </if> " +
-            " AND <if test=\"method != null\" > method = #{method} </if> " +
-            " AND <if test=\"disabled != null\" > disabled = #{disabled} </if> " +
-            " WHERE id = #{id} ")
+    @Update(" <script> " +
+            " UPDATE "  + FUNC_TABLE_NAME +
+            " SET update_time = #{updateTime} " +
+            " <if test=\"menuId != null\" > , menu_id = #{menuId} </if> " +
+            " <if test=\"serviceName != null\" > , service_name = #{serviceName} </if> " +
+            " <if test=\"funcName != null\" > , func_name = #{funcName} </if> " +
+            " <if test=\"scope != null\" > , scope = #{scope} </if> " +
+            " <if test=\"path != null\" > , path = #{path} </if> " +
+            " <if test=\"method != null\" > , method = #{method} </if> " +
+            " <if test=\"disabled != null\" > , disabled = #{disabled} </if> " +
+            " WHERE id = #{id} " +
+            " </script>")
     void update(FuncInfo funcInfo);
 
     @Delete(" <script> " +
@@ -58,8 +60,8 @@ public interface FuncMapper {
     @Select(" <script> " +
             " SELECT * FROM " + FUNC_TABLE_NAME +
             " WHERE menu_id IN <foreach collection='menuIds' item='item' open='(' separator=',' close=')'> #{item} </foreach> " +
-            " AND <if test=\"serviceName != null\" > service_name LIKE CONCAT('%', #{serviceName}, '%') </if> " +
-            " AND <if test=\"funcName != null\" > func_name LIKE CONCAT('%', #{funcName}, '%') </if> " +
+            " <if test=\"serviceName != null\" > AND service_name LIKE CONCAT('%', #{serviceName}, '%') </if> " +
+            " <if test=\"funcName != null\" > AND func_name LIKE CONCAT('%', #{funcName}, '%') </if> " +
             " </script> ")
     List<GetFuncPageRsp> selectAllByMenuIdAndServiceNameLikeAndFuncNameLike(Set<Long> menuIds, String serviceName, String funcName);
 

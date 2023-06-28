@@ -68,16 +68,16 @@ public interface UserMapper {
     @Update(" <script> " +
             " UPDATE "  + USER_TABLE_NAME +
             " SET update_time = #{updateTime}, " +
-            " AND section_id = #{sectionId} " +
-            " AND <if test=\"password != null\" > password = #{password} </if> " +
-            " AND <if test=\"workName != null\" > work_name = #{workName} </if> " +
-            " AND <if test=\"phone != null\" > phone = #{phone} </if> " +
-            " AND <if test=\"workNum != null\" > work_num = #{workNum} </if> " +
-            " AND <if test=\"sectionId != null\" > section_id = #{sectionId} </if> " +
-            " AND <if test=\"address != null\" > address = #{address} </if> " +
-            " AND <if test=\"expiryStartTime != null\" > expiry_start_time = #{expiryStartTime} </if> " +
-            " AND <if test=\"description != null\" > description = #{description} </if> " +
-            " AND <if test=\"disabled != null\" > disabled = #{disabled} </if> " +
+            " section_id = #{sectionId} " +
+            " <if test=\"password != null\" > , password = #{password} </if> " +
+            " <if test=\"workName != null\" > , work_name = #{workName} </if> " +
+            " <if test=\"phone != null\" > , phone = #{phone} </if> " +
+            " <if test=\"workNum != null\" > , work_num = #{workNum} </if> " +
+            " <if test=\"sectionId != null\" > , section_id = #{sectionId} </if> " +
+            " <if test=\"address != null\" > , address = #{address} </if> " +
+            " <if test=\"expiryStartTime != null\" > , expiry_start_time = #{expiryStartTime} </if> " +
+            " <if test=\"description != null\" > , description = #{description} </if> " +
+            " <if test=\"disabled != null\" > , disabled = #{disabled} </if> " +
             " WHERE id = #{id} " +
             " </script> ")
     void update(UserInfo userInfo);

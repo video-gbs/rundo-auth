@@ -41,7 +41,7 @@ public class SectionServiceImpl implements SectionService {
     }
 
     @Override
-    public void addSection(Long pid, String sectionName, String leaderName, String phone, String description) {
+    public Long addSection(Long pid, String sectionName, String leaderName, String phone, String description) {
         LocalDateTime nowTime = LocalDateTime.now();
         SectionInfo sectionInfo = new SectionInfo();
         sectionInfo.setSectionName(sectionName);
@@ -59,6 +59,7 @@ public class SectionServiceImpl implements SectionService {
             sectionInfo.setLevel(fatherSectionInfo.getLevel() + MarkConstant.MARK_SPLIT_RAIL + fatherSectionInfo.getId());
         }
         sectionMapper.save(sectionInfo);
+        return sectionInfo.getId();
     }
 
     @Override
@@ -78,7 +79,7 @@ public class SectionServiceImpl implements SectionService {
         if (userCount > 0){
             throw new BusinessException(BusinessErrorEnums.VALID_ILLEGAL_OPERATION, String.format("部门 %s 存在绑定用户，请先解绑后删除", sectionInfo.getSectionName()));
         }
-        Integer sectionCount = sectionMapper.selectChildCountByPid(sectionInfo.getSectionPid());
+        Integer sectionCount = sectionMapper.selectChildCountByPid(sectionInfo.getId());
         if (sectionCount > 0){
             throw new BusinessException(BusinessErrorEnums.VALID_ILLEGAL_OPERATION, String.format("部门 %s 存在下级部门，请先删除下级部门", sectionInfo.getSectionName()));
         }
@@ -99,9 +100,9 @@ public class SectionServiceImpl implements SectionService {
             pSectionInfo = dataBaseService.getSectionInfo(pid);
             level = pSectionInfo.getLevel()+ MarkConstant.MARK_SPLIT_RAIL + pSectionInfo.getId();
         }
-        if (pSectionInfo.getSectionPid().equals(sectionInfo.getSectionPid())){
-            return;
-        }
+//        if (pSectionInfo.getSectionPid().equals(sectionInfo.getSectionPid())){
+//            return;
+//        }
         if (pSectionInfo.getLevel().startsWith(sectionInfo.getLevel() + MarkConstant.MARK_SPLIT_RAIL + sectionInfo.getId())){
             throw new BusinessException(BusinessErrorEnums.VALID_ILLEGAL_OPERATION, "不可将父部门移动到子部门");
         }

@@ -23,6 +23,6 @@ public class PutSectionFsMoveReq {
      * 部门父id
      */
     @NotNull(message = "部门父id不能为空")
-    @Min(value = 1, message = "非法部门父id")
+    @Min(value = 0, message = "非法部门父id")
     private Long sectionPid;
 }

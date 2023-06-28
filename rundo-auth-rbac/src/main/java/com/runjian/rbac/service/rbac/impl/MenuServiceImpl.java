@@ -49,11 +49,13 @@ public class MenuServiceImpl implements MenuService {
             for (String level : levels){
                 ids.addAll(Arrays.stream(level.split(MarkConstant.MARK_SPLIT_RAIL)).map(Long::parseLong).toList());
             }
-            if (ids.size() == 1){
+            ids.remove(rootMenuTree.getId());
+            if (ids.size() == 0){
                 rootMenuTree.setChildList(getMenuTreeRspList);
                 return rootMenuTree;
             }
             List<GetMenuTreeRsp> pMenuTreeRspList = menuMapper.selectAllByIds(ids);
+            pMenuTreeRspList.addAll(getMenuTreeRspList);
             rootMenuTree.setChildList(rootMenuTree.recursionData(pMenuTreeRspList, rootMenuTree.getLevel()));
             return rootMenuTree;
         }

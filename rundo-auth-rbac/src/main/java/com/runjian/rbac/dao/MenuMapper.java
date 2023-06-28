@@ -71,20 +71,22 @@ public interface MenuMapper {
             " (#{menuPid}, #{sort}, #{menuType}, #{path}, #{component}, #{name}, #{icon}, #{description}, #{level}, #{levelNum}, #{hidden}, #{disabled}, #{createTime}, #{updateTime})")
     void save(MenuInfo menuInfo);
 
-    @Update(" UPDATE "  + MENU_TABLE_NAME +
-            " SET update_time = #{updateTime}, " +
-            " , <if test=\"menuPid != null\" > menu_pid = #{menuPid} </if> " +
-            " , <if test=\"sort != null\" > sort = #{sort} </if> " +
-            " , <if test=\"menu_type != null\" > menu_type = #{menu_type} </if> " +
-            " , <if test=\"level != null\" > level = #{level} </if> " +
-            " , <if test=\"hidden != null\" > hidden = #{hidden} </if> " +
-            " , <if test=\"disabled != null\" > disabled = #{disabled} </if> " +
+    @Update(" <script> " +
+            " UPDATE "  + MENU_TABLE_NAME +
+            " SET update_time = #{updateTime} " +
+            " <if test=\"menuPid != null\" > , menu_pid = #{menuPid} </if> " +
+            " <if test=\"sort != null\" > , sort = #{sort} </if> " +
+            " <if test=\"menuType != null\" > , menu_type = #{menuType} </if> " +
+            " <if test=\"level != null\" > , level = #{level} </if> " +
+            " <if test=\"hidden != null\" > , hidden = #{hidden} </if> " +
+            " <if test=\"disabled != null\" > , disabled = #{disabled} </if> " +
             " , path = #{path} " +
             " , component = #{component} " +
             " , name = #{name} " +
             " , icon = #{icon} " +
             " , description = #{description} " +
-            " WHERE id = #{id} ")
+            " WHERE id = #{id} "+
+            " </script> ")
     void update(MenuInfo menuInfo);
 
 

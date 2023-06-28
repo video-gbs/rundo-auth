@@ -7,6 +7,7 @@ import jakarta.validation.constraints.Size;
 import lombok.Data;
 import org.hibernate.validator.constraints.Range;
 
+import java.util.Map;
 import java.util.Set;
 
 /**
@@ -39,13 +40,6 @@ public class PostBatchResourceReq {
     private String groupName;
 
     /**
-     * 资源名称
-     */
-    @NotBlank(message = "资源名称不能为空")
-    @Size(max = 100, message = "资源名称的范围在1~100")
-    private String resourceName;
-
-    /**
      * 资源Key
      */
     @NotBlank(message = "资源key不能为空")
@@ -53,9 +47,9 @@ public class PostBatchResourceReq {
     private String resourceKey;
 
     /**
-     * 资源value数组
+     * 资源Map resourceValue:resourceName
      */
     @NotNull(message = "资源value不能为空")
     @Size(min = 1, message = "资源value不能为空")
-    private Set<String> resourceValue;
+    private Map<String,String> resourceMap;
 }

@@ -44,10 +44,9 @@ public class SectionController {
      * @return
      */
     @PostMapping("/add")
-    public CommonResponse<?> addSection(@RequestBody PostAddSectionReq req){
+    public CommonResponse<Long> addSection(@RequestBody PostAddSectionReq req){
         validatorService.validateRequest(req);
-        sectionService.addSection(req.getSectionPid(), req.getSectionName(), req.getLeaderName(), req.getPhone(), req.getDescription());
-        return CommonResponse.success();
+        return CommonResponse.success(sectionService.addSection(req.getSectionPid(), req.getSectionName(), req.getLeaderName(), req.getPhone(), req.getDescription()));
     }
 
     /**

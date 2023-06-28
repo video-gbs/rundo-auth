@@ -22,7 +22,7 @@ public interface SectionService {
      * @param phone 电话号码
      * @param description 描述
      */
-    void addSection(Long pid, String sectionName, String leaderName, String phone, String description);
+    Long addSection(Long pid, String sectionName, String leaderName, String phone, String description);
 
     /**
      * 修改部门

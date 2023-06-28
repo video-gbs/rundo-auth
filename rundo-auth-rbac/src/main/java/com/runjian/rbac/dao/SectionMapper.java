@@ -26,6 +26,7 @@ public interface SectionMapper {
             " (section_pid, section_name, sort, leader_name, phone, level, description, create_time, update_time) " +
             " VALUES " +
             " (#{sectionPid}, #{sectionName}, #{sort}, #{leaderName}, #{phone}, #{level}, #{description}, #{createTime}, #{updateTime})")
+    @Options(useGeneratedKeys = true, keyProperty = "id", keyColumn = "id")
     void save(SectionInfo sectionInfo);
 
     @Select(" SELECT * FROM " + SECTION_TABLE_NAME +
@@ -51,10 +52,10 @@ public interface SectionMapper {
             " <foreach collection='sectionList' item='item' separator=';'> " +
             " UPDATE " + SECTION_TABLE_NAME +
             " SET update_time = #{item.updateTime}  " +
-            " ,<if test=\"item.sectionPid != null\" > section_pid = #{item.sectionPid} </if> " +
-            " ,<if test=\"item.sectionName != null\" > section_name = #{item.sectionName} </if> " +
-            " ,<if test=\"item.sort != null\" > sort = #{item.sort} </if> " +
-            " ,<if test=\"item.level != null\" > level = #{item.level} </if> " +
+            " <if test=\"item.sectionPid != null\" > , section_pid = #{item.sectionPid} </if> " +
+            " <if test=\"item.sectionName != null\" > , section_name = #{item.sectionName} </if> " +
+            " <if test=\"item.sort != null\" > , sort = #{item.sort} </if> " +
+            " <if test=\"item.level != null\" > , level = #{item.level} </if> " +
             " , leader_name = #{item.leaderName} " +
             " , phone = #{item.phone}" +
             " , description = #{item.description} " +

@@ -50,8 +50,8 @@ public class ResourceServiceImpl implements ResourceService {
 
 
     @Override
-    public void batchAddResource(Long resourcePid, Integer resourceType, String resourceName, String resourceKey, Set<String> resourceValues) {
-        if (resourceValues.size() == 0){
+    public void batchAddResource(Long resourcePid, Integer resourceType, String resourceKey, Map<String, String> resourceMap) {
+        if (resourceMap.size() == 0){
             return;
         }
         ResourceInfo pResourceInfo;
@@ -61,20 +61,24 @@ public class ResourceServiceImpl implements ResourceService {
         }else {
             pResourceInfo = dataBaseService.getResourceInfo(resourcePid);
         }
-        Set<String> existValues = resourceMapper.selectResourceValueByResourceKeyAndResourceValueIn(resourceKey, resourceValues);
+        Set<String> existValues = resourceMapper.selectResourceValueByResourceKeyAndResourceValueIn(resourceKey, resourceMap.keySet());
         if (existValues.size() > 0){
-            resourceValues.removeAll(existValues);
+            for (Map.Entry<String, String> resource: resourceMap.entrySet()){
+                if (existValues.contains(resource.getKey())){
+                    resourceMap.remove(resource.getValue());
+                }
+            }
         }
-        List<ResourceInfo> resourceInfoList = new ArrayList<>(resourceValues.size());
+        List<ResourceInfo> resourceInfoList = new ArrayList<>(resourceMap.size());
         LocalDateTime nowTime = LocalDateTime.now();
         long sort = nowTime.toInstant(ZoneOffset.of("+8")).toEpochMilli();
-        for (String resourceValue : resourceValues){
+        for (Map.Entry<String, String> resource: resourceMap.entrySet()){
             ResourceInfo resourceInfo = new ResourceInfo();
             resourceInfo.setResourcePid(resourcePid);
             resourceInfo.setResourceType(resourceType);
-            resourceInfo.setResourceName(resourceName);
+            resourceInfo.setResourceName(resource.getValue());
             resourceInfo.setResourceKey(resourceKey);
-            resourceInfo.setResourceValue(resourceValue);
+            resourceInfo.setResourceValue(resource.getKey());
             resourceInfo.setSort(sort++);
             resourceInfo.setUpdateTime(nowTime);
             resourceInfo.setCreateTime(nowTime);
@@ -84,8 +88,12 @@ public class ResourceServiceImpl implements ResourceService {
                 resourceInfo.setLevel(pResourceInfo.getLevel() + MarkConstant.MARK_SPLIT_RAIL + pResourceInfo.getId());
             }
             cacheService.setResourceLevel(resourceInfo.getResourceKey() + MarkConstant.MARK_SPLIT_SEMICOLON + resourceInfo.getResourceValue(), resourceInfo.getLevel());
+            resourceInfoList.add(resourceInfo);
         }
-        resourceMapper.batchAdd(resourceInfoList);
+        if (resourceInfoList.size() > 0){
+            resourceMapper.batchAdd(resourceInfoList);
+        }
+
     }
 
     @Override
@@ -129,9 +137,9 @@ public class ResourceServiceImpl implements ResourceService {
             pResourceInfo = dataBaseService.getResourceInfo(pid);
             level = pResourceInfo.getLevel()+ MarkConstant.MARK_SPLIT_RAIL + pResourceInfo.getId();
         }
-        if (pResourceInfo.getResourcePid().equals(resourceInfo.getResourcePid())){
-            return;
-        }
+//        if (pResourceInfo.getResourcePid().equals(resourceInfo.getResourcePid())){
+//            return;
+//        }
         if (pResourceInfo.getResourceType().equals(ResourceType.RESOURCE.getCode())){
             throw new BusinessException(BusinessErrorEnums.VALID_ILLEGAL_OPERATION, "资源只能移动在目录下");
         }

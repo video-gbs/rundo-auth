@@ -28,10 +28,10 @@ public interface RoleMapper {
     @Select(" <script> " +
             " SELECT * FROM " + ROLE_TABLE_NAME +
             " WHERE deleted !=  1 " +
-            " AND <if test=\"roleName != null\" > role_name LIKE CONCAT('%', #{roleName}, '%') </if> " +
-            " AND <if test=\"createBy != null\" > create_by LIKE CONCAT('%', #{createBy}, '%') </if> " +
-            " AND <if test=\"createTimeStart != null\" > create_time &gt;= #{createTimeStart} </if> " +
-            " AND <if test=\"createTimeEnd != null\" > create_time &lt;= #{createTimeEnd} </if> " +
+            " <if test=\"roleName != null\" > AND role_name LIKE CONCAT('%', #{roleName}, '%') </if> " +
+            " <if test=\"createBy != null\" > AND create_by LIKE CONCAT('%', #{createBy}, '%') </if> " +
+            " <if test=\"createTimeStart != null\" > AND create_time &gt;= #{createTimeStart} </if> " +
+            " <if test=\"createTimeEnd != null\" > AND create_time &lt;= #{createTimeEnd} </if> " +
             " </script> ")
     List<GetRolePageRsp> selectPageByRoleNameAndCreateByAndCreateTime(int page, int num, String roleName, String createBy, LocalDateTime createTimeStart, LocalDateTime createTimeEnd);
 
@@ -39,8 +39,8 @@ public interface RoleMapper {
             " SELECT rt.* FROM " + ROLE_TABLE_NAME + " rt " +
             " <if test=\"userId != null\" > RIGHT JOIN " + UserRoleMapper.USER_ROLE_TABLE_NAME + " ur ON rt.id = ur.role_id </if> " +
             " WHERE rt.deleted !=  1 " +
-            " AND <if test=\"userId != null\" > ur.user_id = #{userId} </if> " +
-            " AND <if test=\"roleName != null\" > rt.role_name LIKE CONCAT('%', #{roleName}, '%') </if> " +
+            " <if test=\"userId != null\" > AND ur.user_id = #{userId} </if> " +
+            " <if test=\"roleName != null\" >  AND rt.role_name LIKE CONCAT('%', #{roleName}, '%') </if> " +
             " </script> ")
     List<GetRolePageRsp> selectPageByUserIdAndRoleName(Long userId, String roleName);
 
