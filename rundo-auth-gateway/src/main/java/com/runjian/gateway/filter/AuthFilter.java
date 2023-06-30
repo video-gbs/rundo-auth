@@ -84,8 +84,8 @@ public class AuthFilter implements GatewayFilter, Ordered {
                 }).doOnSuccess(commonResponse -> {
                     if (commonResponse.isError()){
                         ServerHttpResponse response = exchange.getResponse();
-                        BusinessErrorEnums.getByCode(commonResponse.getCode());
-                        response.setStatusCode(HttpStatusCode.valueOf(BusinessErrorEnums.USER_AUTH_ERROR.getState()));
+                        BusinessErrorEnums errorEnums = BusinessErrorEnums.getByCode(commonResponse.getCode());
+                        response.setStatusCode(HttpStatusCode.valueOf(errorEnums.getState()));
                         exchange.getAttributes().put(AuthProperties.AUTHORIZATION_AUTH_FAILURE_NAME, commonResponse);
                     }else {
                         exchange.getAttributes().put(AuthProperties.AUTHORIZATION_AUTH_SUCCESS_NAME, commonResponse.getData());

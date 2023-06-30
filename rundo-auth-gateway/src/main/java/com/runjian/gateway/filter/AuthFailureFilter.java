@@ -36,7 +36,7 @@ public class AuthFailureFilter implements GatewayFilter, Ordered {
             }
         }
 
-        Object authResponse = exchange.getAttribute(AuthProperties.AUTHORIZATION_AUTH_FAILURE_NAME);
+        Object authResponse = exchange.getAttributes().remove(AuthProperties.AUTHORIZATION_AUTH_FAILURE_NAME);
         if (Objects.nonNull(authResponse)) {
             response.setStatusCode(HttpStatus.FORBIDDEN);
             return response.writeAndFlushWith(Mono.just(ByteBufMono.just(response.bufferFactory().wrap(JSONObject.toJSONString(authResponse).getBytes()))));
