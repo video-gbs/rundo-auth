@@ -23,14 +23,14 @@ public class GetFuncPageRsp {
     private String serviceName;
 
     /**
+     * 范围
+     */
+    private String scope;
+
+    /**
      * 功能名称
      */
     private String funcName;
-
-    /**
-     * 服务前缀
-     */
-    private String prefixPath;
 
     /**
      * 资源路径

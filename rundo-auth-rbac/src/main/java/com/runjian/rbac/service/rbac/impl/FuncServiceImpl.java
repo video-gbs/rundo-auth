@@ -57,8 +57,13 @@ public class FuncServiceImpl implements FuncService {
         Set<Long> menuIds = new HashSet<>();
         menuIds.add(menuId);
         if (isInclude){
-            MenuInfo menuInfo = dataBaseService.getMenuInfo(menuId);
-            menuIds.addAll(menuMapper.selectIdByLevelLike(menuInfo.getLevel() + MarkConstant.MARK_SPLIT_RAIL + menuInfo.getId()));
+            MenuInfo menuInfo;
+            if (menuId.equals(0L)){
+                menuIds.addAll(menuMapper.selectAllId());
+            }else {
+                menuInfo = dataBaseService.getMenuInfo(menuId);
+                menuIds.addAll(menuMapper.selectIdByLevelLike(menuInfo.getLevel() + MarkConstant.MARK_SPLIT_RAIL + menuInfo.getId()));
+            }
         }
         PageHelper.startPage(page, num);
         return new PageInfo<>(funcMapper.selectAllByMenuIdAndServiceNameLikeAndFuncNameLike(menuIds, serviceName, funcName));
@@ -133,6 +138,7 @@ public class FuncServiceImpl implements FuncService {
     public void deleteFunc(Long id) {
         FuncInfo funcInfo = dataBaseService.getFuncInfo(id);
         funcResourceMapper.deleteAllByFuncId(id);
+        roleFuncMapper.deleteAllByFuncId(id);
         funcMapper.deleteById(id);
         cacheService.removeFuncCache(MethodType.getByCode(funcInfo.getMethod()) + MarkConstant.MARK_SPLIT_SEMICOLON + funcInfo.getPath());
     }
@@ -151,7 +157,7 @@ public class FuncServiceImpl implements FuncService {
         funcResourceRel.setFuncId(funcId);
         funcResourceRel.setResourceKey(resourceKey);
         funcResourceRel.setValidateParam(validateParam);
-        funcResourceRel.setDisabled(CommonEnum.ENABLE.getCode());
+        funcResourceRel.setDisabled(CommonEnum.DISABLE.getCode());
         funcResourceRel.setUpdateTime(nowTime);
         funcResourceRel.setCreateTime(nowTime);
         funcResourceMapper.save(funcResourceRel);

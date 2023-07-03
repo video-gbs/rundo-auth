@@ -157,7 +157,7 @@ public class FuncController {
      * @return
      */
     @DeleteMapping("/resource/delete")
-    public CommonResponse<?> deleteFuncResource(@RequestBody Long funcResourceId){
+    public CommonResponse<?> deleteFuncResource(@RequestParam Long funcResourceId){
         funcService.deleteFuncResource(funcResourceId);
         return CommonResponse.success();
     }

@@ -69,7 +69,7 @@ public class RoleController {
     @ApiDoc(result = GetRolePageRsp.class)
     public CommonResponse<PageInfo<GetRolePageRsp>> getRolePageByUser(@RequestParam(defaultValue = "1") int page,
                                                                       @RequestParam(defaultValue = "10") int num,
-                                                                      @RequestParam Long userId, String roleName){
+                                                                      Long userId, String roleName){
         return CommonResponse.success(roleService.getRolePage(page, num, userId, roleName));
     }
 

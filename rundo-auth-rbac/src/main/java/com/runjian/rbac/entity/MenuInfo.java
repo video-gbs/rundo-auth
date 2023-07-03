@@ -1,5 +1,6 @@
 package com.runjian.rbac.entity;
 
+import com.runjian.rbac.constant.MenuType;
 import lombok.Data;
 
 import java.time.LocalDateTime;
@@ -77,4 +78,17 @@ public class MenuInfo {
     private LocalDateTime createTime;
 
     private LocalDateTime updateTime;
+
+    /**
+     * 获取根节点
+     * @return
+     */
+    public static MenuInfo getRoot(){
+        MenuInfo menuInfo = new MenuInfo();
+        menuInfo.setId(0L);
+        menuInfo.setMenuPid(0L);
+        menuInfo.setLevel("0");
+        menuInfo.setLevelNum(0);
+        return menuInfo;
+    }
 }

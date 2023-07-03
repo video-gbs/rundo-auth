@@ -43,6 +43,9 @@ public interface MenuMapper {
             " WHERE level LIKE CONCAT(#{level},'%')")
     Set<Long> selectIdByLevelLike(String level);
 
+    @Select(" SELECT id FROM " + MENU_TABLE_NAME )
+    Set<Long> selectAllId();
+
     @Select(" SELECT * FROM " + MENU_TABLE_NAME +
             " WHERE menu_pid = #{pid} ")
     Set<Long> selectIdByPid(Long pid);

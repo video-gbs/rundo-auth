@@ -1,5 +1,6 @@
 package com.runjian.rbac.vo.response;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.Data;
 
 import java.time.LocalDateTime;
@@ -26,11 +27,6 @@ public class GetUserPageRsp {
      * 用户名
      */
     private String username;
-
-    /**
-     * 密码
-     */
-    private String password;
 
     /**
      * 工作名称
@@ -60,11 +56,13 @@ public class GetUserPageRsp {
     /**
      * 有效开始时间
      */
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     private LocalDateTime expiryStartTime;
 
     /**
      * 有效结束时间
      */
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     private LocalDateTime expiryEndTime;
 
     /**
@@ -76,11 +74,6 @@ public class GetUserPageRsp {
      * 禁用状态
      */
     private Integer disabled;
-
-    /**
-     * 删除状态
-     */
-    private Integer deleted;
 
     /**
      * 创建人

@@ -21,7 +21,7 @@ public class RoleFuncRel {
     /**
      * 功能id
      */
-    private Long functionId;
+    private Long funcId;
 
     /**
      * 创建人

@@ -63,21 +63,19 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public PageInfo<GetUserPageRsp> getUserPage(int page, int num, Long sectionId, String username, String workName, Boolean isInclude) {
-        SectionInfo sectionInfo;
-        if (sectionId.equals(0L)){
-            sectionInfo = new SectionInfo();
-            sectionInfo.setLevel("0");
-            sectionInfo.setId(0L);
-        }else {
-            sectionInfo = dataBaseService.getSectionInfo(sectionId);
-        }
 
-        PageHelper.startPage(page, num);
         List<GetUserPageRsp> getUserPageRspList;
-        if (isInclude){
-            getUserPageRspList = userMapper.selectAllUserBySectionLevelLikeAndUsernameAndWorkName(sectionInfo.getLevel() + MarkConstant.MARK_SPLIT_RAIL + sectionInfo.getId(), username, workName);
-        }else {
-            getUserPageRspList = userMapper.selectAllUserBySectionIdAndUsernameAndWorkName(sectionInfo.getId(), username, workName);
+        if (isInclude) {
+            if (sectionId.equals(0L)) {
+                PageHelper.startPage(page, num);
+                getUserPageRspList = userMapper.selectByUsernameAndWorkName(username, workName);
+            } else {
+                SectionInfo sectionInfo = dataBaseService.getSectionInfo(sectionId);
+                PageHelper.startPage(page, num);
+                getUserPageRspList = userMapper.selectAllUserBySectionLevelLikeAndUsernameAndWorkName(sectionInfo.getLevel() + MarkConstant.MARK_SPLIT_RAIL + sectionInfo.getId(), username, workName);
+            }
+        } else {
+            getUserPageRspList = userMapper.selectAllUserBySectionIdAndUsernameAndWorkName(sectionId, username, workName);
         }
         return new PageInfo<>(getUserPageRspList);
     }
@@ -87,10 +85,10 @@ public class UserServiceImpl implements UserService {
     public void addUser(String username, String password, Long sectionId, LocalDateTime expiryStartTime, LocalDateTime expiryEndTime, String workName, String workNum, String address, String phone, String description, Set<Long> roleIds) {
         AuthDataDto authData = authUtils.getAuthData();
         Optional<UserInfo> userInfoOp = userMapper.selectByUsername(username);
-        if (userInfoOp.isPresent()){
+        if (userInfoOp.isPresent()) {
             throw new BusinessException(BusinessErrorEnums.VALID_BIND_EXCEPTION_ERROR, String.format("用户名%s已存在，请重新填写", username));
         }
-        if (!sectionId.equals(0L)){
+        if (!sectionId.equals(0L)) {
             dataBaseService.getSectionInfo(sectionId);
         }
         LocalDateTime nowTime = LocalDateTime.now();
@@ -110,7 +108,7 @@ public class UserServiceImpl implements UserService {
         userInfo.setCreateBy(authData.getUsername());
         userMapper.save(userInfo);
 
-        if (roleIds.size() > 0){
+        if (roleIds.size() > 0) {
             userRoleMapper.saveAll(userInfo.getId(), roleIds, authData.getUsername(), nowTime);
         }
         log.warn(LogTemplate.PROCESS_LOG_MSG_TEMPLATE, "用户服务", "添加用户成功", String.format("用户'%s' 执行添加 用户'%s'", authData.getUsername(), username));
@@ -121,13 +119,13 @@ public class UserServiceImpl implements UserService {
     public void updateDisabled(Long userId, Integer disabled) {
         AuthDataDto authData = authUtils.getAuthData();
         UserInfo userInfo = dataBaseService.getUserInfo(userId);
-        if (userInfo.getDisabled().equals(disabled)){
+        if (userInfo.getDisabled().equals(disabled)) {
             return;
         }
         userInfo.setDisabled(disabled);
         userInfo.setUpdateTime(LocalDateTime.now());
         userMapper.updateDisabled(userInfo);
-        if (disabled.equals(CommonEnum.DISABLE.getCode())){
+        if (disabled.equals(CommonEnum.DISABLE.getCode())) {
             // 强制下线
             authServerApi.signOut(userInfo.getUsername());
             // 移除缓存
@@ -137,15 +135,14 @@ public class UserServiceImpl implements UserService {
     }
 
 
-
     @Override
     @Transactional(rollbackFor = Exception.class)
     public void updateUser(Long userId, LocalDateTime expiryEndTime, String password, Long sectionId, String workName, String workNum, String phone, String address, String description, Set<Long> roleIds) {
         AuthDataDto authData = authUtils.getAuthData();
         UserInfo userInfo = dataBaseService.getUserInfo(userId);
-        if (Objects.isNull(password)){
+        if (Objects.isNull(password)) {
             userInfo.setPassword(null);
-        }else {
+        } else {
             userInfo.setPassword(AuthProperties.passwordEncoder.encode(password));
         }
         LocalDateTime nowTime = LocalDateTime.now();
@@ -157,44 +154,52 @@ public class UserServiceImpl implements UserService {
         userInfo.setAddress(address);
         userInfo.setDescription(description);
         userInfo.setUpdateTime(nowTime);
-
-        if (Objects.nonNull(roleIds) && new HashSet<>(authData.getRoleIds()).containsAll(roleIds)){
-            if (roleIds.size() == 0){
-                userRoleMapper.deleteAllByUserId(userId);
-            }else {
-                Set<Long> existRoleIds = userRoleMapper.selectRoleIdByUserId(userId);
-                if (existRoleIds.size() > 0){
-                    Set<Long> difference = new HashSet<>(existRoleIds);
-                    // 求交集
-                    difference.retainAll(roleIds);
-                    // 移除交集获得被删除的数据
-                    existRoleIds.removeAll(difference);
-                    // 移除交集获得增加的数据
-                    roleIds.removeAll(difference);
-                    // 删除去除的角色
-                    userRoleMapper.deleteAllByUserIdAndRoleIds(userId, existRoleIds);
-                }
-                // 保存新的角色
-                if (roleIds.size() > 0){
-                    userRoleMapper.saveAll(userInfo.getId(), roleIds, authData.getUsername(), nowTime);
-                }
-            }
-            // 刷新缓存
-            cacheService.setUserRole(userInfo.getUsername(), roleIds);
-        }
+        Set<Long> existRoleIds = userRoleMapper.selectRoleIdByUserId(userId);
         userMapper.update(userInfo);
+
+        if (Objects.isNull(roleIds)){
+            roleIds = Collections.EMPTY_SET;
+        }
+
+        if (roleIds.size() == existRoleIds.size() && existRoleIds.containsAll(roleIds)) {
+            log.warn(LogTemplate.PROCESS_LOG_MSG_TEMPLATE, "用户服务", "修改用户成功", String.format("用户'%s' 执行更新 用户'%s'", authData.getUsername(), userInfo));
+            return;
+        }
+
+        if (roleIds.size() == 0) {
+            userRoleMapper.deleteAllByUserId(userId);
+        } else {
+            if (existRoleIds.size() > 0) {
+                Set<Long> difference = new HashSet<>(existRoleIds);
+                // 求交集
+                difference.retainAll(roleIds);
+                // 移除交集获得被删除的数据
+                existRoleIds.removeAll(difference);
+                // 移除交集获得增加的数据
+                roleIds.removeAll(difference);
+                // 删除去除的角色
+                userRoleMapper.deleteAllByUserIdAndRoleIds(userId, existRoleIds);
+            }
+            // 保存新的角色
+            if (roleIds.size() > 0) {
+                userRoleMapper.saveAll(userInfo.getId(), roleIds, authData.getUsername(), nowTime);
+            }
+        }
+        // 刷新缓存
+        cacheService.setUserRole(userInfo.getUsername(), roleIds);
+
         log.warn(LogTemplate.PROCESS_LOG_MSG_TEMPLATE, "用户服务", "修改用户成功", String.format("用户'%s' 执行更新 用户'%s'", authData.getUsername(), userInfo));
     }
 
     @Override
     @Transactional(rollbackFor = Exception.class)
     public void batchDeleteUser(Set<Long> userIds) {
-        if (userIds.size() == 0){
+        if (userIds.size() == 0) {
             return;
         }
         AuthDataDto authData = authUtils.getAuthData();
-        userMapper.batchUpdateDeleted(userIds, CommonEnum.DISABLE.getCode());
-        for (Long userId : userIds){
+        userMapper.batchUpdateDeleted(userIds, CommonEnum.ENABLE.getCode(), LocalDateTime.now());
+        for (Long userId : userIds) {
             UserInfo userInfo = dataBaseService.getUserInfo(userId);
             // 强制下线
             authServerApi.signOut(userInfo.getUsername());

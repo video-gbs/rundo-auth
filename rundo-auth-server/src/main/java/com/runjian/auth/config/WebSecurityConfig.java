@@ -50,7 +50,7 @@ public class WebSecurityConfig {
     public SecurityFilterChain webSecurityFilterChain(HttpSecurity http) throws Exception{
 
         http
-                .authorizeHttpRequests(req -> req.requestMatchers("/auth/login", "/auth/oauth2").permitAll().anyRequest().authenticated())
+                .authorizeHttpRequests(req -> req.requestMatchers("/auth-server/logout", "/auth-server/sign-out").permitAll().anyRequest().authenticated())
                 .formLogin(formLogin -> formLogin
                         .loginProcessingUrl("/auth/login")
                         .successHandler(authenticationSuccessHandler)

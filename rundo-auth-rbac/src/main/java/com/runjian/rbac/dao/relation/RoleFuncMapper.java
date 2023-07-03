@@ -51,4 +51,8 @@ public interface RoleFuncMapper {
     @Select(" SELECT role_id FROM " + ROLE_FUNC_TABLE_NAME +
             " WHERE func_id = #{funcId} ")
     List<Long> selectRoleIdsByFuncId(Long funcId);
+
+    @Delete(" DELETE FROM " + ROLE_FUNC_TABLE_NAME +
+            " WHERE func_id = #{funcId} ")
+    void deleteAllByFuncId(Long funcId);
 }

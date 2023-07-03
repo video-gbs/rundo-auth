@@ -6,6 +6,7 @@ import com.runjian.rbac.vo.response.GetUserPageRsp;
 import org.apache.ibatis.annotations.*;
 import org.springframework.stereotype.Repository;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
@@ -25,8 +26,8 @@ public interface UserMapper {
     Integer selectCountBySectionId(Long sectionId);
 
     @Select(" <script> " +
-            " SELECT ut.* FROM " + SectionMapper.SECTION_TABLE_NAME + " st " +
-            " LEFT JOIN " + USER_TABLE_NAME + " ut ON ut.section_id = st.id " +
+            " SELECT ut.* FROM " + USER_TABLE_NAME + " ut " +
+            " LEFT JOIN " + SectionMapper.SECTION_TABLE_NAME + " st ON ut.section_id = st.id " +
             " WHERE deleted != 1 " +
             " AND st.level LIKE CONCAT(#{sectionLevel}, '%') " +
             " <if test=\"username != null\" > AND ut.username LIKE CONCAT('%', #{username}, '%') </if> " +
@@ -67,8 +68,7 @@ public interface UserMapper {
 
     @Update(" <script> " +
             " UPDATE "  + USER_TABLE_NAME +
-            " SET update_time = #{updateTime}, " +
-            " section_id = #{sectionId} " +
+            " SET update_time = #{updateTime} " +
             " <if test=\"password != null\" > , password = #{password} </if> " +
             " <if test=\"workName != null\" > , work_name = #{workName} </if> " +
             " <if test=\"phone != null\" > , phone = #{phone} </if> " +
@@ -85,12 +85,12 @@ public interface UserMapper {
     @Update(" <script> " +
             " <foreach collection='userIds' item='item' separator=';'> " +
             " UPDATE " + USER_TABLE_NAME +
-            " SET update_time = #{item.updateTime}  " +
+            " SET update_time = #{updateTime}  " +
             " , deleted = #{deleted} " +
-            " WHERE id = #{item.id} "+
+            " WHERE id = #{item} "+
             " </foreach> " +
             " </script> ")
-    void batchUpdateDeleted(Set<Long> userIds, Integer deleted);
+    void batchUpdateDeleted(Set<Long> userIds, Integer deleted, LocalDateTime updateTime);
 
     @Select(" <script> " +
             " SELECT ut.* FROM " + UserRoleMapper.USER_ROLE_TABLE_NAME + " ur" +
@@ -101,4 +101,13 @@ public interface UserMapper {
             " <if test=\"isBinding == false\" > rt.role_id != #{roleId} </if> " +
             " </script>")
     List<GetUserPageRsp> selectByInRoleIdAndUsername(Long roleId, String username, Boolean isBinding);
+
+
+    @Select(" <script> " +
+            " SELECT * FROM " + USER_TABLE_NAME +
+            " WHERE deleted != 1 " +
+            " <if test=\"username != null\" > AND username LIKE CONCAT('%', #{username}, '%') </if> " +
+            " <if test=\"workName != null\" > AND work_name LIKE CONCAT('%', #{workName}, '%') </if> " +
+            " </script>")
+    List<GetUserPageRsp> selectByUsernameAndWorkName(String username, String workName);
 }

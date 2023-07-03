@@ -1,5 +1,6 @@
 package com.runjian.rbac.vo.request;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.runjian.common.config.exception.BusinessException;
 import com.runjian.common.validator.ValidationResult;
 import com.runjian.common.validator.ValidatorFunction;
@@ -33,7 +34,7 @@ public class PostAddUserReq implements ValidatorFunction {
      * 密码
      */
     @NotBlank(message = "密码不能为空")
-    @Size(min = 1, max = 100, message = "非法密码，长度范围1~100")
+    @Size(min = 1, max = 100, message = "非法密码，长度范围6~100")
     private String password;
 
     /**
@@ -47,11 +48,13 @@ public class PostAddUserReq implements ValidatorFunction {
      * 生效开始时间
      */
     @NotNull(message = "生效开始时间不能为空")
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     private LocalDateTime expiryStartTime;
 
     /**
      * 生效结束时间
      */
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     private LocalDateTime expiryEndTime;
 
     /**
@@ -75,7 +78,7 @@ public class PostAddUserReq implements ValidatorFunction {
     /**
      * 手机号码
      */
-    @Size(min = 1, max = 20, message = "非法名称，长度范围1~20")
+    @Size(min = 1, max = 20, message = "非法手机号码，长度范围1~20")
     private String phone;
 
     /**

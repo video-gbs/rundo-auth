@@ -52,4 +52,12 @@ public class SectionInfo {
 
     private LocalDateTime updateTime;
 
+    public static SectionInfo getRoot(){
+        SectionInfo sectionInfo = new SectionInfo();
+        sectionInfo = new SectionInfo();
+        sectionInfo.setLevel("0");
+        sectionInfo.setId(0L);
+        return sectionInfo;
+    }
+
 }
