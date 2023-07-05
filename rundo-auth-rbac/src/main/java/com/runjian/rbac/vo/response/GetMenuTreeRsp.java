@@ -82,5 +82,6 @@ public class GetMenuTreeRsp extends AbstractTreeInfo {
         getMenuTreeRsp.setHidden(CommonEnum.DISABLE.getCode());
         getMenuTreeRsp.setDisabled(CommonEnum.DISABLE.getCode());
         return getMenuTreeRsp;
+
     }
 }

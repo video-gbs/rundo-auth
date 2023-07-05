@@ -1,7 +1,9 @@
 package com.runjian.rbac.service.rbac;
 
+import com.runjian.rbac.vo.response.GetResourceRootRsp;
 import com.runjian.rbac.vo.response.GetResourceTreeRsp;
 
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
@@ -20,6 +22,19 @@ public interface ResourceService {
      */
     GetResourceTreeRsp getResourceTree(String resourceKey, Boolean isIncludeResource);
 
+    /**
+     * 添加根节点
+     * @param resourceKey 资源key
+     * @param resourceName 资源名称
+     * @param resourceValue 资源值
+     */
+    void addResourceRoot(String resourceKey, String resourceName, String resourceValue);
+
+    /**
+     * 获取全部根节点
+     * @return
+     */
+    List<GetResourceRootRsp> getResourceRoot();
 
     /**
      * 批量添加资源
@@ -39,10 +54,10 @@ public interface ResourceService {
     void updateResource(Long resourceId, String resourceName, String resourceValue);
 
     /**
-     * 批量删除
-     * @param resourceIds 资源id组
+     * 删除
+     * @param resourceId 删除资源
      */
-    void batchDelete(Set<Long> resourceIds);
+    void delete(Long resourceId);
 
     /**
      * 父子移动节点

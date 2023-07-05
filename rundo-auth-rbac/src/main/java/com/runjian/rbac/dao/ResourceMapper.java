@@ -2,6 +2,7 @@ package com.runjian.rbac.dao;
 
 import com.runjian.rbac.dao.relation.RoleResourceMapper;
 import com.runjian.rbac.entity.ResourceInfo;
+import com.runjian.rbac.vo.response.GetResourceRootRsp;
 import com.runjian.rbac.vo.response.GetResourceTreeRsp;
 import org.apache.ibatis.annotations.*;
 import org.springframework.stereotype.Repository;
@@ -100,4 +101,27 @@ public interface ResourceMapper {
             " WHERE id IN <foreach collection='resourceIds' item='item' open='(' separator=',' close=')'> #{item} </foreach> " +
             " </script>")
     List<ResourceInfo> selectAllByResourceIds(Set<Long> resourceIds);
+
+    @Select(" <script> " +
+            " SELECT * FROM " + RESOURCE_TABLE_NAME +
+            " WHERE resource_key = #{resourceKey} " +
+            " AND resource_pid != 0 " +
+            " <if test=\"isIncludeResource = false\" > AND resource_type = 1 </if> " +
+            " </script>")
+    List<GetResourceTreeRsp> selectChildByResourceKeyAndResourceType(String resourceKey, Boolean isIncludeResource);
+
+
+    @Select(" SELECT * FROM " + RESOURCE_TABLE_NAME +
+            " WHERE resource_pid = 0 AND resource_key = #{resourceKey}")
+    Optional<GetResourceTreeRsp> selectRootByResourceKey(String resourceKey);
+
+    @Insert(" <script> " +
+            " INSERT INTO " + RESOURCE_TABLE_NAME + "(resource_pid, resource_type, resource_name, resource_key, resource_value, sort, level, create_time, update_time) VALUES " +
+            " (#{resourcePid}, #{resourceType}, #{resourceName}, #{resourceKey}, #{resourceValue}, #{sort}, #{level}, #{createTime}, #{updateTime}) " +
+            " </script>")
+    void save(ResourceInfo resourceInfo);
+
+    @Select(" SELECT * FROM " + RESOURCE_TABLE_NAME +
+            " WHERE resource_pid = 0")
+    List<GetResourceRootRsp> selectAllRoot();
 }

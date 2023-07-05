@@ -1,5 +1,6 @@
 package com.runjian.rbac.vo.response;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.Data;
 
 import java.time.LocalDateTime;
@@ -46,5 +47,6 @@ public class GetUserRsp {
     /**
      * 账号有效截止时间
      */
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     private LocalDateTime expiryEndTime;
 }

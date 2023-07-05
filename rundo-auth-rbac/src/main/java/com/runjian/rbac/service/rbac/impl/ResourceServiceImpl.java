@@ -11,6 +11,7 @@ import com.runjian.rbac.service.auth.CacheService;
 import com.runjian.rbac.service.rbac.DataBaseService;
 import com.runjian.rbac.service.rbac.ResourceService;
 import com.runjian.rbac.vo.AbstractTreeInfo;
+import com.runjian.rbac.vo.response.GetResourceRootRsp;
 import com.runjian.rbac.vo.response.GetResourceTreeRsp;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -20,6 +21,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.time.LocalDateTime;
 import java.time.ZoneOffset;
 import java.util.*;
+import java.util.stream.Collectors;
 
 /**
  * @author Miracle
@@ -38,14 +40,41 @@ public class ResourceServiceImpl implements ResourceService {
 
     private final CacheService cacheService;
 
-
-
     @Override
     public GetResourceTreeRsp getResourceTree(String resourceKey, Boolean isIncludeResource) {
-        List<GetResourceTreeRsp> resourceInfoList = resourceMapper.selectAllByResourceKeyAndResourceType(resourceKey, isIncludeResource);
-        GetResourceTreeRsp root = GetResourceTreeRsp.getRoot(resourceKey);
+        Optional<GetResourceTreeRsp> rootOp = resourceMapper.selectRootByResourceKey(resourceKey);
+        if (rootOp.isEmpty()){
+            return null;
+        }
+        GetResourceTreeRsp root = rootOp.get();
+        List<GetResourceTreeRsp> resourceInfoList = resourceMapper.selectChildByResourceKeyAndResourceType(resourceKey, isIncludeResource);
         root.setChildList(root.recursionData(resourceInfoList, root.getLevel()));
         return root;
+    }
+
+    @Override
+    public void addResourceRoot(String resourceKey, String resourceName, String resourceValue){
+        Optional<GetResourceTreeRsp> rootOp = resourceMapper.selectRootByResourceKey(resourceKey);
+        if (rootOp.isPresent()){
+            throw new BusinessException(BusinessErrorEnums.VALID_OBJECT_IS_EXIST, "根节点已存在，不能重复创建");
+        }
+        LocalDateTime nowTime = LocalDateTime.now();
+        ResourceInfo resourceInfo = new ResourceInfo();
+        resourceInfo.setResourceType(ResourceType.CATALOGUE.getCode());
+        resourceInfo.setLevel("0");
+        resourceInfo.setResourcePid(0L);
+        resourceInfo.setSort(0L);
+        resourceInfo.setResourceName(resourceName);
+        resourceInfo.setResourceKey(resourceKey);
+        resourceInfo.setResourceValue(resourceValue);
+        resourceInfo.setUpdateTime(nowTime);
+        resourceInfo.setCreateTime(nowTime);
+        resourceMapper.save(resourceInfo);
+    }
+
+    @Override
+    public List<GetResourceRootRsp> getResourceRoot() {
+        return resourceMapper.selectAllRoot();
     }
 
 
@@ -54,13 +83,7 @@ public class ResourceServiceImpl implements ResourceService {
         if (resourceMap.size() == 0){
             return;
         }
-        ResourceInfo pResourceInfo;
-        if (resourcePid.equals(0L)){
-            pResourceInfo = new ResourceInfo();
-            pResourceInfo.setLevel("0");
-        }else {
-            pResourceInfo = dataBaseService.getResourceInfo(resourcePid);
-        }
+        ResourceInfo pResourceInfo = dataBaseService.getResourceInfo(resourcePid);
         Set<String> existValues = resourceMapper.selectResourceValueByResourceKeyAndResourceValueIn(resourceKey, resourceMap.keySet());
         if (existValues.size() > 0){
             for (Map.Entry<String, String> resource: resourceMap.entrySet()){
@@ -82,11 +105,7 @@ public class ResourceServiceImpl implements ResourceService {
             resourceInfo.setSort(sort++);
             resourceInfo.setUpdateTime(nowTime);
             resourceInfo.setCreateTime(nowTime);
-            if (resourcePid.equals(0L)){
-                resourceInfo.setLevel("0");
-            }else {
-                resourceInfo.setLevel(pResourceInfo.getLevel() + MarkConstant.MARK_SPLIT_RAIL + pResourceInfo.getId());
-            }
+            resourceInfo.setLevel(pResourceInfo.getLevel() + MarkConstant.MARK_SPLIT_RAIL + pResourceInfo.getId());
             cacheService.setResourceLevel(resourceInfo.getResourceKey() + MarkConstant.MARK_SPLIT_SEMICOLON + resourceInfo.getResourceValue(), resourceInfo.getLevel());
             resourceInfoList.add(resourceInfo);
         }
@@ -109,15 +128,14 @@ public class ResourceServiceImpl implements ResourceService {
     }
 
     @Override
-    @Transactional(rollbackFor = Exception.class)
-    public void batchDelete(Set<Long> resourceIds) {
-        if (resourceIds.size() == 0){
-            return;
-        }
-        List<ResourceInfo> resourceInfoList = resourceMapper.selectAllByResourceIds(resourceIds);
+    public void delete(Long resourceId) {
+        ResourceInfo pResourceInfo = dataBaseService.getResourceInfo(resourceId);
+        List<ResourceInfo> resourceInfoList = resourceMapper.selectAllLikeByLevel(pResourceInfo.getLevel() + MarkConstant.MARK_SPLIT_RAIL + pResourceInfo.getId());
+        resourceInfoList.add(pResourceInfo);
         for (ResourceInfo resourceInfo : resourceInfoList){
             cacheService.removeResourceLevel(resourceInfo.getResourceKey() + MarkConstant.MARK_SPLIT_SEMICOLON + resourceInfo.getResourceValue());
         }
+        Set<Long> resourceIds = resourceInfoList.stream().map(ResourceInfo::getId).collect(Collectors.toSet());
         funcResourceMapper.deleteAllByResourceIds(resourceIds);
         resourceMapper.batchDelete(resourceIds);
     }
@@ -125,21 +143,8 @@ public class ResourceServiceImpl implements ResourceService {
     @Override
     public void fsMove(Long id, Long pid) {
         ResourceInfo resourceInfo = dataBaseService.getResourceInfo(id);
-        ResourceInfo pResourceInfo;
-        String level;
-        if (pid.equals(0L)){
-            pResourceInfo = new ResourceInfo();
-            pResourceInfo.setId(0L);
-            pResourceInfo.setLevel("0");
-            pResourceInfo.setResourceType(ResourceType.CATALOGUE.getCode());
-            level = pResourceInfo.getLevel();
-        }else {
-            pResourceInfo = dataBaseService.getResourceInfo(pid);
-            level = pResourceInfo.getLevel()+ MarkConstant.MARK_SPLIT_RAIL + pResourceInfo.getId();
-        }
-//        if (pResourceInfo.getResourcePid().equals(resourceInfo.getResourcePid())){
-//            return;
-//        }
+        ResourceInfo pResourceInfo = dataBaseService.getResourceInfo(pid);
+        String level = pResourceInfo.getLevel()+ MarkConstant.MARK_SPLIT_RAIL + pResourceInfo.getId();
         if (pResourceInfo.getResourceType().equals(ResourceType.RESOURCE.getCode())){
             throw new BusinessException(BusinessErrorEnums.VALID_ILLEGAL_OPERATION, "资源只能移动在目录下");
         }

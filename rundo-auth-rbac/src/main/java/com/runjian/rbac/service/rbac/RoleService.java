@@ -35,6 +35,36 @@ public interface RoleService {
     PageInfo<GetRolePageRsp> getRolePage(int page, int num, Long userId, String roleName);
 
     /**
+     * 获取角色资源id
+     * @param roleId 角色id
+     * @return 资源id
+     */
+    Set<Long> getRoleResourceIds(Long roleId);
+
+    /**
+     * 获取角色菜单id
+     * @param roleId 角色id
+     * @return 菜单id
+     */
+    Set<Long> getRoleMenuIds(Long roleId);
+
+    /**
+     * 根据菜单id获取功能id
+     * @param roleId 角色id
+     * @param menuId 菜单id
+     * @return 功能id
+     */
+    Set<Long> getRoleFuncIdByMenuId(Long roleId, Long menuId);
+
+    /**
+     * 获取角色功能id
+     * @param roleId 角色id
+     * @return 功能id
+     */
+    Set<Long> getRoleFuncId(Long roleId);
+
+
+    /**
      * 添加角色
      * @param roleName 角色名称
      * @param roleDesc 角色描述

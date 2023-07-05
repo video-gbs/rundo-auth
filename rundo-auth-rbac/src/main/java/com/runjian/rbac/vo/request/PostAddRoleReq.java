@@ -19,13 +19,13 @@ public class PostAddRoleReq {
      * 角色名称
      */
     @NotBlank(message = "角色名称不能为空")
-    @Max(value = 250, message = "角色名称过长")
+    @Size(max = 128, message = "角色名称过长")
     private String roleName;
 
     /**
      * 角色描述
      */
-    @Max(value = 250, message = "角色描述过长")
+    @Size(max = 250, message = "角色描述过长")
     private String roleDesc;
 
     /**

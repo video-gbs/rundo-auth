@@ -1,5 +1,6 @@
 package com.runjian.rbac.dao.relation;
 
+import com.runjian.rbac.dao.FuncMapper;
 import org.apache.ibatis.annotations.Delete;
 import org.apache.ibatis.annotations.Insert;
 import org.apache.ibatis.annotations.Mapper;
@@ -55,4 +56,9 @@ public interface RoleFuncMapper {
     @Delete(" DELETE FROM " + ROLE_FUNC_TABLE_NAME +
             " WHERE func_id = #{funcId} ")
     void deleteAllByFuncId(Long funcId);
+
+    @Select(" SELECT func_id FROM " + ROLE_FUNC_TABLE_NAME + " rft " +
+            " LEFT JOIN " + FuncMapper.FUNC_TABLE_NAME + " ft ON " + " rft.func_id = ft.id " +
+            " WHERE role_id = #{roleId} AND ft.menu_id = #{menuId} ")
+    Set<Long> selectFuncIdByRoleIdAndMenuId(Long roleId, Long menuId);
 }

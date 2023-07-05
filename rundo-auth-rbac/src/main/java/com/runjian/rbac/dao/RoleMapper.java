@@ -1,13 +1,9 @@
 package com.runjian.rbac.dao;
 
-import com.runjian.common.constant.CommonEnum;
 import com.runjian.rbac.dao.relation.UserRoleMapper;
 import com.runjian.rbac.entity.RoleInfo;
 import com.runjian.rbac.vo.response.GetRolePageRsp;
-import org.apache.ibatis.annotations.Insert;
-import org.apache.ibatis.annotations.Mapper;
-import org.apache.ibatis.annotations.Select;
-import org.apache.ibatis.annotations.Update;
+import org.apache.ibatis.annotations.*;
 import org.springframework.stereotype.Repository;
 
 import java.time.LocalDateTime;
@@ -71,7 +67,8 @@ public interface RoleMapper {
     @Insert(" INSERT INTO " + ROLE_TABLE_NAME +
             " (role_name, role_desc, create_time, update_time) " +
             " VALUES " +
-            " (#{role_name}, #{role_desc}, #{createTime}, #{updateTime})")
+            " (#{roleName}, #{roleDesc}, #{createTime}, #{updateTime})")
+    @Options(useGeneratedKeys = true, keyProperty = "id", keyColumn = "id")
     void save(RoleInfo roleInfo);
 
     @Select(" <script> " +

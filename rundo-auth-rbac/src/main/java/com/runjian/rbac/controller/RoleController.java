@@ -74,6 +74,47 @@ public class RoleController {
     }
 
     /**
+     * 获取角色菜单信息
+     * @param roleId 角色id
+     * @return 菜单id
+     */
+    @GetMapping("/role/menu")
+    public CommonResponse<Set<Long>> getRoleMenuId(@RequestParam Long roleId){
+        return CommonResponse.success(roleService.getRoleMenuIds(roleId));
+    }
+
+    /**
+     * 获取角色资源信息
+     * @param roleId 角色id
+     * @return 资源id
+     */
+    @GetMapping("/role/resource")
+    public CommonResponse<Set<Long>> getRoleResourceId(@RequestParam Long roleId){
+        return CommonResponse.success(roleService.getRoleResourceIds(roleId));
+    }
+
+    /**
+     * 获取角色某菜单下的功能信息
+     * @param roleId 角色id
+     * @param menuId 菜单id
+     * @return 功能id
+     */
+    @GetMapping("/role/func/menu")
+    public CommonResponse<Set<Long>> getRoleFunc(@RequestParam Long roleId, @RequestParam Long menuId){
+        return CommonResponse.success(roleService.getRoleFuncIdByMenuId(roleId, menuId));
+    }
+
+    /**
+     * 获取角色全部功能信息
+     * @param roleId 角色id
+     * @return 功能id
+     */
+    @GetMapping("/role/func")
+    public CommonResponse<Set<Long>> getRoleFunc(@RequestParam Long roleId){
+        return CommonResponse.success(roleService.getRoleFuncId(roleId));
+    }
+
+    /**
      * 添加角色
      * @param req 添加角色请求体
      * @return

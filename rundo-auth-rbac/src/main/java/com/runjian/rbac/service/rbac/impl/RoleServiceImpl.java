@@ -73,6 +73,26 @@ public class RoleServiceImpl implements RoleService {
     }
 
     @Override
+    public Set<Long> getRoleResourceIds(Long roleId) {
+        return roleResourceMapper.selectResourceIdByRoleId(roleId);
+    }
+
+    @Override
+    public Set<Long> getRoleMenuIds(Long roleId) {
+        return roleMenuMapper.selectMenuIdByRoleId(roleId);
+    }
+
+    @Override
+    public Set<Long> getRoleFuncIdByMenuId(Long roleId, Long menuId) {
+        return roleFuncMapper.selectFuncIdByRoleIdAndMenuId(roleId, menuId);
+    }
+
+    @Override
+    public Set<Long> getRoleFuncId(Long roleId) {
+        return roleFuncMapper.selectFuncIdByRoleId(roleId);
+    }
+
+    @Override
     @Transactional(rollbackFor = Exception.class)
     public void addRole(String roleName, String roleDesc, Set<Long> menuIds, Set<Long> funcIds, Set<Long> resourceIds) {
         Optional<RoleInfo> roleInfoOp = roleMapper.selectByRoleName(roleName);

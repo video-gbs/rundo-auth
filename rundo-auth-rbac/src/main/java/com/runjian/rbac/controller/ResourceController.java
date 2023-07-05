@@ -4,12 +4,14 @@ import com.runjian.common.config.response.CommonResponse;
 import com.runjian.common.validator.ValidatorService;
 import com.runjian.rbac.service.rbac.ResourceService;
 import com.runjian.rbac.vo.request.*;
+import com.runjian.rbac.vo.response.GetResourceRootRsp;
 import com.runjian.rbac.vo.response.GetResourceTreeRsp;
 import io.github.yedaxia.apidocs.ApiDoc;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
 import java.util.Set;
 
 /**
@@ -40,6 +42,28 @@ public class ResourceController {
     }
 
     /**
+     * 获取根节点资源
+     * @return
+     */
+    @GetMapping("/root")
+    @ApiDoc(result = GetResourceRootRsp.class)
+    public CommonResponse<List<GetResourceRootRsp>> getResourceRoot(){
+        return CommonResponse.success(resourceService.getResourceRoot());
+    }
+
+    /**
+     * 添加根节点
+     * @param req 添加资源根节点请求体
+     * @return
+     */
+    @PostMapping("/root/add")
+    public CommonResponse<?> addRootResource(@RequestBody PostResourceRootReq req){
+        validatorService.validateRequest(req);
+        resourceService.addResourceRoot(req.getResourceKey(), req.getResourceName(), req.getResourceValue());
+        return CommonResponse.success();
+    }
+
+    /**
      * 批量添加资源
      * @param req 批量添加资源请求体
      * @return
@@ -64,13 +88,13 @@ public class ResourceController {
     }
 
     /**
-     * 批量删除资源
-     * @param resourceIds 资源id数组
+     * 删除资源
+     * @param resourceId 资源id
      * @return
      */
-    @DeleteMapping("/delete/batch")
-    public CommonResponse<?> deleteResource(@RequestParam Set<Long> resourceIds){
-        resourceService.batchDelete(resourceIds);
+    @DeleteMapping("/delete")
+    public CommonResponse<?> delete(@RequestParam Long resourceId){
+        resourceService.delete(resourceId);
         return CommonResponse.success();
     }
 
