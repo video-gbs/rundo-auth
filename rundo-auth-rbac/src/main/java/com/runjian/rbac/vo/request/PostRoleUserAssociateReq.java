@@ -25,6 +25,15 @@ public class PostRoleUserAssociateReq {
     /**
      * 用户id数组
      */
-    @Size(max = 999999, message = "用户id数组过长")
+    @NotNull(message = "用户id数组不能为空")
+    @Size(min = 1, max = 999999, message = "用户id数组过长")
     private Set<Long> userIds;
+
+    /**
+     * 添加指令
+     */
+    @NotNull(message = "是否添加操作不能为空")
+    private Boolean isAdd;
+
+
 }

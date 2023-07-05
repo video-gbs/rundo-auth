@@ -10,7 +10,6 @@ import com.runjian.common.constant.MarkConstant;
 import com.runjian.rbac.constant.MethodType;
 import com.runjian.rbac.dao.FuncMapper;
 import com.runjian.rbac.dao.RoleMapper;
-import com.runjian.rbac.dao.UserMapper;
 import com.runjian.rbac.dao.relation.RoleFuncMapper;
 import com.runjian.rbac.dao.relation.RoleMenuMapper;
 import com.runjian.rbac.dao.relation.RoleResourceMapper;
@@ -18,7 +17,6 @@ import com.runjian.rbac.dao.relation.UserRoleMapper;
 import com.runjian.rbac.entity.FuncInfo;
 import com.runjian.rbac.entity.RoleInfo;
 import com.runjian.rbac.entity.UserInfo;
-import com.runjian.rbac.feign.AuthServerApi;
 import com.runjian.rbac.service.auth.CacheService;
 import com.runjian.rbac.service.rbac.DataBaseService;
 import com.runjian.rbac.service.rbac.RoleService;
@@ -253,7 +251,7 @@ public class RoleServiceImpl implements RoleService {
         if (roleIds.size() == 0){
             return;
         }
-        roleMapper.batchUpdateDeleted(roleIds, CommonEnum.DISABLE.getCode(), LocalDateTime.now());
+        roleMapper.batchUpdateDeleted(roleIds, CommonEnum.ENABLE.getCode(), LocalDateTime.now());
         Set<Long> userIds = userRoleMapper.selectUserIdByRoleIds(roleIds);
         for (Long userId : userIds){
             UserInfo userInfo = dataBaseService.getUserInfo(userId);
@@ -263,46 +261,16 @@ public class RoleServiceImpl implements RoleService {
     }
 
     @Override
-    @Transactional(rollbackFor = Exception.class)
-    public void associateUser(Long roleId, Set<Long> userIds) {
+    public void associateUser(Long roleId, Set<Long> userIds, Boolean isAdd) {
         RoleInfo roleInfo = dataBaseService.getRoleInfo(roleId);
-        if (Objects.isNull(userIds)){
-            return;
-        }
         String authUser = authUtils.getAuthData().getUsername();
-        boolean isUpdate = false;
-        if (userIds.size() == 0){
-            userRoleMapper.deleteAllByRoleId(roleId);
-            isUpdate = true;
+        if (isAdd){
+            userRoleMapper.saveAllUserIds(roleId, userIds, authUser, LocalDateTime.now());
         }else {
-            Set<Long> existUserIds = userRoleMapper.selectUserIdByRoleId(roleId);
-            if (existUserIds.size() > 0){
-                Set<Long> difference = new HashSet<>(existUserIds);
-                // 求交集
-                difference.retainAll(userIds);
-                // 移除交集获得被删除的数据
-                existUserIds.removeAll(difference);
-                // 移除交集获得增加的数据
-                userIds.removeAll(difference);
-                // 删除去除的角色
-                if (existUserIds.size() > 0){
-                    userRoleMapper.deleteAllByRoleIdAndUserIds(roleId, existUserIds);
-                    isUpdate = true;
-                }
-            }
-            // 保存新的角色
-            if (userIds.size() > 0){
-                userRoleMapper.saveAll(roleId, userIds, authUser, LocalDateTime.now());
-                isUpdate = true;
-            }
-        }
-        // 判断是否有更新
-        if (isUpdate){
-            for (Long userId : userIds){
-                UserInfo userInfo = dataBaseService.getUserInfo(userId);
-                cacheService.setUserRole(userInfo.getUsername(), userRoleMapper.selectRoleIdByUserId(userId));
-            }
+            userRoleMapper.deleteAllByRoleIdAndUserIds(roleId, userIds);
         }
         log.warn(LogTemplate.PROCESS_LOG_MSG_TEMPLATE, "角色服务", "角色关联用户", String.format("用户'%s' 执行角色'%s' 关联用户 用户'%s'", authUser, roleInfo.getRoleName(), userIds));
     }
+
+
 }

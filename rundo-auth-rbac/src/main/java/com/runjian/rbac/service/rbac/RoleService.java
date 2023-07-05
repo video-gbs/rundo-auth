@@ -102,6 +102,8 @@ public interface RoleService {
      * 关联用户
      * @param roleId 角色id
      * @param userIds 用户id数组
+     * @param isAdd 是否添加
      */
-    void associateUser(Long roleId, Set<Long> userIds);
+    void associateUser(Long roleId, Set<Long> userIds, Boolean isAdd);
+
 }

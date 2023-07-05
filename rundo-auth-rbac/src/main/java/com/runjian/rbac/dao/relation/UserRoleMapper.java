@@ -1,7 +1,5 @@
 package com.runjian.rbac.dao.relation;
 
-import com.runjian.rbac.dao.UserMapper;
-import com.runjian.rbac.entity.relation.UserRoleRel;
 import org.apache.ibatis.annotations.Delete;
 import org.apache.ibatis.annotations.Insert;
 import org.apache.ibatis.annotations.Mapper;
@@ -9,7 +7,6 @@ import org.apache.ibatis.annotations.Select;
 import org.springframework.stereotype.Repository;
 
 import java.time.LocalDateTime;
-import java.util.List;
 import java.util.Set;
 
 /**
@@ -38,7 +35,7 @@ public interface UserRoleMapper {
             " (user_id, role_id, create_by, create_time) VALUES " +
             " <foreach collection='roleIds' item='item' separator=','>(#{userId}, #{item}, #{createBy}, #{createTime})</foreach> " +
             " </script>")
-    void saveAll(Long userId, Set<Long> roleIds, String createBy, LocalDateTime createTime);
+    void saveAllByRoleIds(Long userId, Set<Long> roleIds, String createBy, LocalDateTime createTime);
 
     @Select(" SELECT user_id FROM " + USER_ROLE_TABLE_NAME +
             " WHERE role_id = #{roleId} ")
@@ -59,12 +56,16 @@ public interface UserRoleMapper {
             " </script>")
     void deleteAllByRoleIdAndUserIds(Long roleId, Set<Long> userIds);
 
-    @Select(" SELECT role_id FROM " + USER_ROLE_TABLE_NAME + " urt " +
-            " LEFT JOIN " + UserMapper.USER_TABLE_NAME + " ut ON ut.id = urt.user_id " +
-            " WHERE ut.username = #{username} ")
-    Set<Long> selectRoleIdByUsername(String username);
-
-    @Select(" SELECT user_id FROM " + USER_ROLE_TABLE_NAME +
-            " WHERE role_id IN <foreach collection='userIds' item='item' open='(' separator=',' close=')'> #{item} </foreach> ")
+    @Select(" <script> " +
+            " SELECT user_id FROM " + USER_ROLE_TABLE_NAME +
+            " WHERE role_id IN <foreach collection='roleIds' item='item' open='(' separator=',' close=')'> #{item} </foreach> " +
+            " </script>")
     Set<Long> selectUserIdByRoleIds(Set<Long> roleIds);
+
+    @Insert(" <script> " +
+            " INSERT INTO " + USER_ROLE_TABLE_NAME +
+            " (user_id, role_id, create_by, create_time) VALUES " +
+            " <foreach collection='userIds' item='item' separator=','>(#{item}, #{roleId}, #{createBy}, #{createTime})</foreach> " +
+            " </script>")
+    void saveAllUserIds(Long roleId, Set<Long> userIds, String createBy, LocalDateTime createTime);
 }

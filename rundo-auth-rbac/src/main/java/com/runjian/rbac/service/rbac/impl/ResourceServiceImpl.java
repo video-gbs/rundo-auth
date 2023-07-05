@@ -48,7 +48,7 @@ public class ResourceServiceImpl implements ResourceService {
         }
         GetResourceTreeRsp root = rootOp.get();
         List<GetResourceTreeRsp> resourceInfoList = resourceMapper.selectChildByResourceKeyAndResourceType(resourceKey, isIncludeResource);
-        root.setChildList(root.recursionData(resourceInfoList, root.getLevel()));
+        root.setChildList(root.recursionData(resourceInfoList, root.getLevel() + MarkConstant.MARK_SPLIT_RAIL + root.getId()));
         return root;
     }
 
@@ -79,12 +79,16 @@ public class ResourceServiceImpl implements ResourceService {
 
 
     @Override
-    public void batchAddResource(Long resourcePid, Integer resourceType, String resourceKey, Map<String, String> resourceMap) {
+    public void batchAddResource(Long resourcePid, Integer resourceType, Map<String, String> resourceMap) {
         if (resourceMap.size() == 0){
             return;
         }
+
         ResourceInfo pResourceInfo = dataBaseService.getResourceInfo(resourcePid);
-        Set<String> existValues = resourceMapper.selectResourceValueByResourceKeyAndResourceValueIn(resourceKey, resourceMap.keySet());
+        if (pResourceInfo.getResourceType().equals(ResourceType.RESOURCE.getCode())){
+            throw new BusinessException(BusinessErrorEnums.VALID_ILLEGAL_OPERATION, "不能在资源下添加资源");
+        }
+        Set<String> existValues = resourceMapper.selectResourceValueByResourceKeyAndResourceValueIn(pResourceInfo.getResourceKey(), resourceMap.keySet());
         if (existValues.size() > 0){
             for (Map.Entry<String, String> resource: resourceMap.entrySet()){
                 if (existValues.contains(resource.getKey())){
@@ -100,7 +104,7 @@ public class ResourceServiceImpl implements ResourceService {
             resourceInfo.setResourcePid(resourcePid);
             resourceInfo.setResourceType(resourceType);
             resourceInfo.setResourceName(resource.getValue());
-            resourceInfo.setResourceKey(resourceKey);
+            resourceInfo.setResourceKey(pResourceInfo.getResourceKey());
             resourceInfo.setResourceValue(resource.getKey());
             resourceInfo.setSort(sort++);
             resourceInfo.setUpdateTime(nowTime);
@@ -145,11 +149,14 @@ public class ResourceServiceImpl implements ResourceService {
         ResourceInfo resourceInfo = dataBaseService.getResourceInfo(id);
         ResourceInfo pResourceInfo = dataBaseService.getResourceInfo(pid);
         String level = pResourceInfo.getLevel()+ MarkConstant.MARK_SPLIT_RAIL + pResourceInfo.getId();
+        if (resourceInfo.getResourcePid().equals(0L)){
+            throw new BusinessException(BusinessErrorEnums.VALID_ILLEGAL_OPERATION, "不能移动根节点");
+        }
         if (pResourceInfo.getResourceType().equals(ResourceType.RESOURCE.getCode())){
             throw new BusinessException(BusinessErrorEnums.VALID_ILLEGAL_OPERATION, "资源只能移动在目录下");
         }
-        if (pResourceInfo.getLevel().startsWith(resourceInfo.getLevel() + MarkConstant.MARK_SPLIT_RAIL + resourceInfo.getId())){
-            throw new BusinessException(BusinessErrorEnums.VALID_ILLEGAL_OPERATION, "不可将父部门移动到子部门");
+        if (resourceInfo.getLevel().startsWith(pResourceInfo.getLevel() + MarkConstant.MARK_SPLIT_RAIL + pResourceInfo.getId())){
+            throw new BusinessException(BusinessErrorEnums.VALID_ILLEGAL_OPERATION, "不可将父节点移动到子节点下");
         }
         LocalDateTime nowTime = LocalDateTime.now();
         String oldLevel = resourceInfo.getLevel();
@@ -171,6 +178,9 @@ public class ResourceServiceImpl implements ResourceService {
     @Override
     public void btMove(Long id, Integer moveOp) {
         ResourceInfo resourceInfo = dataBaseService.getResourceInfo(id);
+        if (resourceInfo.getResourcePid().equals(0L)){
+            throw new BusinessException(BusinessErrorEnums.VALID_ILLEGAL_OPERATION, "不能移动根节点");
+        }
         List<ResourceInfo> brotherList = resourceMapper.selectChildByPid(resourceInfo.getResourcePid());
         if (brotherList.size() == 1){
             return;

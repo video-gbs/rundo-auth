@@ -169,7 +169,7 @@ public class RoleController {
     @PostMapping("/associate")
     public CommonResponse<?> associateUser(@RequestBody PostRoleUserAssociateReq req){
         validatorService.validateRequest(req);
-        roleService.associateUser(req.getRoleId(), req.getUserIds());
+        roleService.associateUser(req.getRoleId(), req.getUserIds(), req.getIsAdd());
         return CommonResponse.success();
     }
 

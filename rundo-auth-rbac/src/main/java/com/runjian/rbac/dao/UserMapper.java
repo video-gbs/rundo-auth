@@ -93,15 +93,20 @@ public interface UserMapper {
     void batchUpdateDeleted(Set<Long> userIds, Integer deleted, LocalDateTime updateTime);
 
     @Select(" <script> " +
-            " SELECT ut.* FROM " + UserRoleMapper.USER_ROLE_TABLE_NAME + " ur" +
-            " LEFT JOIN " + USER_TABLE_NAME + " ut ON " + " ur.user_id = ut.id" +
+            " SELECT * FROM " + USER_TABLE_NAME +
             " WHERE " +
-            " <if test=\"username != null\" > ut.username LIKE CONCAT('%', #{username}, '%')  AND </if> " +
-            " <if test=\"isBinding == true\" > rt.role_id = #{roleId} </if> " +
-            " <if test=\"isBinding == false\" > rt.role_id != #{roleId} </if> " +
+            " id IN <foreach collection='userIds' item='item' open='(' separator=',' close=')'> #{item} </foreach> " +
+            " <if test=\"username != null\" > AND username LIKE CONCAT('%', #{username}, '%') </if> " +
             " </script>")
-    List<GetUserPageRsp> selectByInRoleIdAndUsername(Long roleId, String username, Boolean isBinding);
+    List<GetUserPageRsp> selectByUserIdsInAndUsername(Set<Long> userIds, String username);
 
+    @Select(" <script> " +
+            " SELECT * FROM " + USER_TABLE_NAME +
+            " WHERE " +
+            " id NOT IN <foreach collection='userIds' item='item' open='(' separator=',' close=')'> #{item} </foreach> " +
+            " <if test=\"username != null\" > AND username LIKE CONCAT('%', #{username}, '%') </if> " +
+            " </script>")
+    List<GetUserPageRsp> selectByUserIdsNotInAndUsername(Set<Long> userIds, String username);
 
     @Select(" <script> " +
             " SELECT * FROM " + USER_TABLE_NAME +
@@ -110,4 +115,11 @@ public interface UserMapper {
             " <if test=\"workName != null\" > AND work_name LIKE CONCAT('%', #{workName}, '%') </if> " +
             " </script>")
     List<GetUserPageRsp> selectByUsernameAndWorkName(String username, String workName);
+
+    @Select(" <script> " +
+            " SELECT * FROM " + USER_TABLE_NAME +
+            " WHERE 1=1" +
+            " <if test=\"username != null\" > AND username LIKE CONCAT('%', #{username}, '%') </if> " +
+            " </script>")
+    List<GetUserPageRsp> selectByUsernameLike(String username);
 }

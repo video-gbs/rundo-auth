@@ -40,10 +40,9 @@ public interface ResourceService {
      * 批量添加资源
      * @param resourcePid 资源父id
      * @param resourceType 资源类型
-     * @param resourceKey 资源Key
      * @param resourceMap 资源value数组
      */
-    void batchAddResource(Long resourcePid, Integer resourceType, String resourceKey, Map<String, String> resourceMap);
+    void batchAddResource(Long resourcePid, Integer resourceType, Map<String, String> resourceMap);
 
     /**
      * 修改资源

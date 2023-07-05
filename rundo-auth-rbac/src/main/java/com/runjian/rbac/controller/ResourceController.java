@@ -71,7 +71,7 @@ public class ResourceController {
     @PostMapping("/batch/add")
     public CommonResponse<?> batchAddResource(@RequestBody PostBatchResourceReq req){
         validatorService.validateRequest(req);
-        resourceService.batchAddResource(req.getResourcePid(), req.getResourceType(), req.getResourceKey(), req.getResourceMap());
+        resourceService.batchAddResource(req.getResourcePid(), req.getResourceType(), req.getResourceMap());
         return CommonResponse.success();
     }
 

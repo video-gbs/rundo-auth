@@ -8,31 +8,24 @@ import com.runjian.common.constant.CommonEnum;
 import com.runjian.common.constant.LogTemplate;
 import com.runjian.common.constant.MarkConstant;
 import com.runjian.rbac.config.AuthProperties;
-import com.runjian.rbac.dao.RoleMapper;
-import com.runjian.rbac.dao.SectionMapper;
 import com.runjian.rbac.dao.UserMapper;
 import com.runjian.rbac.dao.relation.UserRoleMapper;
-import com.runjian.rbac.entity.RoleInfo;
 import com.runjian.rbac.entity.SectionInfo;
 import com.runjian.rbac.entity.UserInfo;
 import com.runjian.rbac.feign.AuthServerApi;
-import com.runjian.rbac.service.auth.AuthSystemService;
 import com.runjian.rbac.service.auth.CacheService;
 import com.runjian.rbac.service.rbac.DataBaseService;
 import com.runjian.rbac.service.rbac.UserService;
 import com.runjian.rbac.utils.AuthUtils;
 import com.runjian.rbac.vo.dto.AuthDataDto;
 import com.runjian.rbac.vo.response.GetUserPageRsp;
-import com.runjian.rbac.vo.response.GetUserRsp;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
 import java.util.*;
-import java.util.stream.Collectors;
 
 /**
  * @author Miracle
@@ -57,8 +50,20 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public PageInfo<GetUserPageRsp> getUserPage(int page, int num, Long roleId, String username, Boolean isBinding) {
+        Set<Long> bindingUser = userRoleMapper.selectUserIdByRoleId(roleId);
         PageHelper.startPage(page, num);
-        return new PageInfo<>(userMapper.selectByInRoleIdAndUsername(roleId, username, isBinding));
+        if (bindingUser.size() > 0){
+            if (isBinding){
+                return new PageInfo<>(userMapper.selectByUserIdsInAndUsername(bindingUser, username));
+            } else {
+                return new PageInfo<>(userMapper.selectByUserIdsNotInAndUsername(bindingUser, username));
+            }
+        }
+        if (isBinding){
+            return new PageInfo<>();
+        }else {
+            return new PageInfo<>(userMapper.selectByUsernameLike(username));
+        }
     }
 
     @Override
@@ -109,7 +114,7 @@ public class UserServiceImpl implements UserService {
         userMapper.save(userInfo);
 
         if (roleIds.size() > 0) {
-            userRoleMapper.saveAll(userInfo.getId(), roleIds, authData.getUsername(), nowTime);
+            userRoleMapper.saveAllByRoleIds(userInfo.getId(), roleIds, authData.getUsername(), nowTime);
         }
         log.warn(LogTemplate.PROCESS_LOG_MSG_TEMPLATE, "用户服务", "添加用户成功", String.format("用户'%s' 执行添加 用户'%s'", authData.getUsername(), username));
     }
@@ -182,7 +187,7 @@ public class UserServiceImpl implements UserService {
             }
             // 保存新的角色
             if (roleIds.size() > 0) {
-                userRoleMapper.saveAll(userInfo.getId(), roleIds, authData.getUsername(), nowTime);
+                userRoleMapper.saveAllByRoleIds(userInfo.getId(), roleIds, authData.getUsername(), nowTime);
             }
         }
         // 刷新缓存
