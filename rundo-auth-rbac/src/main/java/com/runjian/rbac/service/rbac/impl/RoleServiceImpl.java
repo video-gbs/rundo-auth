@@ -272,5 +272,4 @@ public class RoleServiceImpl implements RoleService {
         log.warn(LogTemplate.PROCESS_LOG_MSG_TEMPLATE, "角色服务", "角色关联用户", String.format("用户'%s' 执行角色'%s' 关联用户 用户'%s'", authUser, roleInfo.getRoleName(), userIds));
     }
 
-
 }

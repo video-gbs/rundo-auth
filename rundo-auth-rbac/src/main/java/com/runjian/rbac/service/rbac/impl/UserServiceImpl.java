@@ -61,7 +61,7 @@ public class UserServiceImpl implements UserService {
         }
         if (isBinding){
             return new PageInfo<>();
-        }else {
+        } else {
             return new PageInfo<>(userMapper.selectByUsernameLike(username));
         }
     }
