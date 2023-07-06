@@ -24,6 +24,11 @@ public class GetUserPageRsp {
     private Long sectionId;
 
     /**
+     * 部门名称
+     */
+    private String sectionName;
+
+    /**
      * 用户名
      */
     private String username;

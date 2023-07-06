@@ -90,5 +90,5 @@ public interface FuncMapper {
             " SELECT * FROM " + FUNC_TABLE_NAME +
             " WHERE id IN <foreach collection='funcIds' item='item' open='(' separator=',' close=')'> #{item} </foreach> " +
             " </script>")
-    List<FuncInfo> selectAllByIds(Set<Long> funIds);
+    List<FuncInfo> selectAllByIds(Set<Long> funcIds);
 }

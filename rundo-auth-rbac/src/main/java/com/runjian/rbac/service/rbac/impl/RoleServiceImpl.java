@@ -157,7 +157,7 @@ public class RoleServiceImpl implements RoleService {
         roleInfo.setRoleName(roleName);
         roleInfo.setRoleDesc(roleDesc);
         roleInfo.setUpdateTime(nowTime);
-
+        roleMapper.update(roleInfo);
         if (Objects.nonNull(menuIds)){
             if (menuIds.size() == 0){
                 roleMenuMapper.deleteAllByRoleId(roleId);

@@ -26,9 +26,9 @@ public interface UserMapper {
     Integer selectCountBySectionId(Long sectionId);
 
     @Select(" <script> " +
-            " SELECT ut.* FROM " + USER_TABLE_NAME + " ut " +
+            " SELECT ut.*,st.section_name FROM " + USER_TABLE_NAME + " ut " +
             " LEFT JOIN " + SectionMapper.SECTION_TABLE_NAME + " st ON ut.section_id = st.id " +
-            " WHERE deleted != 1 " +
+            " WHERE ut.deleted != 1 " +
             " AND st.level LIKE CONCAT(#{sectionLevel}, '%') " +
             " <if test=\"username != null\" > AND ut.username LIKE CONCAT('%', #{username}, '%') </if> " +
             " <if test=\"workName != null\" > AND ut.work_name LIKE CONCAT('%', #{workName}, '%') </if> " +
@@ -36,11 +36,12 @@ public interface UserMapper {
     List<GetUserPageRsp> selectAllUserBySectionLevelLikeAndUsernameAndWorkName(String sectionLevel, String username, String workName);
 
     @Select(" <script> " +
-            " SELECT * FROM " + USER_TABLE_NAME +
-            " WHERE deleted != 1 " +
-            " AND section_id = #{sectionId} " +
-            " <if test=\"username != null\" > AND username LIKE CONCAT('%', #{username}, '%') </if> " +
-            " <if test=\"workName != null\" > AND work_name LIKE CONCAT('%', #{workName}, '%') </if> " +
+            " SELECT ut.*,st.section_name FROM " + USER_TABLE_NAME + " ut " +
+            " LEFT JOIN " + SectionMapper.SECTION_TABLE_NAME + " st ON ut.section_id = st.id" +
+            " WHERE ut.deleted != 1 " +
+            " AND ut.section_id = #{sectionId} " +
+            " <if test=\"username != null\" > AND ut.username LIKE CONCAT('%', #{username}, '%') </if> " +
+            " <if test=\"workName != null\" > AND ut.work_name LIKE CONCAT('%', #{workName}, '%') </if> " +
             " </script>"
     )
     List<GetUserPageRsp> selectAllUserBySectionIdAndUsernameAndWorkName(Long sectionId, String username, String workName);
@@ -93,33 +94,37 @@ public interface UserMapper {
     void batchUpdateDeleted(Set<Long> userIds, Integer deleted, LocalDateTime updateTime);
 
     @Select(" <script> " +
-            " SELECT * FROM " + USER_TABLE_NAME +
-            " WHERE " +
-            " id IN <foreach collection='userIds' item='item' open='(' separator=',' close=')'> #{item} </foreach> " +
-            " <if test=\"username != null\" > AND username LIKE CONCAT('%', #{username}, '%') </if> " +
+            " SELECT ut.*,st.section_name FROM " + USER_TABLE_NAME + " ut " +
+            " LEFT JOIN " + SectionMapper.SECTION_TABLE_NAME + " st ON ut.section_id = st.id" +
+            " WHERE ut.deleted != 1 AND " +
+            " ut.id IN <foreach collection='userIds' item='item' open='(' separator=',' close=')'> #{item} </foreach> " +
+            " <if test=\"username != null\" > AND ut.username LIKE CONCAT('%', #{username}, '%') </if> " +
             " </script>")
     List<GetUserPageRsp> selectByUserIdsInAndUsername(Set<Long> userIds, String username);
 
     @Select(" <script> " +
-            " SELECT * FROM " + USER_TABLE_NAME +
-            " WHERE " +
-            " id NOT IN <foreach collection='userIds' item='item' open='(' separator=',' close=')'> #{item} </foreach> " +
-            " <if test=\"username != null\" > AND username LIKE CONCAT('%', #{username}, '%') </if> " +
+            " SELECT ut.*,st.section_name FROM " + USER_TABLE_NAME + " ut " +
+            " LEFT JOIN " + SectionMapper.SECTION_TABLE_NAME + " st ON ut.section_id = st.id" +
+            " WHERE ut.deleted != 1 AND " +
+            " ut.id NOT IN <foreach collection='userIds' item='item' open='(' separator=',' close=')'> #{item} </foreach> " +
+            " <if test=\"username != null\" > AND ut.username LIKE CONCAT('%', #{username}, '%') </if> " +
             " </script>")
     List<GetUserPageRsp> selectByUserIdsNotInAndUsername(Set<Long> userIds, String username);
 
     @Select(" <script> " +
-            " SELECT * FROM " + USER_TABLE_NAME +
-            " WHERE deleted != 1 " +
-            " <if test=\"username != null\" > AND username LIKE CONCAT('%', #{username}, '%') </if> " +
-            " <if test=\"workName != null\" > AND work_name LIKE CONCAT('%', #{workName}, '%') </if> " +
+            " SELECT ut.*,st.section_name FROM " + USER_TABLE_NAME + " ut " +
+            " LEFT JOIN " + SectionMapper.SECTION_TABLE_NAME + " st ON ut.section_id = st.id" +
+            " WHERE ut.deleted != 1 " +
+            " <if test=\"username != null\" > AND ut.username LIKE CONCAT('%', #{username}, '%') </if> " +
+            " <if test=\"workName != null\" > AND ut.work_name LIKE CONCAT('%', #{workName}, '%') </if> " +
             " </script>")
     List<GetUserPageRsp> selectByUsernameAndWorkName(String username, String workName);
 
     @Select(" <script> " +
-            " SELECT * FROM " + USER_TABLE_NAME +
-            " WHERE 1=1" +
-            " <if test=\"username != null\" > AND username LIKE CONCAT('%', #{username}, '%') </if> " +
+            " SELECT ut.*,st.section_name FROM " + USER_TABLE_NAME + " ut " +
+            " LEFT JOIN " + SectionMapper.SECTION_TABLE_NAME + " st ON ut.section_id = st.id" +
+            " WHERE ut.deleted != 1 " +
+            " <if test=\"username != null\" > AND ut.username LIKE CONCAT('%', #{username}, '%') </if> " +
             " </script>")
     List<GetUserPageRsp> selectByUsernameLike(String username);
 }

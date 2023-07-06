@@ -65,9 +65,9 @@ public interface RoleMapper {
     Optional<RoleInfo> selectByRoleName(String roleName);
 
     @Insert(" INSERT INTO " + ROLE_TABLE_NAME +
-            " (role_name, role_desc, create_time, update_time) " +
+            " (role_name, role_desc, create_by, create_time, update_time) " +
             " VALUES " +
-            " (#{roleName}, #{roleDesc}, #{createTime}, #{updateTime})")
+            " (#{roleName}, #{roleDesc}, #{createBy}, #{createTime}, #{updateTime})")
     @Options(useGeneratedKeys = true, keyProperty = "id", keyColumn = "id")
     void save(RoleInfo roleInfo);
 
@@ -78,4 +78,14 @@ public interface RoleMapper {
             " AND ur.user_id = #{userId} " +
             " </script> ")
     List<RoleInfo> selectByUserId(Long userId);
+
+    @Update(" <script> " +
+            " UPDATE "  + ROLE_TABLE_NAME +
+            " SET update_time = #{updateTime} " +
+            " <if test=\"roleName != null\" > , role_name = #{roleName} </if> " +
+            " <if test=\"roleDesc != null\" > , role_desc = #{roleDesc} </if> " +
+            " <if test=\"roleName != null\" > , role_name = #{roleName} </if> " +
+            " WHERE id = #{id} " +
+            " </script> ")
+    void update(RoleInfo roleInfo);
 }

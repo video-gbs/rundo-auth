@@ -4,6 +4,7 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -21,12 +22,12 @@ public class CacheFuncDto {
     /**
      * 角色数组
      */
-    private List<Long> roleIds;
+    private List<Long> roleIds = new ArrayList<>();
 
     /**
      * 资源组
      */
-    private List<FuncResourceData> funcResourceDataList;
+    private List<FuncResourceData> funcResourceDataList = new ArrayList<>();
 
 
     @Data
