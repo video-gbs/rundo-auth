@@ -13,6 +13,7 @@ import com.runjian.rbac.feign.AuthServerApi;
 import com.runjian.rbac.service.auth.AuthUserService;
 import com.runjian.rbac.service.rbac.DataBaseService;
 import com.runjian.rbac.utils.AuthUtils;
+import com.runjian.rbac.vo.AbstractTreeInfo;
 import com.runjian.rbac.vo.dto.AuthDataDto;
 import com.runjian.rbac.vo.response.GetFuncRsp;
 import com.runjian.rbac.vo.response.GetMenuTreeRsp;
@@ -115,9 +116,9 @@ public class AuthUserServiceImpl implements AuthUserService {
         cmenuTreeRspList.removeAll(pMenuTreeRspList);
         for (GetMenuTreeRsp root : pMenuTreeRspList){
             String level = root.getLevel() + MarkConstant.MARK_SPLIT_RAIL + root.getId();
-            root.recursionData(cmenuTreeRspList.stream().filter(cRsp -> cRsp.getLevel().startsWith(root.getLevel())).toList(), level);
+            root.setChildList(root.recursionData(cmenuTreeRspList.stream().filter(cRsp -> cRsp.getLevel().startsWith(level)).toList(), level));
         }
-        return pMenuTreeRspList;
+        return pMenuTreeRspList.stream().sorted(Comparator.comparing(AbstractTreeInfo::getSort)).toList();
     }
 
     @Override
