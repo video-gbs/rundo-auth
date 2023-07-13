@@ -1,15 +1,20 @@
 package com.runjian.rbac.service.auth.impl;
 
+import com.alibaba.fastjson2.JSONArray;
 import com.alibaba.fastjson2.JSONObject;
 import com.runjian.common.constant.MarkConstant;
+import com.runjian.rbac.dao.ResourceMapper;
 import com.runjian.rbac.service.auth.CacheService;
 import com.runjian.rbac.vo.dto.CacheFuncDto;
+import com.runjian.rbac.vo.response.GetResourceRootRsp;
+import lombok.Data;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.redisson.api.RList;
 import org.redisson.api.RedissonClient;
 import org.springframework.stereotype.Service;
 
+import java.time.Duration;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
@@ -25,6 +30,8 @@ import java.util.Set;
 public class CacheServiceImpl implements CacheService {
 
     private final RedissonClient redissonClient;
+
+    private final ResourceMapper resourceMapper;
 
 
     @Override
@@ -60,31 +67,30 @@ public class CacheServiceImpl implements CacheService {
     }
 
     @Override
-    public String getResourceLevel(String keyValue) {
-        return redissonClient.getMap(MarkConstant.REDIS_AUTH_RESOURCE_ROLE).get(keyValue).toString();
-    }
-
-    @Override
-    public void setResourceLevel(String keyValue, String level) {
-        redissonClient.getMap(MarkConstant.REDIS_AUTH_RESOURCE_ROLE).put(keyValue, level);
-    }
-
-    @Override
-    public void removeResourceLevel(String keyValue) {
-        redissonClient.getMap(MarkConstant.REDIS_AUTH_RESOURCE_ROLE).remove(keyValue);
-    }
-
-    @Override
     public List<String> getUserResource(String username, String resourceKey){
-       return redissonClient.getList(MarkConstant.REDIS_AUTH_USER_RESOURCE + username+ MarkConstant.MARK_SPLIT_SEMICOLON + resourceKey).readAll().stream().map(Object::toString).toList();
+        Object data = redissonClient.getMap(MarkConstant.REDIS_AUTH_USER_RESOURCE + resourceKey).get(username);
+        if (Objects.isNull(data)){
+            return null;
+        }
+        return JSONArray.parseArray(JSONArray.toJSONString(data)).toList(String.class);
     }
 
     @Override
-    public void setUserResource(String username, Map<String, Set<String>> resourceLevel) {
-        for (Map.Entry<String, Set<String>> entry : resourceLevel.entrySet()){
-            RList<Object> rList = redissonClient.getList(MarkConstant.REDIS_AUTH_USER_RESOURCE + username + MarkConstant.MARK_SPLIT_SEMICOLON + entry.getKey());
-            rList.clear();
-            rList.addAll(entry.getValue());
+    public void setUserResource(String username, String resourceKey, List<String> resourceValue){
+        redissonClient.getMap(MarkConstant.REDIS_AUTH_USER_RESOURCE + resourceKey).put(username, JSONArray.toJSONString(resourceValue));
+    }
+
+    @Override
+    public void removeUserResourceByUsername(String username) {
+        List<GetResourceRootRsp> getResourceRootRsps = resourceMapper.selectAllRoot();
+        for (GetResourceRootRsp root :getResourceRootRsps){
+            redissonClient.getMap(MarkConstant.REDIS_AUTH_USER_RESOURCE + root.getResourceKey()).remove(username);
         }
     }
+
+    @Override
+    public void removeUserResourceByResourceKey(String resourceKey) {
+        redissonClient.getMap(MarkConstant.REDIS_AUTH_USER_RESOURCE + resourceKey).delete();
+    }
+
 }

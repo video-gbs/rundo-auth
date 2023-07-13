@@ -210,6 +210,8 @@ public class UserServiceImpl implements UserService {
             authServerApi.signOut(userInfo.getUsername());
             // 移除缓存
             cacheService.removeUserRole(userInfo.getUsername());
+            // 移除用户资源
+            cacheService.removeUserResourceByUsername(userInfo.getUsername());
         }
         log.warn(LogTemplate.PROCESS_LOG_MSG_TEMPLATE, "用户服务", "删除用户成功", String.format("用户'%s' 执行删除 用户'%s'", authData.getUsername(), userIds));
     }

@@ -109,13 +109,15 @@ public interface ResourceMapper {
             " WHERE resource_pid = 0 AND resource_key = #{resourceKey}")
     Optional<GetResourceTreeRsp> selectRootByResourceKey(String resourceKey);
 
-    @Insert(" <script> " +
-            " INSERT INTO " + RESOURCE_TABLE_NAME + "(resource_pid, resource_type, resource_name, resource_key, resource_value, sort, level, create_time, update_time) VALUES " +
-            " (#{resourcePid}, #{resourceType}, #{resourceName}, #{resourceKey}, #{resourceValue}, #{sort}, #{level}, #{createTime}, #{updateTime}) " +
-            " </script>")
+    @Insert(" INSERT INTO " + RESOURCE_TABLE_NAME + "(resource_pid, resource_type, resource_name, resource_key, resource_value, sort, level, create_time, update_time) VALUES " +
+            " (#{resourcePid}, #{resourceType}, #{resourceName}, #{resourceKey}, #{resourceValue}, #{sort}, #{level}, #{createTime}, #{updateTime}) " )
     void save(ResourceInfo resourceInfo);
 
     @Select(" SELECT * FROM " + RESOURCE_TABLE_NAME +
             " WHERE resource_pid = 0")
     List<GetResourceRootRsp> selectAllRoot();
+
+    @Select(" SELECT * FROM " + RESOURCE_TABLE_NAME +
+            " WHERE resource_key = #{resourceKey} AND resource_type = #{resourceType}")
+    List<ResourceInfo> selectAllByResourceKey(String resourceKey, Integer resourceType);
 }

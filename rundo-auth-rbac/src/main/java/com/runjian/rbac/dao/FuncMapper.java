@@ -74,12 +74,12 @@ public interface FuncMapper {
     @Select(" <script> " +
             " SELECT * FROM " + FUNC_TABLE_NAME +
             " WHERE id IN <foreach collection='funcIds' item='item' open='(' separator=',' close=')'> #{item} </foreach> " +
-            " AND menu_id = #{menuId} " +
+            " AND menu_id = #{menuId} AND disabled = 0 " +
             " </script>")
     List<GetFuncRsp> selectAllByMenuIdAndFuncIds(Integer menuId, List<Long> funcIds);
 
     @Select(" SELECT * FROM " + FUNC_TABLE_NAME +
-            " WHERE menu_id = #{menuId} ")
+            " WHERE menu_id = #{menuId} AND disabled = 0 ")
     List<GetFuncRsp> selectAllByMenuId(Integer menuId);
 
     @Select(" SELECT * FROM " + FUNC_TABLE_NAME +

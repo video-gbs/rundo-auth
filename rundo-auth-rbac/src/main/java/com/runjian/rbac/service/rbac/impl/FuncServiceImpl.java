@@ -84,7 +84,7 @@ public class FuncServiceImpl implements FuncService {
         funcInfo.setScope(scope);
         funcInfo.setPath(path);
         funcInfo.setMethod(method);
-        funcInfo.setDisabled(CommonEnum.ENABLE.getCode());
+        funcInfo.setDisabled(CommonEnum.DISABLE.getCode());
         funcInfo.setUpdateTime(nowTime);
         funcInfo.setCreateTime(nowTime);
         funcMapper.save(funcInfo);

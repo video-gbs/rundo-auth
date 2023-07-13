@@ -18,6 +18,7 @@ import com.runjian.rbac.vo.dto.AuthUserDto;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
+import org.springframework.util.CollectionUtils;
 
 import java.time.LocalDateTime;
 import java.util.*;
@@ -62,11 +63,22 @@ public class AuthSystemServiceImpl implements AuthSystemService {
         LocalDateTime nowTime = LocalDateTime.now();
         authUserDto.setAccountNonExpired(!nowTime.isBefore(userInfo.getExpiryStartTime()) && !nowTime.isAfter(userInfo.getExpiryEndTime()));
         Set<Long> roleIds = userRoleMapper.selectRoleIdByUserId(userInfo.getId());
-        if (roleIds.size() == 0){
+        if (roleIds.size() == 0) {
             authUserDto.setAuthorities(Collections.EMPTY_SET);
             return authUserDto;
         }
         authUserDto.setAuthorities(roleIds.stream().map(String::valueOf).collect(Collectors.toSet()));
+        setUserResourceCache(username, roleIds);
+
+        return authUserDto;
+    }
+
+    /**
+     * 设置用户资源缓存
+     * @param username 用户名
+     * @param roleIds 角色
+     */
+    private void setUserResourceCache(String username, Set<Long> roleIds) {
         cacheService.setUserRole(username, roleIds);
         Set<ResourceInfo> resourceInfos = resourceMapper.selectByRoleIds(roleIds);
         if (resourceInfos.size() > 0) {
@@ -77,42 +89,60 @@ public class AuthSystemServiceImpl implements AuthSystemService {
             Map<String, List<ResourceInfo>> catalogueKeyMap = typeMap.get(ResourceType.CATALOGUE.getCode()).stream().collect(Collectors.groupingBy(ResourceInfo::getResourceKey));
             // 获取按照ResourceKey分类的资源数组
             Map<String, List<ResourceInfo>> resourceKeyMap = typeMap.get(ResourceType.RESOURCE.getCode()).stream().collect(Collectors.groupingBy(ResourceInfo::getResourceKey));
-            // 创建用资源层级数据
-            Map<String, Set<String>> keyLevel = new HashMap<>(resourceKeys.size());
-            for (String resourceKey : resourceKeys) {
-                // 检验数组
-                List<ResourceInfo> validList = resourceKeyMap.get(resourceKey);
-                // 目录检验数组
-                List<ResourceInfo> list = catalogueKeyMap.get(resourceKey);
-                if (Objects.nonNull(validList)) {
-                    // 先将资源数据加入过滤完成数组
-                    keyLevel.put(resourceKey, validList.stream().map(ResourceInfo::getLevel).collect(Collectors.toSet()));
-                    if (Objects.nonNull(list)) {
-                        // 将目录数据加入到检验数组
-                        validList.addAll(list);
-                    }
-                } else {
-                    validList = list;
-                }
-                // 执行数据过滤
-                if (Objects.nonNull(list) && list.size() > 0) {
-                    for (ResourceInfo resourceInfo : list) {
-                        validList = validList.stream().filter(validResource -> {
-                            if (resourceInfo.getLevel().equals(validResource.getLevel())) {
-                                return true;
-                            }
-                            return !validResource.getLevel().startsWith(resourceInfo.getLevel());
-                        }).toList();
-                    }
-                    if (validList.size() > 0) {
-                        keyLevel.put(resourceKey, validList.stream().map(ResourceInfo::getLevel).collect(Collectors.toSet()));
-                    }
-                }
-            }
-            cacheService.setUserResource(username, keyLevel);
-        }
 
-        return authUserDto;
+            // 循环所有的资源组
+            for (String resourceKey : resourceKeys) {
+
+                // 资源检验数组
+                List<ResourceInfo> validResourceList = resourceKeyMap.get(resourceKey);
+
+                // 目录检验数组
+                List<ResourceInfo> validCatalogueList = catalogueKeyMap.get(resourceKey);
+                // 初始化资源List
+                List<String> resourceValueList = new ArrayList<>();
+                // 判断资源是否为空
+                if (!CollectionUtils.isEmpty(validCatalogueList)) {
+                    // 提取所有的level
+                    Set<String> catalogueLevel = validCatalogueList.stream().map(ResourceInfo::getLevel).collect(Collectors.toSet());
+                    // 判断资源数组是否为空
+                    if (!CollectionUtils.isEmpty(validResourceList)) {
+                        catalogueLevel.addAll(validResourceList.stream().map(ResourceInfo::getLevel).collect(Collectors.toSet()));
+                    }
+                    // 过滤所有的父类数据
+                    List<String> childCatalogueLevelList = validCatalogueList.stream().filter(catalogueInfo -> {
+                        for (String level : catalogueLevel) {
+                            // 判断是否是相等的
+                            if (catalogueInfo.getLevel().equals(level)) {
+                                continue;
+                            }
+                            // 判断是否是父类
+                            if (catalogueInfo.getLevel().startsWith(level)) {
+                                return false;
+                            }
+                        }
+                        return true;
+                    }).map(ResourceInfo::getLevel).toList();
+
+                    // 查询目录下的资源
+                    if (childCatalogueLevelList.size() > 0) {
+                        resourceValueList.addAll(
+                                resourceMapper.selectAllByResourceKey(resourceKey, ResourceType.RESOURCE.getCode()).stream().filter(resourceInfo -> {
+                                    for (String level : childCatalogueLevelList) {
+                                        if (resourceInfo.getLevel().startsWith(level)) {
+                                            return true;
+                                        }
+                                    }
+                                    return false;
+                                }).map(ResourceInfo::getResourceValue).toList());
+                    }
+                }
+                // 判断资源数组是否为空，不为空的话，将资源添加进去
+                if (!CollectionUtils.isEmpty(validResourceList)){
+                    resourceValueList.addAll(validResourceList.stream().map(ResourceInfo::getResourceValue).toList());
+                }
+                cacheService.setUserResource(username, resourceKey, resourceValueList);
+            }
+        }
     }
 
     @Override
@@ -157,7 +187,12 @@ public class AuthSystemServiceImpl implements AuthSystemService {
             String param = funcResourceData.getValidateParam();
             // 判断参数是否为空，若为空交由API自己判断
             if (Objects.isNull(param)) {
-                authDataDto.getResourceKeyList().add(key);
+                String resourceCacheKey = MarkConstant.REDIS_AUTH_USER_RESOURCE + username + MarkConstant.MARK_SPLIT_SEMICOLON + key;
+                authDataDto.getResourceKeyList().add(resourceCacheKey);
+                List<String> userResource = cacheService.getUserResource(username, key);
+                if (Objects.isNull(userResource)) {
+                    setUserResourceCache(username, new HashSet<>(userRoles));
+                }
             } else {
                 if (Objects.isNull(jsonStr)) {
                     authDataDto.setMsg(String.format("必要的参数权限校验失败，缺失参数'%s'", param));
@@ -173,17 +208,13 @@ public class AuthSystemServiceImpl implements AuthSystemService {
                     return authDataDto;
                 }
 
-                String resourceLevel = cacheService.getResourceLevel(key + MarkConstant.MARK_SPLIT_SEMICOLON + value);
-
-                // 判断是否有权限角色绑定
-                if (Objects.nonNull(resourceLevel)) {
-                    List<String> userResourceLevel = cacheService.getUserResource(username, key);
-                    // 判断角色是否包含该资源的权限
-                    for (String level : userResourceLevel) {
-                        if (resourceLevel.startsWith(level)) {
-                            authDataDto.setIsAuthorized(true);
-                            return authDataDto;
-                        }
+                // 获取角色绑定的资源
+                List<String> userResourceValue = cacheService.getUserResource(username, key);
+                // 判断角色是否包含该资源的权限
+                for (String resourceValue : userResourceValue) {
+                    if (resourceValue.equals(value)) {
+                        authDataDto.setIsAuthorized(true);
+                        return authDataDto;
                     }
                 }
                 authDataDto.setIsAuthorized(false);
@@ -217,9 +248,9 @@ public class AuthSystemServiceImpl implements AuthSystemService {
     }
 
 
-
     /**
      * 判断两个数组存在交集
+     *
      * @param aList 数组a
      * @param bList 数组b
      * @return 布尔
