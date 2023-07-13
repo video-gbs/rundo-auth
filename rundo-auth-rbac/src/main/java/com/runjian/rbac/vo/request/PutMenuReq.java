@@ -73,11 +73,10 @@ public class PutMenuReq {
     private String description;
 
     /**
-     * 是否隐藏
+     * 是否全屏
      */
-    @NotNull(message = "隐藏状态不能为空")
-    @Range(min = 0, max = 1, message = "非法隐藏状态")
-    private Integer hidden;
+    @Range(min = 0, max = 1, message = "非法全屏选项")
+    private Integer isFullScreen;
 
     /**
      * 是否禁用

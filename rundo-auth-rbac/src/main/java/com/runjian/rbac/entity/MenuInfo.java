@@ -65,9 +65,9 @@ public class MenuInfo {
     private Integer levelNum;
 
     /**
-     * 是否隐藏
+     * 是否全屏
      */
-    private Integer hidden;
+    private Integer isFullScreen;
 
     /**
      * 是否禁用

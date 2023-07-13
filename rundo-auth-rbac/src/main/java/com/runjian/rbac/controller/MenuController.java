@@ -56,7 +56,7 @@ public class MenuController {
         validatorService.validateRequest(req);
         menuService.addMenu(req.getMenuPid(), req.getMenuSort(), req.getMenuType(),
                 req.getPath(), req.getComponent(), req.getName(),
-                req.getIcon(), req.getDescription(), req.getHidden(),
+                req.getIcon(), req.getDescription(), req.getIsFullScreen(),
                 req.getDisabled());
         return CommonResponse.success();
     }
@@ -74,18 +74,6 @@ public class MenuController {
     }
 
     /**
-     * 隐藏菜单
-     * @param req 菜单隐藏请求体
-     * @return
-     */
-    @PutMapping("/update/hidden")
-    public CommonResponse<?> updateHidden(@RequestBody PutMenuHiddenReq req){
-        validatorService.validateRequest(req);
-        menuService.updateHidden(req.getMenuId(), req.getHidden());
-        return CommonResponse.success();
-    }
-
-    /**
      * 修改菜单
      * @param req 修改菜单请求体
      * @return
@@ -95,8 +83,7 @@ public class MenuController {
         validatorService.validateRequest(req);
         menuService.updateMenu(req.getId(), req.getMenuPid(), req.getMenuSort(),
                 req.getMenuType(), req.getPath(), req.getComponent(),
-                req.getName(), req.getIcon(), req.getDescription(),
-                req.getHidden(), req.getDisabled());
+                req.getName(), req.getIcon(), req.getDescription(), req.getIsFullScreen(), req.getDisabled());
         return CommonResponse.success();
     }
 

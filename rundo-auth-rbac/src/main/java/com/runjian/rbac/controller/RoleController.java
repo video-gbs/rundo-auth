@@ -78,7 +78,7 @@ public class RoleController {
      * @param roleId 角色id
      * @return 菜单id
      */
-    @GetMapping("/role/menu")
+    @GetMapping("/menu")
     public CommonResponse<Set<Long>> getRoleMenuId(@RequestParam Long roleId){
         return CommonResponse.success(roleService.getRoleMenuIds(roleId));
     }
@@ -88,7 +88,7 @@ public class RoleController {
      * @param roleId 角色id
      * @return 资源id
      */
-    @GetMapping("/role/resource")
+    @GetMapping("/resource")
     public CommonResponse<Set<Long>> getRoleResourceId(@RequestParam Long roleId){
         return CommonResponse.success(roleService.getRoleResourceIds(roleId));
     }
@@ -99,7 +99,7 @@ public class RoleController {
      * @param menuId 菜单id
      * @return 功能id
      */
-    @GetMapping("/role/func/menu")
+    @GetMapping("/func/menu")
     public CommonResponse<Set<Long>> getRoleFunc(@RequestParam Long roleId, @RequestParam Long menuId){
         return CommonResponse.success(roleService.getRoleFuncIdByMenuId(roleId, menuId));
     }
@@ -109,7 +109,7 @@ public class RoleController {
      * @param roleId 角色id
      * @return 功能id
      */
-    @GetMapping("/role/func")
+    @GetMapping("/func")
     public CommonResponse<Set<Long>> getRoleFunc(@RequestParam Long roleId){
         return CommonResponse.success(roleService.getRoleFuncId(roleId));
     }
@@ -155,7 +155,7 @@ public class RoleController {
      * @param roleIds 角色id数组
      * @return
      */
-    @DeleteMapping("/delete/batch")
+    @DeleteMapping("/batch/delete")
     public CommonResponse<?> batchDelete(@RequestParam Set<Long> roleIds){
         roleService.batchDeleteRoles(roleIds);
         return CommonResponse.success();

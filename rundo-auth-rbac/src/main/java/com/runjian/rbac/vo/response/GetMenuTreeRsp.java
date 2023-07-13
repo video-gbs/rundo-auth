@@ -57,9 +57,9 @@ public class GetMenuTreeRsp extends AbstractTreeInfo {
     private Integer levelNum;
 
     /**
-     * 是否隐藏
+     * 是否全屏
      */
-    private Integer hidden;
+    private Integer isFullScreen;
 
     /**
      * 是否禁用
@@ -79,7 +79,7 @@ public class GetMenuTreeRsp extends AbstractTreeInfo {
         getMenuTreeRsp.setLevel("0");
         getMenuTreeRsp.setName("根节点");
         getMenuTreeRsp.setIcon(null);
-        getMenuTreeRsp.setHidden(CommonEnum.DISABLE.getCode());
+        getMenuTreeRsp.setIsFullScreen(CommonEnum.DISABLE.getCode());
         getMenuTreeRsp.setDisabled(CommonEnum.DISABLE.getCode());
         return getMenuTreeRsp;
 

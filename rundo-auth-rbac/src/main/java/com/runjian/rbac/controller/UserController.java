@@ -126,7 +126,7 @@ public class UserController {
      * @param userIds 用户id数组
      * @return
      */
-    @DeleteMapping("/delete")
+    @DeleteMapping("/batch/delete")
     public CommonResponse<?> delete(@RequestParam Set<Long> userIds){
         userService.batchDeleteUser(userIds);
         return CommonResponse.success();

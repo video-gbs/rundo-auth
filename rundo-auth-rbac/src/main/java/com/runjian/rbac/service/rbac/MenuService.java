@@ -28,10 +28,10 @@ public interface MenuService {
      * @param name 菜单名称
      * @param icon 菜单图标
      * @param description 描述
-     * @param hidden 是否隐藏
+     * @param isFullScreen 是否全屏
      * @param disabled 是否禁用
      */
-    void addMenu(Long menuPid, Integer menuSort, Integer menuType, String path, String component, String name, String icon, String description, Integer hidden, Integer disabled);
+    void addMenu(Long menuPid, Integer menuSort, Integer menuType, String path, String component, String name, String icon, String description, Integer isFullScreen, Integer disabled);
 
     /**
      * 更改禁用状态
@@ -39,13 +39,6 @@ public interface MenuService {
      * @param disabled 禁用状态
      */
     void updateDisabled(Long id, Integer disabled);
-
-    /**
-     * 更改隐藏状态
-     * @param id 菜单id
-     * @param disabled 隐藏状态
-     */
-    void updateHidden(Long id, Integer disabled);
 
     /**
      * 修改菜单
@@ -58,10 +51,10 @@ public interface MenuService {
      * @param name 菜单名称
      * @param icon 菜单图标
      * @param description 描述
-     * @param hidden 是否隐藏
+     * @param isFullScreen 是否全屏
      * @param disabled 是否禁用
      */
-    void updateMenu(Long id, Long menuPid, Integer menuSort, Integer menuType, String path, String component, String name, String icon, String description, Integer hidden, Integer disabled);
+    void updateMenu(Long id, Long menuPid, Integer menuSort, Integer menuType, String path, String component, String name, String icon, String description, Integer isFullScreen, Integer disabled);
 
     /**
      * 删除菜单

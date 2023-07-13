@@ -60,7 +60,6 @@ public class PostMenuReq {
     /**
      * 菜单图标
      */
-    @NotBlank(message = "菜单图标不能为空")
     @Size(min = 1, max = 250, message = "菜单图标长度范围1~250")
     private String icon;
 
@@ -71,11 +70,10 @@ public class PostMenuReq {
     private String description;
 
     /**
-     * 是否隐藏
+     * 是否全屏
      */
-    @NotNull(message = "隐藏类型不能为空")
-    @Range(min = 0, max = 1, message = "非法隐藏类型")
-    private Integer hidden;
+    @Range(min = 0, max = 1, message = "非法全屏选项")
+    private Integer isFullScreen;
 
     /**
      * 是否禁用

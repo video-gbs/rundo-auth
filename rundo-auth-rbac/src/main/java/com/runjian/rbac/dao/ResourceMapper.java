@@ -98,12 +98,6 @@ public interface ResourceMapper {
 
     @Select(" <script> " +
             " SELECT * FROM " + RESOURCE_TABLE_NAME +
-            " WHERE id IN <foreach collection='resourceIds' item='item' open='(' separator=',' close=')'> #{item} </foreach> " +
-            " </script>")
-    List<ResourceInfo> selectAllByResourceIds(Set<Long> resourceIds);
-
-    @Select(" <script> " +
-            " SELECT * FROM " + RESOURCE_TABLE_NAME +
             " WHERE resource_key = #{resourceKey} " +
             " AND resource_pid != 0 " +
             " <if test=\"isIncludeResource = false\" > AND resource_type = 1 </if> " +

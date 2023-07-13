@@ -19,9 +19,6 @@ public interface MenuMapper {
 
     String MENU_TABLE_NAME = "rbac_menu";
 
-    @Select(" SELECT * FROM " + MENU_TABLE_NAME)
-    List<GetMenuTreeRsp> selectAll();
-
     @Select("SELECT * FROM " + MENU_TABLE_NAME +
             " WHERE id = #{id}")
     Optional<MenuInfo> selectById(Long id);
@@ -34,10 +31,6 @@ public interface MenuMapper {
             " <if test=\"path != null\" > AND path LIKE CONCAT('%', #{path}, '%')  </if> " +
             " </script> ")
     List<GetMenuTreeRsp> selectByNameLikeAndPathLike(String name, String path);
-
-    @Select(" SELECT * FROM " + MENU_TABLE_NAME +
-            " WHERE level LIKE CONCAT(#{level},'%')")
-    List<GetMenuTreeRsp> selectAllByLevelLike(String level);
 
     @Select(" SELECT id FROM " + MENU_TABLE_NAME +
             " WHERE level LIKE CONCAT(#{level},'%')")
@@ -62,16 +55,10 @@ public interface MenuMapper {
             " WHERE id = #{id} ")
     void updateDisabled(MenuInfo menuInfo);
 
-    @Update(" UPDATE "  + MENU_TABLE_NAME +
-            " SET update_time = #{updateTime}, " +
-            " hidden = #{hidden} " +
-            " WHERE id = #{id} ")
-    void updateHidden(MenuInfo menuInfo);
-
     @Insert(" INSERT INTO " + MENU_TABLE_NAME +
-            " (menu_pid, sort, menu_type, path, component, name, icon, description, level, level_num, hidden, disabled, create_time, update_time) " +
+            " (menu_pid, sort, menu_type, path, component, name, icon, description, level, level_num, is_full_screen, disabled, create_time, update_time) " +
             " VALUES " +
-            " (#{menuPid}, #{sort}, #{menuType}, #{path}, #{component}, #{name}, #{icon}, #{description}, #{level}, #{levelNum}, #{hidden}, #{disabled}, #{createTime}, #{updateTime})")
+            " (#{menuPid}, #{sort}, #{menuType}, #{path}, #{component}, #{name}, #{icon}, #{description}, #{level}, #{levelNum}, #{isFullScreen}, #{disabled}, #{createTime}, #{updateTime})")
     void save(MenuInfo menuInfo);
 
     @Update(" <script> " +
@@ -81,7 +68,7 @@ public interface MenuMapper {
             " <if test=\"sort != null\" > , sort = #{sort} </if> " +
             " <if test=\"menuType != null\" > , menu_type = #{menuType} </if> " +
             " <if test=\"level != null\" > , level = #{level} </if> " +
-            " <if test=\"hidden != null\" > , hidden = #{hidden} </if> " +
+            " <if test=\"isFullScreen != null\" > , is_full_screen = #{isFullScreen} </if> " +
             " <if test=\"disabled != null\" > , disabled = #{disabled} </if> " +
             " , path = #{path} " +
             " , component = #{component} " +
@@ -102,7 +89,8 @@ public interface MenuMapper {
 
     @Select(" <script> " +
             " SELECT * FROM " + MENU_TABLE_NAME +
-            " WHERE level_num &gt;= #{levelNumStart} " +
+            " WHERE disabled = 0 " +
+            " AND level_num &gt;= #{levelNumStart} " +
             " <if test=\"levelNumEnd != null\" > AND level_num &lt;= #{levelNumEnd} </if> " +
             " </script> ")
     List<GetMenuTreeRsp> selectAllByLevelNumStartAndLevelNumEnd(Integer levelNumStart, Integer levelNumEnd);
@@ -111,6 +99,7 @@ public interface MenuMapper {
             " SELECT * FROM " + MENU_TABLE_NAME +
             " WHERE id IN <foreach collection='menuIds' item='item' open='(' separator=',' close=')'> #{item} </foreach> " +
             " AND level_num &gt;= #{levelNumStart} " +
+            " AND disabled = 0 " +
             " <if test=\"levelNumEnd != null\" > AND level_num &lt;= #{levelNumEnd} </if> " +
             " </script> ")
     List<GetMenuTreeRsp> selectAllByLevelNumStartAndLevelNumEndAndMenuIdsIn(Integer levelNumStart, Integer levelNumEnd, Set<Long> menuIds);

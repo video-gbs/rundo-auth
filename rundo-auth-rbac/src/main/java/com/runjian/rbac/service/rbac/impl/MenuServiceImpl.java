@@ -65,7 +65,7 @@ public class MenuServiceImpl implements MenuService {
 
 
     @Override
-    public void addMenu(Long menuPid, Integer menuSort, Integer menuType, String path, String component, String name, String icon, String description, Integer hidden, Integer disabled) {
+    public void addMenu(Long menuPid, Integer menuSort, Integer menuType, String path, String component, String name, String icon, String description, Integer isFullScreen, Integer disabled) {
         MenuInfo pMenuInfo;
         if (menuPid.equals(0L)){
             pMenuInfo = new MenuInfo();
@@ -95,7 +95,7 @@ public class MenuServiceImpl implements MenuService {
             cMenuInfo.setLevel(pMenuInfo.getLevel() + MarkConstant.MARK_SPLIT_RAIL + pMenuInfo.getId());
         }
         cMenuInfo.setLevelNum(pMenuInfo.getLevelNum() + 1);
-        cMenuInfo.setHidden(hidden);
+        cMenuInfo.setIsFullScreen(isFullScreen);
         cMenuInfo.setDisabled(disabled);
         cMenuInfo.setCreateTime(nowTime);
         cMenuInfo.setUpdateTime(nowTime);
@@ -111,15 +111,7 @@ public class MenuServiceImpl implements MenuService {
     }
 
     @Override
-    public void updateHidden(Long id, Integer hidden) {
-        MenuInfo menuInfo = dataBaseService.getMenuInfo(id);
-        menuInfo.setHidden(hidden);
-        menuInfo.setUpdateTime(LocalDateTime.now());
-        menuMapper.updateHidden(menuInfo);
-    }
-
-    @Override
-    public void updateMenu(Long id, Long menuPid, Integer menuSort, Integer menuType, String path, String component, String name, String icon, String description, Integer hidden, Integer disabled) {
+    public void updateMenu(Long id, Long menuPid, Integer menuSort, Integer menuType, String path, String component, String name, String icon, String description, Integer isFullScreen, Integer disabled) {
         MenuInfo cMenuInfo = dataBaseService.getMenuInfo(id);
         if (!cMenuInfo.getMenuPid().equals(menuPid)){
             MenuInfo pMenuInfo;
@@ -140,7 +132,7 @@ public class MenuServiceImpl implements MenuService {
         cMenuInfo.setName(name);
         cMenuInfo.setIcon(icon);
         cMenuInfo.setDescription(description);
-        cMenuInfo.setHidden(hidden);
+        cMenuInfo.setIsFullScreen(isFullScreen);
         cMenuInfo.setDisabled(disabled);
         cMenuInfo.setUpdateTime(LocalDateTime.now());
         menuMapper.update(cMenuInfo);
