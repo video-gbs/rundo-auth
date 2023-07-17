@@ -11,6 +11,7 @@ import lombok.Data;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.redisson.api.RList;
+import org.redisson.api.RMap;
 import org.redisson.api.RedissonClient;
 import org.springframework.stereotype.Service;
 
@@ -58,6 +59,13 @@ public class CacheServiceImpl implements CacheService {
             return null;
         }
         return JSONObject.parseObject(cacheData.toString(), CacheFuncDto.class);
+    }
+
+    @Override
+    public void setAllFuncCache(Map<String, String> funcCacheMap){
+        RMap<Object, Object> redisMap = redissonClient.getMap(MarkConstant.REDIS_AUTH_FUNC);
+        redisMap.delete();
+        redisMap.putAll(funcCacheMap);
     }
 
     @Override

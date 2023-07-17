@@ -91,4 +91,7 @@ public interface FuncMapper {
             " WHERE id IN <foreach collection='funcIds' item='item' open='(' separator=',' close=')'> #{item} </foreach> " +
             " </script>")
     List<FuncInfo> selectAllByIds(Set<Long> funcIds);
+
+    @Select(" SELECT * FROM " + FUNC_TABLE_NAME)
+    List<FuncInfo> selectAll();
 }

@@ -65,4 +65,10 @@ public interface FuncResourceMapper {
             " validate_param = #{validateParam} " +
             " WHERE id = #{id} ")
     void update(FuncResourceRel funcResourceRel);
+
+    @Select(" <script> " +
+            " SELECT * FROM " + FUNC_RESOURCE_TABLE_NAME +
+            " WHERE func_id IN <foreach collection='funcIds' item='item' open='(' separator=',' close=')'> #{item} </foreach> " +
+            " </script>")
+    List<FuncResourceRel> selectByFuncIdIn(List<Long> funcIds);
 }

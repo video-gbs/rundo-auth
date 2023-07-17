@@ -1,5 +1,6 @@
 package com.runjian.rbac.service.rbac.impl;
 
+import com.alibaba.fastjson2.JSONObject;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import com.runjian.common.config.exception.BusinessErrorEnums;
@@ -14,22 +15,23 @@ import com.runjian.rbac.dao.relation.RoleFuncMapper;
 import com.runjian.rbac.entity.FuncInfo;
 import com.runjian.rbac.entity.MenuInfo;
 import com.runjian.rbac.entity.relation.FuncResourceRel;
+import com.runjian.rbac.entity.relation.RoleFuncRel;
 import com.runjian.rbac.service.auth.CacheService;
 import com.runjian.rbac.service.rbac.DataBaseService;
 import com.runjian.rbac.service.rbac.FuncService;
 import com.runjian.rbac.vo.dto.CacheFuncDto;
 import com.runjian.rbac.vo.response.GetFuncPageRsp;
 import com.runjian.rbac.vo.response.GetFuncResourceRsp;
+import jakarta.annotation.PostConstruct;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.CollectionUtils;
 
 import java.time.LocalDateTime;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Optional;
-import java.util.Set;
+import java.util.*;
+import java.util.stream.Collectors;
 
 /**
  * @author Miracle
@@ -51,6 +53,34 @@ public class FuncServiceImpl implements FuncService {
     private final RoleFuncMapper roleFuncMapper;
 
     private final CacheService cacheService;
+
+    @Override
+    @PostConstruct
+    public void initFuncCache() {
+        List<FuncInfo> funcInfoList = funcMapper.selectAll();
+        if (funcInfoList.size() == 0){
+            return;
+        }
+        List<Long> funcIds = funcInfoList.stream().map(FuncInfo::getId).toList();
+        Map<Long, List<FuncResourceRel>> funcResourceMap = funcResourceMapper.selectByFuncIdIn(funcIds).stream().collect(Collectors.groupingBy(FuncResourceRel::getFuncId));
+        Map<Long, List<RoleFuncRel>> roleFuncMap = roleFuncMapper.selectByFuncIdIn(funcIds).stream().collect(Collectors.groupingBy(RoleFuncRel::getFuncId));
+        Map<String, String> funcCache = new HashMap<>();
+        for (FuncInfo funcInfo : funcInfoList){
+            CacheFuncDto cacheFuncDto = new CacheFuncDto();
+            cacheFuncDto.setScope(funcInfo.getScope());
+            cacheFuncDto.setFuncName(funcInfo.getFuncName());
+            List<RoleFuncRel> roleFuncRels = roleFuncMap.get(funcInfo.getId());
+            if (!CollectionUtils.isEmpty(roleFuncRels)){
+                cacheFuncDto.setRoleIds(roleFuncRels.stream().map(RoleFuncRel::getRoleId).toList());
+            }
+            List<FuncResourceRel> funcResourceRelList = funcResourceMap.get(funcInfo.getId());
+            if (!CollectionUtils.isEmpty(funcResourceRelList)){
+                cacheFuncDto.setFuncResourceDataList(funcResourceRelList.stream().map(CacheFuncDto.FuncResourceData::new).toList());
+            }
+            funcCache.put(MethodType.getByCode(funcInfo.getMethod()) + MarkConstant.MARK_SPLIT_SEMICOLON + funcInfo.getPath(), JSONObject.toJSONString(cacheFuncDto));
+        }
+        cacheService.setAllFuncCache(funcCache);
+    }
 
     @Override
     public PageInfo<GetFuncPageRsp> getFuncPage(int page, int num, Long menuId, String serviceName, String funcName, Boolean isInclude) {

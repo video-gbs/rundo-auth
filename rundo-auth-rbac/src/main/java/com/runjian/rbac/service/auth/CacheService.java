@@ -3,6 +3,7 @@ package com.runjian.rbac.service.auth;
 import com.runjian.rbac.vo.dto.CacheFuncDto;
 
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 
@@ -36,6 +37,12 @@ public interface CacheService {
      * @param methodPath 方法路径key
      */
     CacheFuncDto getFuncCache(String methodPath);
+
+    /**
+     * 设置全部功能缓存
+     * @param funcCacheMap 功能缓存
+     */
+    void setAllFuncCache(Map<String, String> funcCacheMap);
 
     /**
      * 设置功能信息

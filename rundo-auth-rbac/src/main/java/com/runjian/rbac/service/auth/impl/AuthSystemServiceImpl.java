@@ -183,7 +183,7 @@ public class AuthSystemServiceImpl implements AuthSystemService {
         }
 
         // 判断是否需要参数校验
-        if (funcCache.getFuncResourceDataList().isEmpty()) {
+        if (funcCache.getFuncResourceDataList().isEmpty()) { 
             authDataDto.setIsAuthorized(true);
             return authDataDto;
         }

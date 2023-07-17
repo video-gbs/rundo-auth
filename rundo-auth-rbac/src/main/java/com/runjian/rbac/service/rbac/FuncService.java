@@ -13,6 +13,11 @@ import java.util.List;
 public interface FuncService {
 
     /**
+     * 初始化功能缓存
+     */
+    void initFuncCache();
+
+    /**
      * 查询功能列表
      * @param page 页数
      * @param num 数量

@@ -1,6 +1,7 @@
 package com.runjian.rbac.dao.relation;
 
 import com.runjian.rbac.dao.FuncMapper;
+import com.runjian.rbac.entity.relation.RoleFuncRel;
 import org.apache.ibatis.annotations.Delete;
 import org.apache.ibatis.annotations.Insert;
 import org.apache.ibatis.annotations.Mapper;
@@ -61,4 +62,10 @@ public interface RoleFuncMapper {
             " LEFT JOIN " + FuncMapper.FUNC_TABLE_NAME + " ft ON " + " rft.func_id = ft.id " +
             " WHERE role_id = #{roleId} AND ft.menu_id = #{menuId} ")
     Set<Long> selectFuncIdByRoleIdAndMenuId(Long roleId, Long menuId);
+
+    @Select(" <script> " +
+            " SELECT * FROM " + ROLE_FUNC_TABLE_NAME +
+            " WHERE func_id IN <foreach collection='funcIds' item='item' open='(' separator=',' close=')'> #{item} </foreach> " +
+            " </script>")
+    List<RoleFuncRel> selectByFuncIdIn(List<Long> funcIds);
 }
