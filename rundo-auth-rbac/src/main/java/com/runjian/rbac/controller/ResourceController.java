@@ -4,6 +4,7 @@ import com.runjian.common.config.response.CommonResponse;
 import com.runjian.common.validator.ValidatorService;
 import com.runjian.rbac.service.rbac.ResourceService;
 import com.runjian.rbac.vo.request.*;
+import com.runjian.rbac.vo.response.GetCatalogueResourceRsp;
 import com.runjian.rbac.vo.response.GetResourceRootRsp;
 import com.runjian.rbac.vo.response.GetResourceTreeRsp;
 import io.github.yedaxia.apidocs.ApiDoc;
@@ -49,6 +50,18 @@ public class ResourceController {
     @ApiDoc(result = GetResourceRootRsp.class)
     public CommonResponse<List<GetResourceRootRsp>> getResourceRoot(){
         return CommonResponse.success(resourceService.getResourceRoot());
+    }
+
+    /**
+     * 获取目录下的所有资源数据
+     * @param pid 父id
+     * @param isIncludeChild 是否包含子目录数据
+     * @return
+     */
+    @GetMapping("/pid")
+    @ApiDoc(result = GetCatalogueResourceRsp.class)
+    public CommonResponse<List<GetCatalogueResourceRsp>> getCatalogueResourceRsp(@RequestParam Long pid, @RequestParam Boolean isIncludeChild){
+        return CommonResponse.success(resourceService.getCatalogueResource(pid, isIncludeChild));
     }
 
     /**

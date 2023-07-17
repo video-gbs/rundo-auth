@@ -16,13 +16,10 @@ import com.runjian.rbac.service.auth.CacheService;
 import com.runjian.rbac.vo.dto.AuthDataDto;
 import com.runjian.rbac.vo.dto.CacheFuncDto;
 import com.runjian.rbac.vo.dto.AuthUserDto;
-import lombok.Data;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
-import org.springframework.util.LinkedMultiValueMap;
-import org.springframework.util.MultiValueMap;
 
 import java.time.LocalDateTime;
 import java.util.*;
@@ -183,7 +180,7 @@ public class AuthSystemServiceImpl implements AuthSystemService {
         }
 
         // 判断是否需要参数校验
-        if (funcCache.getFuncResourceDataList().isEmpty()) { 
+        if (funcCache.getFuncResourceDataList().isEmpty()) {
             authDataDto.setIsAuthorized(true);
             return authDataDto;
         }
@@ -282,7 +279,6 @@ public class AuthSystemServiceImpl implements AuthSystemService {
 
     /**
      * 判断两个数组存在交集
-     *
      * @param aList 数组a
      * @param bList 数组b
      * @return 布尔

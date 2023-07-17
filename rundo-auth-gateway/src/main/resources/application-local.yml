@@ -34,19 +34,22 @@ spring:
             - Auth
             - AuthFailure
             - StripPrefix=1
-        - id: auth-resource
-          uri: lb://auth-resource
+        - id: device-expansion
+          uri: lb://device-expansion
           predicates:
-            - Path=/api/**
+            - Path=/expansion/**
           filters:
             - AuthHeader
             - Auth
             - AuthFailure
-        - id: device-control
-          uri: lb://device-control
+        - id: foreign-server
+          uri: lb://foreign-server
           predicates:
-            - Path=/device-control/**
+            - Path=/foreign/**
           filters:
+            - AuthHeader
+            - Auth
+            - AuthFailure
             - StripPrefix=1
       globalcors:
         add-to-simple-url-handler-mapping: true

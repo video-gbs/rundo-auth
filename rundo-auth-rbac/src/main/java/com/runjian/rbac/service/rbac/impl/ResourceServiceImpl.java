@@ -11,12 +11,14 @@ import com.runjian.rbac.service.auth.CacheService;
 import com.runjian.rbac.service.rbac.DataBaseService;
 import com.runjian.rbac.service.rbac.ResourceService;
 import com.runjian.rbac.vo.AbstractTreeInfo;
+import com.runjian.rbac.vo.response.GetCatalogueResourceRsp;
 import com.runjian.rbac.vo.response.GetResourceRootRsp;
 import com.runjian.rbac.vo.response.GetResourceTreeRsp;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.CollectionUtils;
 
 import java.time.LocalDateTime;
 import java.time.ZoneOffset;
@@ -50,6 +52,48 @@ public class ResourceServiceImpl implements ResourceService {
         List<GetResourceTreeRsp> resourceInfoList = resourceMapper.selectChildByResourceKeyAndResourceType(resourceKey, isIncludeResource);
         root.setChildList(root.recursionData(resourceInfoList, root.getLevel() + MarkConstant.MARK_SPLIT_RAIL + root.getId()));
         return root;
+    }
+
+    @Override
+    public List<GetCatalogueResourceRsp> getCatalogueResource(Long pid, Boolean isIncludeChild) {
+        ResourceInfo pResourceInfo = dataBaseService.getResourceInfo(pid);
+        if (!Objects.equals(pResourceInfo.getResourceType(), ResourceType.CATALOGUE.getCode())){
+            throw new BusinessException(BusinessErrorEnums.VALID_ILLEGAL_OPERATION, String.format("节点 %s 不是目录", pResourceInfo.getResourceName()));
+        }
+        List<ResourceInfo> resourceInfoList;
+        if (isIncludeChild){
+            resourceInfoList = resourceMapper.selectAllLikeByLevel(pResourceInfo.getLevel());
+        }else {
+            resourceInfoList = resourceMapper.selectChildByPid(pid);
+        }
+
+        if (CollectionUtils.isEmpty(resourceInfoList)){
+            return null;
+        }
+        Map<Long, List<Long>> levelMap = new HashMap<>(resourceInfoList.size());
+        for (ResourceInfo resourceInfo: resourceInfoList){
+            levelMap.put(resourceInfo.getId(), Arrays.stream(resourceInfo.getLevel().split(MarkConstant.MARK_SPLIT_RAIL)).map(Long::parseLong).toList());
+        }
+        Set<Long> levelIds = new HashSet<>();
+        for (List<Long> idList : levelMap.values()){
+            levelIds.addAll(idList);
+        }
+        Map<Long, String> resourceNameMap = resourceMapper.selectAllByIdIn(levelIds).stream().collect(Collectors.toMap(ResourceInfo::getId, ResourceInfo::getResourceName));
+
+        List<GetCatalogueResourceRsp> getCatalogueResourceRspList = new ArrayList<>(resourceInfoList.size());
+        for (ResourceInfo resourceInfo : resourceInfoList){
+            GetCatalogueResourceRsp getCatalogueResourceRsp = new GetCatalogueResourceRsp();
+            getCatalogueResourceRsp.setResourceValue(resourceInfo.getResourceValue());
+            List<Long> ids = levelMap.get(resourceInfo.getId());
+            StringBuilder stringBuilder = new StringBuilder();
+            for (Long id : ids){
+                stringBuilder.append("/");
+                stringBuilder.append(resourceNameMap.get(id));
+            }
+            getCatalogueResourceRsp.setLevelName(stringBuilder.toString());
+            getCatalogueResourceRspList.add(getCatalogueResourceRsp);
+        }
+        return getCatalogueResourceRspList;
     }
 
     @Override

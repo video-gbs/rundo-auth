@@ -1,5 +1,6 @@
 package com.runjian.rbac.service.rbac;
 
+import com.runjian.rbac.vo.response.GetCatalogueResourceRsp;
 import com.runjian.rbac.vo.response.GetResourceRootRsp;
 import com.runjian.rbac.vo.response.GetResourceTreeRsp;
 
@@ -21,6 +22,13 @@ public interface ResourceService {
      * @return
      */
     GetResourceTreeRsp getResourceTree(String resourceKey, Boolean isIncludeResource);
+
+    /**
+     * 获取目录下的资源信息
+     * @param pid
+     * @return
+     */
+    List<GetCatalogueResourceRsp> getCatalogueResource(Long pid, Boolean isIncludeChild);
 
     /**
      * 添加根节点

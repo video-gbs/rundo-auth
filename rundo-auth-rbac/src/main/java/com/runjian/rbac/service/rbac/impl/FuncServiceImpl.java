@@ -64,13 +64,13 @@ public class FuncServiceImpl implements FuncService {
         List<Long> funcIds = funcInfoList.stream().map(FuncInfo::getId).toList();
         Map<Long, List<FuncResourceRel>> funcResourceMap = funcResourceMapper.selectByFuncIdIn(funcIds).stream().collect(Collectors.groupingBy(FuncResourceRel::getFuncId));
         Map<Long, List<RoleFuncRel>> roleFuncMap = roleFuncMapper.selectByFuncIdIn(funcIds).stream().collect(Collectors.groupingBy(RoleFuncRel::getFuncId));
-        Map<String, String> funcCache = new HashMap<>();
+        Map<String, String> funcCache = new HashMap<>(funcInfoList.size());
         for (FuncInfo funcInfo : funcInfoList){
             CacheFuncDto cacheFuncDto = new CacheFuncDto();
             cacheFuncDto.setScope(funcInfo.getScope());
             cacheFuncDto.setFuncName(funcInfo.getFuncName());
             List<RoleFuncRel> roleFuncRels = roleFuncMap.get(funcInfo.getId());
-            if (!CollectionUtils.isEmpty(roleFuncRels)){
+            if (!CollectionUtils.isEmpty(roleFuncRels)) {
                 cacheFuncDto.setRoleIds(roleFuncRels.stream().map(RoleFuncRel::getRoleId).toList());
             }
             List<FuncResourceRel> funcResourceRelList = funcResourceMap.get(funcInfo.getId());
