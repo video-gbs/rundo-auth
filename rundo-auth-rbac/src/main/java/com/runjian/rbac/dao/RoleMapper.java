@@ -3,6 +3,7 @@ package com.runjian.rbac.dao;
 import com.runjian.rbac.dao.relation.UserRoleMapper;
 import com.runjian.rbac.entity.RoleInfo;
 import com.runjian.rbac.vo.response.GetRolePageRsp;
+import com.runjian.rbac.vo.response.GetUserRolePageRsp;
 import org.apache.ibatis.annotations.*;
 import org.springframework.stereotype.Repository;
 
@@ -23,7 +24,7 @@ public interface RoleMapper {
 
     @Select(" <script> " +
             " SELECT * FROM " + ROLE_TABLE_NAME +
-            " WHERE deleted !=  1 " +
+            " WHERE deleted =  0 " +
             " <if test=\"roleName != null\" > AND role_name LIKE CONCAT('%', #{roleName}, '%') </if> " +
             " <if test=\"createBy != null\" > AND create_by LIKE CONCAT('%', #{createBy}, '%') </if> " +
             " <if test=\"createTimeStart != null\" > AND create_time &gt;= #{createTimeStart} </if> " +
@@ -32,13 +33,20 @@ public interface RoleMapper {
     List<GetRolePageRsp> selectPageByRoleNameAndCreateByAndCreateTime(int page, int num, String roleName, String createBy, LocalDateTime createTimeStart, LocalDateTime createTimeEnd);
 
     @Select(" <script> " +
-            " SELECT rt.* FROM " + ROLE_TABLE_NAME + " rt " +
-            " <if test=\"userId != null\" > RIGHT JOIN " + UserRoleMapper.USER_ROLE_TABLE_NAME + " ur ON rt.id = ur.role_id </if> " +
-            " WHERE rt.deleted !=  1 " +
-            " <if test=\"userId != null\" > AND ur.user_id = #{userId} </if> " +
+            " SELECT * FROM " + ROLE_TABLE_NAME +
+            " WHERE deleted =  0 " +
             " <if test=\"roleName != null\" >  AND rt.role_name LIKE CONCAT('%', #{roleName}, '%') </if> " +
             " </script> ")
-    List<GetRolePageRsp> selectPageByUserIdAndRoleName(Long userId, String roleName);
+    List<GetUserRolePageRsp> selectPageByRoleName(String roleName);
+
+    @Select(" <script> " +
+            " SELECT rt.*, ur.user_id  FROM " + ROLE_TABLE_NAME + " rt " +
+            " LEFT JOIN " + UserRoleMapper.USER_ROLE_TABLE_NAME + " ur ON rt.id = ur.role_id AND ur.user_id = #{userId} " +
+            " WHERE rt.deleted = 0 " +
+            " <if test=\"roleName != null\" >  AND rt.role_name LIKE CONCAT('%', #{roleName}, '%') </if> " +
+            " ORDER BY ur.id desc " +
+            " </script> ")
+    List<GetUserRolePageRsp> selectPageByUserIdAndRoleName(Long userId, String roleName);
 
     @Update(" <script> " +
             " <foreach collection='roleIds' item='item' separator=';'> " +
@@ -74,7 +82,7 @@ public interface RoleMapper {
     @Select(" <script> " +
             " SELECT rt.* FROM " + ROLE_TABLE_NAME + " rt " +
             " <if test=\"userId != null\" > RIGHT JOIN " + UserRoleMapper.USER_ROLE_TABLE_NAME + " ur ON rt.id = ur.role_id </if> " +
-            " WHERE rt.deleted !=  1 " +
+            " WHERE rt.deleted =  0 " +
             " AND ur.user_id = #{userId} " +
             " </script> ")
     List<RoleInfo> selectByUserId(Long userId);

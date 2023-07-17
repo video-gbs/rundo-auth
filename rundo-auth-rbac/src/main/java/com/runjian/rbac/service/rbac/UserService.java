@@ -37,8 +37,6 @@ public interface UserService {
     PageInfo<GetUserPageRsp> getUserPage(int page, int num, Long sectionId, String username, String workName, Boolean isInclude);
 
 
-
-
     /**
      * 新增用户
      * @param username 用户名
@@ -67,6 +65,7 @@ public interface UserService {
     /**
      * 编辑用户
      * @param userId 用户id
+     * @param expiryStartTime 生效开始时间
      * @param expiryEndTime 生效结束时间
      * @param password 密码
      * @param sectionId 部门id
@@ -77,7 +76,7 @@ public interface UserService {
      * @param description 描述
      * @param roleIds 角色id数组
      */
-    void updateUser(Long userId, LocalDateTime expiryEndTime, String password, Long sectionId,
+    void updateUser(Long userId, LocalDateTime expiryStartTime, LocalDateTime expiryEndTime, String password, Long sectionId,
                     String workName, String workNum, String phone, String address, String description, Set<Long> roleIds);
 
     /**

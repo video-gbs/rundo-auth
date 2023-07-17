@@ -31,13 +31,6 @@ public class ReadBodyFilter implements GlobalFilter, Ordered {
 
         if (hasBody){
             // 从请求体中获取参数
-//            return DataBufferUtils.join(exchange.getRequest().getBody())
-//                    .flatMap(dataBuffer ->{
-//                        byte[] bytes = new byte[dataBuffer.readableByteCount()];
-//                        dataBuffer.read(bytes);
-//                        exchange.getAttributes().put("bodyData", new String(bytes, StandardCharsets.UTF_8));
-//                        return chain.filter(exchange);
-//                    });
             return DataBufferUtils.join(exchange.getRequest().getBody())
                     .flatMap(dataBuffer -> {
                         DataBufferUtils.retain(dataBuffer);
@@ -56,7 +49,6 @@ public class ReadBodyFilter implements GlobalFilter, Ordered {
                         return chain.filter(exchange.mutate().request(mutatedRequest).build());
                     });
         }
-
 
         return chain.filter(exchange);
     }

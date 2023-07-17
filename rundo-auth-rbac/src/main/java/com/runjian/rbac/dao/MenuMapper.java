@@ -89,8 +89,7 @@ public interface MenuMapper {
 
     @Select(" <script> " +
             " SELECT * FROM " + MENU_TABLE_NAME +
-            " WHERE disabled = 0 " +
-            " AND level_num &gt;= #{levelNumStart} " +
+            " WHERE  level_num &gt;= #{levelNumStart}" +
             " <if test=\"levelNumEnd != null\" > AND level_num &lt;= #{levelNumEnd} </if> " +
             " </script> ")
     List<GetMenuTreeRsp> selectAllByLevelNumStartAndLevelNumEnd(Integer levelNumStart, Integer levelNumEnd);

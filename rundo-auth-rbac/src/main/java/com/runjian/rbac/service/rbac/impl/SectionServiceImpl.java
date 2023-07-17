@@ -100,9 +100,6 @@ public class SectionServiceImpl implements SectionService {
             pSectionInfo = dataBaseService.getSectionInfo(pid);
             level = pSectionInfo.getLevel()+ MarkConstant.MARK_SPLIT_RAIL + pSectionInfo.getId();
         }
-//        if (pSectionInfo.getSectionPid().equals(sectionInfo.getSectionPid())){
-//            return;
-//        }
         if (pSectionInfo.getLevel().startsWith(sectionInfo.getLevel() + MarkConstant.MARK_SPLIT_RAIL + sectionInfo.getId())){
             throw new BusinessException(BusinessErrorEnums.VALID_ILLEGAL_OPERATION, "不可将父部门移动到子部门");
         }

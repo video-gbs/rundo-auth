@@ -60,31 +60,31 @@ public class PostAddUserReq implements ValidatorFunction {
     /**
      * 工作名称
      */
-    @Size(min = 1, max = 32, message = "非法名称，长度范围1~32")
+    @Size(max = 32, message = "非法名称，长度范围1~32")
     private String workName;
 
     /**
      * 工号
      */
-    @Size(min = 1, max = 32, message = "非法工号，长度范围1~32")
+    @Size(max = 32, message = "非法工号，长度范围1~32")
     private String workNum;
 
     /**
      * 地址
      */
-    @Size(min = 1, max = 250, message = "非法地址，长度范围1~250")
+    @Size(max = 250, message = "非法地址，长度范围1~250")
     private String address;
 
     /**
      * 手机号码
      */
-    @Size(min = 1, max = 20, message = "非法手机号码，长度范围1~20")
+    @Size(max = 20, message = "非法手机号码，长度范围1~20")
     private String phone;
 
     /**
      * 描述
      */
-    @Size(min = 1, max = 250, message = "非法地址，长度范围1~250")
+    @Size(max = 250, message = "非法描述，长度范围1~250")
     private String description;
 
     /**

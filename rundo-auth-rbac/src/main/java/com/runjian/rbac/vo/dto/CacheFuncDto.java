@@ -20,6 +20,11 @@ public class CacheFuncDto {
     private String scope;
 
     /**
+     * 功能名称
+     */
+    private String funcName;
+
+    /**
      * 角色数组
      */
     private List<Long> roleIds = new ArrayList<>();

@@ -11,6 +11,7 @@ import com.runjian.rbac.vo.request.PostRoleUserAssociateReq;
 import com.runjian.rbac.vo.request.PutRoleDisabledReq;
 import com.runjian.rbac.vo.request.PutRoleReq;
 import com.runjian.rbac.vo.response.GetRolePageRsp;
+import com.runjian.rbac.vo.response.GetUserRolePageRsp;
 import io.github.yedaxia.apidocs.ApiDoc;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -67,9 +68,9 @@ public class RoleController {
     @IllegalStringValid
     @GetMapping("/page/user")
     @ApiDoc(result = GetRolePageRsp.class)
-    public CommonResponse<PageInfo<GetRolePageRsp>> getRolePageByUser(@RequestParam(defaultValue = "1") int page,
-                                                                      @RequestParam(defaultValue = "10") int num,
-                                                                      Long userId, String roleName){
+    public CommonResponse<PageInfo<GetUserRolePageRsp>> getRolePageByUser(@RequestParam(defaultValue = "1") int page,
+                                                                          @RequestParam(defaultValue = "10") int num,
+                                                                          Long userId, String roleName){
         return CommonResponse.success(roleService.getRolePage(page, num, userId, roleName));
     }
 

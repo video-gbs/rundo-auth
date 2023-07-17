@@ -33,7 +33,7 @@ public class AuthController {
     @PostMapping("/request")
     public CommonResponse<AuthDataRsp> authRequest(@RequestBody PostAuthReq req){
         validatorService.validateRequest(req);
-        return CommonResponse.success(authService.authenticate(req.getReqUrl(), req.getReqMethod(), req.getJsonStr()));
+        return CommonResponse.success(authService.authenticate(req.getReqUrl(), req.getReqMethod(), req.getQueryData(), req.getBodyData()));
     }
 
     /**

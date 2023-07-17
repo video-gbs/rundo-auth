@@ -19,6 +19,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.HttpStatusCode;
 import org.springframework.http.server.reactive.ServerHttpRequest;
 import org.springframework.http.server.reactive.ServerHttpResponse;
+import org.springframework.util.MultiValueMap;
 import org.springframework.web.reactive.function.client.WebClient;
 import org.springframework.web.reactive.function.client.WebClientResponseException;
 import org.springframework.web.server.ServerWebExchange;
@@ -56,12 +57,13 @@ public class AuthFilter implements GatewayFilter, Ordered {
             return response.writeAndFlushWith(Mono.just(ByteBufMono.just(response.bufferFactory().wrap(JSONObject.toJSONString(CommonResponse.failure(BusinessErrorEnums.USER_AUTH_ERROR)).getBytes()))));
         }
         Flux<DataBuffer> bodyData = exchange.getAttribute(AuthProperties.REQUEST_BODY_NAME);
+        MultiValueMap<String, String> queryParams = exchange.getRequest().getQueryParams();
         PostAuthReq postAuthReq;
         if (Objects.nonNull(bodyData)){
             String raw = toRaw(bodyData);
-            postAuthReq = new PostAuthReq(uri.getPath(), exchange.getRequest().getMethod().name(), JSONObject.toJSONString(raw));
+            postAuthReq = new PostAuthReq(uri.getPath(), exchange.getRequest().getMethod().name(), JSONObject.toJSONString(queryParams), JSONObject.toJSONString(raw));
         }else {
-            postAuthReq = new PostAuthReq(uri.getPath(), exchange.getRequest().getMethod().name(), null);
+            postAuthReq = new PostAuthReq(uri.getPath(), exchange.getRequest().getMethod().name(), JSONObject.toJSONString(queryParams), null);
         }
 
         return WebClient.builder()

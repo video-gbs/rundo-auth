@@ -23,6 +23,7 @@ import com.runjian.rbac.service.rbac.RoleService;
 import com.runjian.rbac.utils.AuthUtils;
 import com.runjian.rbac.vo.dto.CacheFuncDto;
 import com.runjian.rbac.vo.response.GetRolePageRsp;
+import com.runjian.rbac.vo.response.GetUserRolePageRsp;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -65,8 +66,11 @@ public class RoleServiceImpl implements RoleService {
     }
 
     @Override
-    public PageInfo<GetRolePageRsp> getRolePage(int page, int num, Long userId, String roleName) {
+    public PageInfo<GetUserRolePageRsp> getRolePage(int page, int num, Long userId, String roleName) {
         PageHelper.startPage(page, num);
+        if (Objects.isNull(userId)){
+            return new PageInfo<>(roleMapper.selectPageByRoleName(roleName));
+        }
         return new PageInfo<>(roleMapper.selectPageByUserIdAndRoleName(userId, roleName));
     }
 

@@ -27,8 +27,14 @@ public class PostAuthReq {
     private String reqMethod;
 
     /**
-     * json数据
+     * 参数数据
      */
-    @Size(max = 999999, message = "json数据体过大，不支持数据验证")
-    private String jsonStr;
+    @Size(max = 9999, message = "query数据体过大，不支持数据验证")
+    private String queryData;
+
+    /**
+     * body的json数据
+     */
+    @Size(max = 9999, message = "body数据体过大，不支持数据验证")
+    private String bodyData;
 }

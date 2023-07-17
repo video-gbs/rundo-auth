@@ -24,10 +24,11 @@ public interface UserRoleMapper {
             " WHERE user_id = #{userId} ")
     Set<Long> selectRoleIdByUserId(Long userId);
 
-    @Delete(" DELETE FROM " + USER_ROLE_TABLE_NAME +
+    @Delete(" <script> " +
+            " DELETE FROM " + USER_ROLE_TABLE_NAME +
             " WHERE user_id = #{userId} " +
-            " AND role_id IN <foreach collection='roleIds' item='item' open='(' separator=',' close=')'> #{item} </foreach> "
-    )
+            " AND role_id IN <foreach collection='roleIds' item='item' open='(' separator=',' close=')'> #{item} </foreach> "+
+            " </script>")
     void deleteAllByUserIdAndRoleIds(Long userId, Set<Long> roleIds);
 
     @Insert(" <script> " +

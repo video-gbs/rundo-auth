@@ -2,6 +2,7 @@ package com.runjian.rbac.service.rbac;
 
 import com.github.pagehelper.PageInfo;
 import com.runjian.rbac.vo.response.GetRolePageRsp;
+import com.runjian.rbac.vo.response.GetUserRolePageRsp;
 
 import java.time.LocalDateTime;
 import java.util.Set;
@@ -32,7 +33,7 @@ public interface RoleService {
      * @param roleName 角色名称
      * @return GetRolePageRsp
      */
-    PageInfo<GetRolePageRsp> getRolePage(int page, int num, Long userId, String roleName);
+    PageInfo<GetUserRolePageRsp> getRolePage(int page, int num, Long userId, String roleName);
 
     /**
      * 获取角色资源id

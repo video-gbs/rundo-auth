@@ -47,7 +47,7 @@ public class AuthSystemController {
     @ApiDoc(result = AuthDataDto.class)
     public CommonResponse<AuthDataDto> authUserApi(@RequestBody PostAuthUserApiReq req){
         validatorService.validateRequest(req);
-        return CommonResponse.success(authSystemService.getAuthDataByUser(req.getUsername(), req.getScope(), req.getReqPath(), req.getReqMethod(), req.getJsonStr()));
+        return CommonResponse.success(authSystemService.getAuthDataByUser(req.getUsername(), req.getScope(), req.getReqPath(), req.getReqMethod(), req.getQueryData(), req.getBodyData()));
     }
 
     /**

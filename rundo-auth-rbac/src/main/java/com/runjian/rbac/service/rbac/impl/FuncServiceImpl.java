@@ -90,6 +90,7 @@ public class FuncServiceImpl implements FuncService {
         funcMapper.save(funcInfo);
         CacheFuncDto cacheFuncDto = new CacheFuncDto();
         cacheFuncDto.setScope(scope);
+        cacheFuncDto.setFuncName(funcName);
         cacheService.setFuncCache(MethodType.getByCode(funcInfo.getMethod()) + MarkConstant.MARK_SPLIT_SEMICOLON + funcInfo.getPath(), cacheFuncDto);
     }
 
@@ -226,6 +227,7 @@ public class FuncServiceImpl implements FuncService {
     private void addFuncCache(FuncInfo funcInfo) {
         CacheFuncDto cacheFuncDto = new CacheFuncDto();
         cacheFuncDto.setScope(funcInfo.getScope());
+        cacheFuncDto.setFuncName(funcInfo.getFuncName());
         cacheFuncDto.setRoleIds(roleFuncMapper.selectRoleIdsByFuncId(funcInfo.getId()));
         cacheFuncDto.setFuncResourceDataList(funcResourceMapper.selectFuncResourceDataByFuncId(funcInfo.getId()));
         cacheService.setFuncCache(MethodType.getByCode(funcInfo.getMethod()) + MarkConstant.MARK_SPLIT_SEMICOLON + funcInfo.getPath(), cacheFuncDto);

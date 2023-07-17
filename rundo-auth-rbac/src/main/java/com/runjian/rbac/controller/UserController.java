@@ -33,8 +33,6 @@ public class UserController {
 
     private final UserService userService;
 
-
-
     /**
      * 角色页面获取绑定或未绑定的数据
      * @param page 页码
@@ -114,7 +112,7 @@ public class UserController {
     @PutMapping("/update")
     public CommonResponse<?> update(@RequestBody PutUserReq req){
         validatorService.validateRequest(req);
-        userService.updateUser(req.getUserId(), req.getExpiryEndTime(), req.getPassword(),
+        userService.updateUser(req.getUserId(), req.getExpiryStartTime(), req.getExpiryEndTime(), req.getPassword(),
                 req.getSectionId(), req.getWorkName(), req.getWorkNum(),
                 req.getPhone(), req.getAddress(), req.getDescription(),
                 req.getRoleIds());

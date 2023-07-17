@@ -53,7 +53,11 @@ public class CacheServiceImpl implements CacheService {
 
     @Override
     public CacheFuncDto getFuncCache(String methodPath) {
-        return JSONObject.parseObject(redissonClient.getMap(MarkConstant.REDIS_AUTH_FUNC).get(methodPath).toString(), CacheFuncDto.class);
+        Object cacheData = redissonClient.getMap(MarkConstant.REDIS_AUTH_FUNC).get(methodPath);
+        if (Objects.isNull(cacheData)){
+            return null;
+        }
+        return JSONObject.parseObject(cacheData.toString(), CacheFuncDto.class);
     }
 
     @Override

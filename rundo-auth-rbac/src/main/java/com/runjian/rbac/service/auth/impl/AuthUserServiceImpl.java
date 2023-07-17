@@ -82,7 +82,11 @@ public class AuthUserServiceImpl implements AuthUserService {
         getUserRsp.setPhone(userInfo.getPhone());
         getUserRsp.setExpiryEndTime(userInfo.getExpiryEndTime());
         getUserRsp.setRoleNames(roleMapper.selectByUserId(userInfo.getId()).stream().map(RoleInfo::getRoleName).collect(Collectors.toSet()));
-        getUserRsp.setSectionName(dataBaseService.getSectionInfo(userInfo.getId()).getSectionName());
+        if (Objects.equals(userInfo.getSectionId(), 0L)){
+            getUserRsp.setSectionName("根节点");
+        }else {
+            getUserRsp.setSectionName(dataBaseService.getSectionInfo(userInfo.getSectionId()).getSectionName());
+        }
         return getUserRsp;
     }
 

@@ -22,10 +22,11 @@ public interface AuthSystemService {
      * @param scope 授权体系
      * @param reqPath 访问路径
      * @param reqMethod 访问方式
-     * @param jsonStr 数据体
+     * @param queryData query数据
+     * @param bodyData body数据
      * @return AuthDataDto
      */
-    AuthDataDto getAuthDataByUser(String username, String scope, String reqPath, String reqMethod, String jsonStr);
+    AuthDataDto getAuthDataByUser(String username, String scope, String reqPath, String reqMethod, String queryData, String bodyData);
 
     /**
      * 获取客户端授权信息

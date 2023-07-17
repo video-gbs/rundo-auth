@@ -37,7 +37,7 @@ public class AuthServiceImpl implements AuthService {
     private final OAuth2AuthorizationDao authorizationDao;
 
     @Override
-    public AuthDataRsp authenticate(String reqPath, String reqMethod, String jsonStr) {
+    public AuthDataRsp authenticate(String reqPath, String reqMethod, String queryData, String bodyData) {
         String jwtToken = request.getHeader(CommonConstant.AUTHORIZATION).split(" ")[1];
         OAuth2Authorization authorization = this.authorizationService.findByToken(jwtToken, null);
         if (Objects.isNull(authorization)){
@@ -48,7 +48,7 @@ public class AuthServiceImpl implements AuthService {
             return AuthDataRsp.getFailureRsp("非法token,请重新登录");
         }
 
-        CommonResponse<AuthDataRsp> authDataDtoCommonResponse = authRbacApi.authUserApi(new PostAuthUserApiReq(authorization.getPrincipalName(), String.join(",", authorization.getAuthorizedScopes()), reqMethod, reqPath, jsonStr));
+        CommonResponse<AuthDataRsp> authDataDtoCommonResponse = authRbacApi.authUserApi(new PostAuthUserApiReq(authorization.getPrincipalName(), String.join(",", authorization.getAuthorizedScopes()), reqMethod, reqPath, queryData, bodyData));
         if (authDataDtoCommonResponse.isError()){
             throw new BusinessException(BusinessErrorEnums.FEIGN_REQUEST_BUSINESS_ERROR);
         }

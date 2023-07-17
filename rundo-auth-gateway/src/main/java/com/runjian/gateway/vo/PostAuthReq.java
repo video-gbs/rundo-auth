@@ -24,7 +24,12 @@ public class PostAuthReq {
     private String reqMethod;
 
     /**
-     * json数据
+     * 参数数据
      */
-    private String jsonStr;
+    private String queryData;
+
+    /**
+     * body的json数据
+     */
+    private String bodyData;
 }

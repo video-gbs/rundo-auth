@@ -142,7 +142,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     @Transactional(rollbackFor = Exception.class)
-    public void updateUser(Long userId, LocalDateTime expiryEndTime, String password, Long sectionId, String workName, String workNum, String phone, String address, String description, Set<Long> roleIds) {
+    public void updateUser(Long userId, LocalDateTime expiryStartTime, LocalDateTime expiryEndTime, String password, Long sectionId, String workName, String workNum, String phone, String address, String description, Set<Long> roleIds) {
         AuthDataDto authData = authUtils.getAuthData();
         UserInfo userInfo = dataBaseService.getUserInfo(userId);
         if (Objects.isNull(password)) {
@@ -151,6 +151,7 @@ public class UserServiceImpl implements UserService {
             userInfo.setPassword(AuthProperties.passwordEncoder.encode(password));
         }
         LocalDateTime nowTime = LocalDateTime.now();
+        userInfo.setExpiryStartTime(expiryStartTime);
         userInfo.setExpiryEndTime(expiryEndTime);
         userInfo.setSectionId(sectionId);
         userInfo.setWorkName(workName);

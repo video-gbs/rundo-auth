@@ -79,7 +79,7 @@ public interface FuncMapper {
     List<GetFuncRsp> selectAllByMenuIdAndFuncIds(Integer menuId, List<Long> funcIds);
 
     @Select(" SELECT * FROM " + FUNC_TABLE_NAME +
-            " WHERE menu_id = #{menuId} AND disabled = 0 ")
+            " WHERE menu_id = #{menuId} ")
     List<GetFuncRsp> selectAllByMenuId(Integer menuId);
 
     @Select(" SELECT * FROM " + FUNC_TABLE_NAME +

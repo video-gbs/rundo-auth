@@ -25,6 +25,12 @@ public class PutUserReq {
     private Long userId;
 
     /**
+     * 生效开始时间
+     */
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
+    private LocalDateTime expiryStartTime;
+
+    /**
      * 生效结束时间
      */
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
@@ -51,25 +57,25 @@ public class PutUserReq {
     /**
      * 工号
      */
-    @Size(min = 1, max = 32, message = "非法工号，长度范围1~32")
+    @Size(max = 32, message = "非法工号，长度范围1~32")
     private String workNum;
 
     /**
      * 手机号码
      */
-    @Size(min = 1, max = 20, message = "非法手机号码，长度范围1~20")
+    @Size(max = 20, message = "非法手机号码，长度范围1~20")
     private String phone;
 
     /**
      * 地址
      */
-    @Size(min = 1, max = 250, message = "非法地址，长度范围1~250")
+    @Size(max = 250, message = "非法地址，长度范围1~250")
     private String address;
 
     /**
      * 描述
      */
-    @Size(min = 1, max = 250, message = "非法地址，长度范围1~250")
+    @Size(max = 250, message = "非法地址，长度范围1~250")
     private String description;
 
     /**
