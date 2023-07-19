@@ -128,4 +128,11 @@ public interface UserMapper {
             " <if test=\"username != null\" > AND ut.username LIKE CONCAT('%', #{username}, '%') </if> " +
             " </script>")
     List<GetUserPageRsp> selectByUsernameLike(String username);
+
+    @Select(" <script> " +
+            " SELECT ut.* FROM " + USER_TABLE_NAME + " ut " +
+            " LEFT JOIN " + UserRoleMapper.USER_ROLE_TABLE_NAME + " urt ON urt.user_id = ut.id" +
+            " WHERE ut.deleted != 1 AND urt.role_id = #{roleId}" +
+            " </script>")
+    List<UserInfo> selectByRoleId(Long roleId);
 }

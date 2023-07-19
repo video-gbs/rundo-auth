@@ -1,4 +1,4 @@
-package com.runjian.auth.config;
+package com.runjian.rbac.config;
 
 import org.redisson.Redisson;
 import org.redisson.api.RedissonClient;
@@ -7,11 +7,13 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.io.ClassPathResource;
+import org.springframework.util.StringUtils;
 
 import java.io.IOException;
 
 /**
- * @author chenjialing
+ * @author Miracle
+ * @date 2023/7/19 17:15
  */
 @Configuration
 public class RedissonConfig {
@@ -31,6 +33,9 @@ public class RedissonConfig {
     @Bean(destroyMethod="shutdown")
     public RedissonClient redisson() throws IOException {
         Config config = Config.fromYAML(new ClassPathResource("redisson.yml").getInputStream());
+        if (!StringUtils.hasText(password)){
+            password = null;
+        }
         config.useSingleServer()
                 .setAddress("redis://" + redisHost + ":" + redisPort)
                 .setDatabase(redisDatabase)

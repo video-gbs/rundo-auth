@@ -12,6 +12,16 @@ public class GetCatalogueResourceRsp {
     /**
      * 资源id
      */
+    private Long resourceId;
+
+    /**
+     * 资源名称
+     */
+    private String resourceName;
+
+    /**
+     * 资源id
+     */
     private String resourceValue;
 
     /**

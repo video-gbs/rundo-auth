@@ -1,19 +1,16 @@
 package com.runjian.rbac.service.rbac;
 
-import com.runjian.rbac.vo.response.GetCatalogueResourceRsp;
 import com.runjian.rbac.vo.response.GetResourceRootRsp;
 import com.runjian.rbac.vo.response.GetResourceTreeRsp;
 
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 
 /**
  * @author Miracle
  * @date 2023/6/6 10:52
  */
 public interface ResourceService {
-
 
     /**
      * 获取分组资源树
@@ -22,13 +19,6 @@ public interface ResourceService {
      * @return
      */
     GetResourceTreeRsp getResourceTree(String resourceKey, Boolean isIncludeResource);
-
-    /**
-     * 获取目录下的资源信息
-     * @param pid
-     * @return
-     */
-    List<GetCatalogueResourceRsp> getCatalogueResource(Long pid, Boolean isIncludeChild);
 
     /**
      * 添加根节点
@@ -80,4 +70,35 @@ public interface ResourceService {
      */
     void btMove(Long id, Integer moveOp);
 
+    /**
+     * 修改资源
+     * @param resourceKey 资源key
+     * @param resourceValue 资源value
+     * @param resourceName 资源名称
+     */
+    void updateResourceByKv(String resourceKey, String resourceValue, String resourceName);
+
+
+    /**
+     * 删除
+     * @param resourceKey 资源key
+     * @param resourceValue 资源value
+     */
+    void deleteByResourceByKv(String resourceKey, String resourceValue);
+
+    /**
+     * 父子移动节点
+     * @param resourceKey 资源key
+     * @param resourceValue 资源value
+     * @param pResourceValue 父资源value
+     */
+    void fsMoveByKv(String resourceKey, String resourceValue, String pResourceValue);
+
+    /**
+     * 兄弟移动节点
+     * @param resourceKey 资源key
+     * @param resourceValue 资源value
+     * @param moveOp 1上移 0下移
+     */
+    void btMoveByKv(String resourceKey, String resourceValue, Integer moveOp);
 }

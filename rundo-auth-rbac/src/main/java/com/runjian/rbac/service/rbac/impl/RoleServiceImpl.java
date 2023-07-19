@@ -10,6 +10,7 @@ import com.runjian.common.constant.MarkConstant;
 import com.runjian.rbac.constant.MethodType;
 import com.runjian.rbac.dao.FuncMapper;
 import com.runjian.rbac.dao.RoleMapper;
+import com.runjian.rbac.dao.UserMapper;
 import com.runjian.rbac.dao.relation.RoleFuncMapper;
 import com.runjian.rbac.dao.relation.RoleMenuMapper;
 import com.runjian.rbac.dao.relation.RoleResourceMapper;
@@ -58,6 +59,8 @@ public class RoleServiceImpl implements RoleService {
     private final CacheService cacheService;
 
     private final FuncMapper funcMapper;
+
+    private final UserMapper userMapper;
 
     @Override
     public PageInfo<GetRolePageRsp> getRolePage(int page, int num, String roleName, String createBy, LocalDateTime createTimeStart, LocalDateTime createTimeEnd) {
@@ -244,9 +247,17 @@ public class RoleServiceImpl implements RoleService {
                     roleResourceMapper.saveAll(roleId, resourceIds, authUser, nowTime);
                 }
             }
+            deleteUserResourceCache(roleId);
         }
 
         log.warn(LogTemplate.PROCESS_LOG_MSG_TEMPLATE, "角色服务", "修改角色", String.format("用户'%s' 执行修改角色'%s'", authUser, roleInfo));
+    }
+
+    private void deleteUserResourceCache(Long roleId) {
+        List<UserInfo> userInfoList = userMapper.selectByRoleId(roleId);
+        for (UserInfo userInfo : userInfoList){
+            cacheService.removeUserResourceByUsername(userInfo.getUsername());
+        }
     }
 
     @Override

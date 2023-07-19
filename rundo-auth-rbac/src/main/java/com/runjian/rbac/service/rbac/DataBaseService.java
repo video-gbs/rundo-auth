@@ -57,4 +57,12 @@ public interface DataBaseService {
      * @return
      */
     ResourceInfo getResourceInfo(Long id);
+
+    /**
+     * 获取资源接口信息
+     * @param resourceKey 资源Key
+     * @param resourceValue 资源Value
+     * @return
+     */
+    ResourceInfo getResourceInfo(String resourceKey, String resourceValue);
 }

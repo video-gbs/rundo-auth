@@ -84,7 +84,7 @@ public class CacheServiceImpl implements CacheService {
         if (Objects.isNull(data)){
             return null;
         }
-        return JSONArray.parseArray(JSONArray.toJSONString(data)).toList(String.class);
+        return JSONArray.parseArray(data.toString()).toList(String.class);
     }
 
     @Override

@@ -24,5 +24,5 @@ public class PutResourceFsMoveReq {
      */
     @NotNull(message = "资源父id不能为空")
     @Min(value = 0, message = "非法资源父id")
-    private Long sectionPid;
+    private Long resourcePid;
 }

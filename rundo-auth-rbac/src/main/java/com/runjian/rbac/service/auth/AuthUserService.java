@@ -1,9 +1,6 @@
 package com.runjian.rbac.service.auth;
 
-import com.runjian.rbac.vo.response.GetFuncRsp;
-import com.runjian.rbac.vo.response.GetMenuTreeRsp;
-import com.runjian.rbac.vo.response.GetResourceTreeRsp;
-import com.runjian.rbac.vo.response.GetUserRsp;
+import com.runjian.rbac.vo.response.*;
 
 import java.util.List;
 
@@ -42,7 +39,13 @@ public interface AuthUserService {
     /**
      * 获取资源
      * @param resourceKey 资源key
-     * @param isIncludeResource 是否包含资源
      */
-    GetResourceTreeRsp getResource(String resourceKey, Boolean isIncludeResource);
+    GetResourceTreeRsp getCatalogueResource(String resourceKey);
+
+    /**
+     * 获取目录下的资源信息
+     * @param pid
+     * @return
+     */
+    List<GetCatalogueResourceRsp> getResourceByCatalogue(Long pid, Boolean isIncludeChild);
 }

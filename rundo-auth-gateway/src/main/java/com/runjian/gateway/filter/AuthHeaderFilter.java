@@ -43,6 +43,8 @@ public class AuthHeaderFilter implements GatewayFilter, Ordered {
                 httpHeaders.add("Role-Ids", authDataDto.getRoleIds().stream().map(String::valueOf).collect(Collectors.joining(",")));
                 if (Objects.nonNull(authDataDto.getResourceKey())){
                     httpHeaders.add("Resource-Key", authDataDto.getResourceKey());
+                }else {
+                    httpHeaders.remove("Resource-Key");
                 }
             }
         });

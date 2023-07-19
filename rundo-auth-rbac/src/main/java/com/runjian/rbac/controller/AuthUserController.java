@@ -2,10 +2,7 @@ package com.runjian.rbac.controller;
 
 import com.runjian.common.config.response.CommonResponse;
 import com.runjian.rbac.service.auth.AuthUserService;
-import com.runjian.rbac.vo.response.GetFuncRsp;
-import com.runjian.rbac.vo.response.GetMenuTreeRsp;
-import com.runjian.rbac.vo.response.GetResourceTreeRsp;
-import com.runjian.rbac.vo.response.GetUserRsp;
+import com.runjian.rbac.vo.response.*;
 import io.github.yedaxia.apidocs.ApiDoc;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -72,12 +69,24 @@ public class AuthUserController {
     /**
      * 获取资源数据
      * @param resourceKey 资源key
-     * @param isIncludeResource 是否包含资源
      * @return
      */
     @GetMapping("/resource")
     @ApiDoc(result = GetResourceTreeRsp.class)
-    public CommonResponse<GetResourceTreeRsp> getResource(@RequestParam String resourceKey, @RequestParam Boolean isIncludeResource){
-        return CommonResponse.success(authUserService.getResource(resourceKey, isIncludeResource));
+    public CommonResponse<GetResourceTreeRsp> getResource(@RequestParam String resourceKey){
+        return CommonResponse.success(authUserService.getCatalogueResource(resourceKey));
     }
+
+    /**
+     * 获取目录下的所有资源数据
+     * @param pid 父id
+     * @param isIncludeChild 是否包含子目录数据
+     * @return
+     */
+    @GetMapping("/resource/pid")
+    @ApiDoc(result = GetCatalogueResourceRsp.class)
+    public CommonResponse<List<GetCatalogueResourceRsp>> getCatalogueResourceRsp(@RequestParam Long pid, @RequestParam Boolean isIncludeChild){
+        return CommonResponse.success(authUserService.getResourceByCatalogue(pid, isIncludeChild));
+    }
+
 }

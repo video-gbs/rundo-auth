@@ -10,15 +10,16 @@ import com.runjian.rbac.entity.ResourceInfo;
 import com.runjian.rbac.service.auth.CacheService;
 import com.runjian.rbac.service.rbac.DataBaseService;
 import com.runjian.rbac.service.rbac.ResourceService;
-import com.runjian.rbac.vo.AbstractTreeInfo;
-import com.runjian.rbac.vo.response.GetCatalogueResourceRsp;
 import com.runjian.rbac.vo.response.GetResourceRootRsp;
 import com.runjian.rbac.vo.response.GetResourceTreeRsp;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.jdbc.datasource.DataSourceTransactionManager;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.TransactionDefinition;
+import org.springframework.transaction.TransactionException;
+import org.springframework.transaction.TransactionStatus;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.util.CollectionUtils;
 
 import java.time.LocalDateTime;
 import java.time.ZoneOffset;
@@ -42,6 +43,10 @@ public class ResourceServiceImpl implements ResourceService {
 
     private final CacheService cacheService;
 
+    private final DataSourceTransactionManager dataSourceTransactionManager;
+
+    private final TransactionDefinition transactionDefinition;
+
     @Override
     public GetResourceTreeRsp getResourceTree(String resourceKey, Boolean isIncludeResource) {
         Optional<GetResourceTreeRsp> rootOp = resourceMapper.selectRootByResourceKey(resourceKey);
@@ -52,48 +57,6 @@ public class ResourceServiceImpl implements ResourceService {
         List<GetResourceTreeRsp> resourceInfoList = resourceMapper.selectChildByResourceKeyAndResourceType(resourceKey, isIncludeResource);
         root.setChildList(root.recursionData(resourceInfoList, root.getLevel() + MarkConstant.MARK_SPLIT_RAIL + root.getId()));
         return root;
-    }
-
-    @Override
-    public List<GetCatalogueResourceRsp> getCatalogueResource(Long pid, Boolean isIncludeChild) {
-        ResourceInfo pResourceInfo = dataBaseService.getResourceInfo(pid);
-        if (!Objects.equals(pResourceInfo.getResourceType(), ResourceType.CATALOGUE.getCode())){
-            throw new BusinessException(BusinessErrorEnums.VALID_ILLEGAL_OPERATION, String.format("节点 %s 不是目录", pResourceInfo.getResourceName()));
-        }
-        List<ResourceInfo> resourceInfoList;
-        if (isIncludeChild){
-            resourceInfoList = resourceMapper.selectAllLikeByLevel(pResourceInfo.getLevel());
-        }else {
-            resourceInfoList = resourceMapper.selectChildByPid(pid);
-        }
-
-        if (CollectionUtils.isEmpty(resourceInfoList)){
-            return null;
-        }
-        Map<Long, List<Long>> levelMap = new HashMap<>(resourceInfoList.size());
-        for (ResourceInfo resourceInfo: resourceInfoList){
-            levelMap.put(resourceInfo.getId(), Arrays.stream(resourceInfo.getLevel().split(MarkConstant.MARK_SPLIT_RAIL)).map(Long::parseLong).toList());
-        }
-        Set<Long> levelIds = new HashSet<>();
-        for (List<Long> idList : levelMap.values()){
-            levelIds.addAll(idList);
-        }
-        Map<Long, String> resourceNameMap = resourceMapper.selectAllByIdIn(levelIds).stream().collect(Collectors.toMap(ResourceInfo::getId, ResourceInfo::getResourceName));
-
-        List<GetCatalogueResourceRsp> getCatalogueResourceRspList = new ArrayList<>(resourceInfoList.size());
-        for (ResourceInfo resourceInfo : resourceInfoList){
-            GetCatalogueResourceRsp getCatalogueResourceRsp = new GetCatalogueResourceRsp();
-            getCatalogueResourceRsp.setResourceValue(resourceInfo.getResourceValue());
-            List<Long> ids = levelMap.get(resourceInfo.getId());
-            StringBuilder stringBuilder = new StringBuilder();
-            for (Long id : ids){
-                stringBuilder.append("/");
-                stringBuilder.append(resourceNameMap.get(id));
-            }
-            getCatalogueResourceRsp.setLevelName(stringBuilder.toString());
-            getCatalogueResourceRspList.add(getCatalogueResourceRsp);
-        }
-        return getCatalogueResourceRspList;
     }
 
     @Override
@@ -123,6 +86,7 @@ public class ResourceServiceImpl implements ResourceService {
 
 
     @Override
+    @Transactional(rollbackFor = Exception.class)
     public void batchAddResource(Long resourcePid, Integer resourceType, Map<String, String> resourceMap) {
         if (resourceMap.size() == 0){
             return;
@@ -134,10 +98,8 @@ public class ResourceServiceImpl implements ResourceService {
         }
         Set<String> existValues = resourceMapper.selectResourceValueByResourceKeyAndResourceValueIn(pResourceInfo.getResourceKey(), resourceMap.keySet());
         if (existValues.size() > 0){
-            for (Map.Entry<String, String> resource: resourceMap.entrySet()){
-                if (existValues.contains(resource.getKey())){
-                    resourceMap.remove(resource.getValue());
-                }
+            for (String resourceValue : existValues){
+                resourceMap.remove(resourceValue);
             }
         }
         List<ResourceInfo> resourceInfoList = new ArrayList<>(resourceMap.size());
@@ -176,18 +138,33 @@ public class ResourceServiceImpl implements ResourceService {
     @Override
     public void delete(Long resourceId) {
         ResourceInfo pResourceInfo = dataBaseService.getResourceInfo(resourceId);
-        List<ResourceInfo> resourceInfoList = resourceMapper.selectAllLikeByLevel(pResourceInfo.getLevel() + MarkConstant.MARK_SPLIT_RAIL + pResourceInfo.getId());
-        resourceInfoList.add(pResourceInfo);
-        Set<Long> resourceIds = resourceInfoList.stream().map(ResourceInfo::getId).collect(Collectors.toSet());
-        funcResourceMapper.deleteAllByResourceIds(resourceIds);
-        resourceMapper.batchDelete(resourceIds);
-        cacheService.removeUserResourceByResourceKey(pResourceInfo.getResourceKey());
+        delete(pResourceInfo);
+    }
+
+    private void delete(ResourceInfo pResourceInfo) {
+        TransactionStatus transaction = dataSourceTransactionManager.getTransaction(transactionDefinition);
+        try {
+            List<ResourceInfo> resourceInfoList = resourceMapper.selectAllLikeByLevel(pResourceInfo.getLevel() + MarkConstant.MARK_SPLIT_RAIL + pResourceInfo.getId());
+            resourceInfoList.add(pResourceInfo);
+            Set<Long> resourceIds = resourceInfoList.stream().map(ResourceInfo::getId).collect(Collectors.toSet());
+            funcResourceMapper.deleteAllByResourceIds(resourceIds);
+            resourceMapper.batchDelete(resourceIds);
+            cacheService.removeUserResourceByResourceKey(pResourceInfo.getResourceKey());
+            dataSourceTransactionManager.commit(transaction);
+        }catch (TransactionException exception){
+            exception.printStackTrace();
+            dataSourceTransactionManager.rollback(transaction);
+        }
     }
 
     @Override
     public void fsMove(Long id, Long pid) {
         ResourceInfo resourceInfo = dataBaseService.getResourceInfo(id);
         ResourceInfo pResourceInfo = dataBaseService.getResourceInfo(pid);
+        fsMove(resourceInfo, pResourceInfo);
+    }
+
+    private void fsMove(ResourceInfo resourceInfo, ResourceInfo pResourceInfo) {
         String level = pResourceInfo.getLevel()+ MarkConstant.MARK_SPLIT_RAIL + pResourceInfo.getId();
         if (resourceInfo.getResourcePid().equals(0L)){
             throw new BusinessException(BusinessErrorEnums.VALID_ILLEGAL_OPERATION, "不能移动根节点");
@@ -195,13 +172,13 @@ public class ResourceServiceImpl implements ResourceService {
         if (pResourceInfo.getResourceType().equals(ResourceType.RESOURCE.getCode())){
             throw new BusinessException(BusinessErrorEnums.VALID_ILLEGAL_OPERATION, "资源只能移动在目录下");
         }
-        if (resourceInfo.getLevel().startsWith(pResourceInfo.getLevel() + MarkConstant.MARK_SPLIT_RAIL + pResourceInfo.getId())){
+        if (pResourceInfo.getLevel().startsWith(resourceInfo.getLevel() + MarkConstant.MARK_SPLIT_RAIL + resourceInfo.getId())){
             throw new BusinessException(BusinessErrorEnums.VALID_ILLEGAL_OPERATION, "不可将父节点移动到子节点下");
         }
         LocalDateTime nowTime = LocalDateTime.now();
         String oldLevel = resourceInfo.getLevel();
         resourceInfo.setLevel(level);
-        resourceInfo.setResourcePid(pid);
+        resourceInfo.setResourcePid(pResourceInfo.getId());
         resourceInfo.setSort(nowTime.toInstant(ZoneOffset.of("+8")).toEpochMilli());
         resourceInfo.setUpdateTime(nowTime);
         List<ResourceInfo> childList = resourceMapper.selectAllLikeByLevel(oldLevel + MarkConstant.MARK_SPLIT_RAIL + resourceInfo.getId());
@@ -213,6 +190,18 @@ public class ResourceServiceImpl implements ResourceService {
     @Override
     public void btMove(Long id, Integer moveOp) {
         ResourceInfo resourceInfo = dataBaseService.getResourceInfo(id);
+        btMove(resourceInfo, moveOp);
+    }
+
+    @Override
+    public void updateResourceByKv(String resourceKey, String resourceValue, String resourceName) {
+        ResourceInfo resourceInfo = dataBaseService.getResourceInfo(resourceKey, resourceValue);
+        resourceInfo.setResourceName(resourceName);
+        resourceInfo.setUpdateTime(LocalDateTime.now());
+        resourceMapper.update(resourceInfo);
+    }
+
+    private void btMove(ResourceInfo resourceInfo, Integer moveOp) {
         if (resourceInfo.getResourcePid().equals(0L)){
             throw new BusinessException(BusinessErrorEnums.VALID_ILLEGAL_OPERATION, "不能移动根节点");
         }
@@ -223,7 +212,7 @@ public class ResourceServiceImpl implements ResourceService {
         brotherList.sort(Comparator.comparing(ResourceInfo::getSort));
         for (int i = 0; i < brotherList.size(); i++){
             ResourceInfo pointData = brotherList.get(i);
-            if (pointData.getId().equals(id)){
+            if (pointData.getId().equals(resourceInfo.getId())){
                 ResourceInfo brother;
                 if (moveOp.equals(1)){
                     if (i == 0){
@@ -248,5 +237,24 @@ public class ResourceServiceImpl implements ResourceService {
                 return;
             }
         }
+    }
+
+    @Override
+    public void deleteByResourceByKv(String resourceKey, String resourceValue) {
+        ResourceInfo resourceInfo = dataBaseService.getResourceInfo(resourceKey, resourceValue);
+        delete(resourceInfo);
+    }
+
+    @Override
+    public void fsMoveByKv(String resourceKey, String resourceValue, String pResourceValue) {
+        ResourceInfo resourceInfo = dataBaseService.getResourceInfo(resourceKey, resourceValue);
+        ResourceInfo pResourceInfo = dataBaseService.getResourceInfo(resourceKey, pResourceValue);
+        fsMove(resourceInfo, pResourceInfo);
+    }
+
+    @Override
+    public void btMoveByKv(String resourceKey, String resourceValue, Integer moveOp) {
+        ResourceInfo resourceInfo = dataBaseService.getResourceInfo(resourceKey, resourceValue);
+        btMove(resourceInfo, moveOp);
     }
 }

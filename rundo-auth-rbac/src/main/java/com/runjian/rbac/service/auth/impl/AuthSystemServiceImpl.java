@@ -69,6 +69,7 @@ public class AuthSystemServiceImpl implements AuthSystemService {
             return authUserDto;
         }
         authUserDto.setAuthorities(roleIds.stream().map(String::valueOf).collect(Collectors.toSet()));
+        cacheService.setUserRole(username, roleIds);
         setUserResourceCache(username, roleIds);
 
         return authUserDto;
@@ -80,50 +81,41 @@ public class AuthSystemServiceImpl implements AuthSystemService {
      * @param roleIds 角色
      */
     private void setUserResourceCache(String username, Set<Long> roleIds) {
-        cacheService.setUserRole(username, roleIds);
         Set<ResourceInfo> resourceInfos = resourceMapper.selectByRoleIds(roleIds);
         if (resourceInfos.size() > 0) {
             Set<String> resourceKeys = resourceInfos.stream().map(ResourceInfo::getResourceKey).collect(Collectors.toSet());
             Map<Integer, List<ResourceInfo>> typeMap = resourceInfos.stream().collect(Collectors.groupingBy(ResourceInfo::getResourceType));
 
             // 获取按照ResourceKey分类的目录数组
-            Map<String, List<ResourceInfo>> catalogueKeyMap = typeMap.get(ResourceType.CATALOGUE.getCode()).stream().collect(Collectors.groupingBy(ResourceInfo::getResourceKey));
+            List<ResourceInfo> catalogueList = typeMap.get(ResourceType.CATALOGUE.getCode());
+            Map<String, List<ResourceInfo>> catalogueKeyMap = null;
+            if (!CollectionUtils.isEmpty(catalogueList)){
+                catalogueKeyMap = catalogueList.stream().collect(Collectors.groupingBy(ResourceInfo::getResourceKey));
+            }
             // 获取按照ResourceKey分类的资源数组
-            Map<String, List<ResourceInfo>> resourceKeyMap = typeMap.get(ResourceType.RESOURCE.getCode()).stream().collect(Collectors.groupingBy(ResourceInfo::getResourceKey));
+            List<ResourceInfo> resourceList = typeMap.get(ResourceType.RESOURCE.getCode());
+            Map<String, List<ResourceInfo>> resourceKeyMap = null;
+            if (!CollectionUtils.isEmpty(resourceList)){
+                resourceKeyMap = resourceList.stream().collect(Collectors.groupingBy(ResourceInfo::getResourceKey));
+            }
 
             // 循环所有的资源组
             for (String resourceKey : resourceKeys) {
-
-                // 资源检验数组
-                List<ResourceInfo> validResourceList = resourceKeyMap.get(resourceKey);
-
-                // 目录检验数组
-                List<ResourceInfo> validCatalogueList = catalogueKeyMap.get(resourceKey);
                 // 初始化资源List
                 List<String> resourceValueList = new ArrayList<>();
                 // 判断资源是否为空
-                if (!CollectionUtils.isEmpty(validCatalogueList)) {
-                    // 提取所有的level
-                    Set<String> catalogueLevel = validCatalogueList.stream().map(ResourceInfo::getLevel).collect(Collectors.toSet());
+                if (Objects.nonNull(catalogueKeyMap)) {
+                    // 目录检验数组
+                    List<ResourceInfo> validCatalogueList = catalogueKeyMap.get(resourceKey);
+                    // 提取所有的Pid
+                    Set<Long> cataloguePids = validCatalogueList.stream().map(ResourceInfo::getResourcePid).collect(Collectors.toSet());
                     // 判断资源数组是否为空
-                    if (!CollectionUtils.isEmpty(validResourceList)) {
-                        catalogueLevel.addAll(validResourceList.stream().map(ResourceInfo::getLevel).collect(Collectors.toSet()));
+                    if (Objects.nonNull(resourceKeyMap)) {
+                        cataloguePids.addAll(resourceKeyMap.get(resourceKey).stream().map(ResourceInfo::getResourcePid).collect(Collectors.toSet()));
                     }
                     // 过滤所有的父类数据
-                    List<String> childCatalogueLevelList = validCatalogueList.stream().filter(catalogueInfo -> {
-                        for (String level : catalogueLevel) {
-                            // 判断是否是相等的
-                            if (catalogueInfo.getLevel().equals(level)) {
-                                continue;
-                            }
-                            // 判断是否是父类
-                            if (catalogueInfo.getLevel().startsWith(level)) {
-                                return false;
-                            }
-                        }
-                        return true;
-                    }).map(ResourceInfo::getLevel).toList();
-
+                    List<String> childCatalogueLevelList = validCatalogueList.stream().filter(catalogueInfo -> !cataloguePids.contains(catalogueInfo.getId()))
+                            .map(resourceInfo -> resourceInfo.getLevel() + MarkConstant.MARK_SPLIT_RAIL + resourceInfo.getId()).toList();
                     // 查询目录下的资源
                     if (childCatalogueLevelList.size() > 0) {
                         resourceValueList.addAll(
@@ -138,8 +130,8 @@ public class AuthSystemServiceImpl implements AuthSystemService {
                     }
                 }
                 // 判断资源数组是否为空，不为空的话，将资源添加进去
-                if (!CollectionUtils.isEmpty(validResourceList)){
-                    resourceValueList.addAll(validResourceList.stream().map(ResourceInfo::getResourceValue).toList());
+                if (Objects.nonNull(resourceKeyMap)){
+                    resourceValueList.addAll(resourceKeyMap.get(resourceKey).stream().map(ResourceInfo::getResourceValue).toList());
                 }
                 cacheService.setUserResource(username, resourceKey, resourceValueList);
             }

@@ -1,6 +1,5 @@
 package com.runjian.rbac.config;
 
-import com.runjian.rbac.entity.UserInfo;
 import com.runjian.rbac.vo.dto.AuthDataDto;
 import com.runjian.rbac.vo.dto.AuthUserDto;
 import jakarta.annotation.PostConstruct;
@@ -8,7 +7,6 @@ import lombok.Data;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
-import org.springframework.security.crypto.password.PasswordEncoder;
 
 import java.util.Set;
 

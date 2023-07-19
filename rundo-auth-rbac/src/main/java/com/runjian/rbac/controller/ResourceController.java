@@ -4,9 +4,7 @@ import com.runjian.common.config.response.CommonResponse;
 import com.runjian.common.validator.ValidatorService;
 import com.runjian.rbac.service.rbac.ResourceService;
 import com.runjian.rbac.vo.request.*;
-import com.runjian.rbac.vo.response.GetCatalogueResourceRsp;
-import com.runjian.rbac.vo.response.GetResourceRootRsp;
-import com.runjian.rbac.vo.response.GetResourceTreeRsp;
+import com.runjian.rbac.vo.response.*;
 import io.github.yedaxia.apidocs.ApiDoc;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -52,17 +50,6 @@ public class ResourceController {
         return CommonResponse.success(resourceService.getResourceRoot());
     }
 
-    /**
-     * 获取目录下的所有资源数据
-     * @param pid 父id
-     * @param isIncludeChild 是否包含子目录数据
-     * @return
-     */
-    @GetMapping("/pid")
-    @ApiDoc(result = GetCatalogueResourceRsp.class)
-    public CommonResponse<List<GetCatalogueResourceRsp>> getCatalogueResourceRsp(@RequestParam Long pid, @RequestParam Boolean isIncludeChild){
-        return CommonResponse.success(resourceService.getCatalogueResource(pid, isIncludeChild));
-    }
 
     /**
      * 添加根节点
@@ -101,6 +88,18 @@ public class ResourceController {
     }
 
     /**
+     * 修改资源
+     * @param req 修改资源请求体
+     * @return
+     */
+    @PutMapping("/update/kv")
+    public CommonResponse<?> updateResource(@RequestBody PutResourceKvReq req){
+        validatorService.validateRequest(req);
+        resourceService.updateResourceByKv(req.getResourceKey(), req.getResourceValue(), req.getResourceValue());
+        return CommonResponse.success();
+    }
+
+    /**
      * 删除资源
      * @param resourceId 资源id
      * @return
@@ -112,6 +111,18 @@ public class ResourceController {
     }
 
     /**
+     * 删除
+     * @param resourceKey 资源key
+     * @param resourceValue 资源value
+     * @return
+     */
+    @DeleteMapping("/delete/kv")
+    public CommonResponse<?> deleteByResourceKeyAndResourceValue(@RequestParam String resourceKey, @RequestParam String resourceValue){
+        resourceService.deleteByResourceByKv(resourceKey, resourceValue);
+        return CommonResponse.success();
+    }
+
+    /**
      * 资源父子级别移动
      * @param req 资源父子移动请求体
      * @return
@@ -119,7 +130,19 @@ public class ResourceController {
     @PutMapping("/move/fs")
     public CommonResponse<?> fsMove(@RequestBody PutResourceFsMoveReq req){
         validatorService.validateRequest(req);
-        resourceService.fsMove(req.getId(), req.getSectionPid());
+        resourceService.fsMove(req.getId(), req.getResourcePid());
+        return CommonResponse.success();
+    }
+
+    /**
+     * 资源父子级别移动
+     * @param req 资源父子移动请求体
+     * @return
+     */
+    @PutMapping("/move/fs/kv")
+    public CommonResponse<?> fsMove(@RequestBody PutResourceFsMoveKvReq req){
+        validatorService.validateRequest(req);
+        resourceService.fsMoveByKv(req.getResourceKey(), req.getResourceValue(), req.getPResourceValue());
         return CommonResponse.success();
     }
 
@@ -132,6 +155,18 @@ public class ResourceController {
     public CommonResponse<?> btMove(@RequestBody PutResourceBtMoveReq req){
         validatorService.validateRequest(req);
         resourceService.btMove(req.getId(), req.getMoveOp());
+        return CommonResponse.success();
+    }
+
+    /**
+     * 部门的兄弟节点移动
+     * @param req 部门兄弟节点移动请求体
+     * @return
+     */
+    @PutMapping("/move/bt/kv")
+    public CommonResponse<?> btMove(@RequestBody PutResourceBtMoveKvReq req){
+        validatorService.validateRequest(req);
+        resourceService.btMoveByKv(req.getResourceKey(), req.getResourceValue(), req.getMoveOp());
         return CommonResponse.success();
     }
 }

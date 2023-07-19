@@ -2,6 +2,7 @@ package com.runjian.rbac.service.rbac.impl;
 
 import com.runjian.common.config.exception.BusinessErrorEnums;
 import com.runjian.common.config.exception.BusinessException;
+import com.runjian.common.constant.MarkConstant;
 import com.runjian.rbac.dao.*;
 import com.runjian.rbac.dao.ResourceMapper;
 import com.runjian.rbac.entity.*;
@@ -92,6 +93,15 @@ public class DataBaseServiceImpl implements DataBaseService {
         Optional<ResourceInfo> resourceInfoOp = resourceMapper.selectById(id);
         if (resourceInfoOp.isEmpty()){
             throw new BusinessException(BusinessErrorEnums.VALID_NO_OBJECT_FOUND, String.format("资源 %s 不存在，请刷新后重试", id));
+        }
+        return resourceInfoOp.get();
+    }
+
+    @Override
+    public ResourceInfo getResourceInfo(String resourceKey, String resourceValue) {
+        Optional<ResourceInfo> resourceInfoOp = resourceMapper.selectByResourceKeyAndResourceValue(resourceKey, resourceValue);
+        if (resourceInfoOp.isEmpty()){
+            throw new BusinessException(BusinessErrorEnums.VALID_NO_OBJECT_FOUND, String.format("资源 %s 不存在，请刷新后重试", resourceKey + MarkConstant.MARK_SPLIT_RAIL + resourceValue));
         }
         return resourceInfoOp.get();
     }

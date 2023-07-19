@@ -6,6 +6,8 @@ import com.runjian.rbac.vo.response.GetResourceRootRsp;
 import com.runjian.rbac.vo.response.GetResourceTreeRsp;
 import org.apache.ibatis.annotations.*;
 import org.springframework.stereotype.Repository;
+
+import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
@@ -40,7 +42,7 @@ public interface ResourceMapper {
     void update(ResourceInfo resourceInfo);
 
     @Select(" <script> " +
-            " SELECT * FROM " + RESOURCE_TABLE_NAME +
+            " SELECT resource_value FROM " + RESOURCE_TABLE_NAME +
             " WHERE resource_key = #{resourceKey} " +
             " AND resource_value IN <foreach collection='resourceValues' item='item' open='(' separator=',' close=')'> #{item} </foreach> " +
             " </script>")
@@ -48,8 +50,8 @@ public interface ResourceMapper {
 
     @Select(" <script> " +
             " SELECT rt.* FROM " + RESOURCE_TABLE_NAME + " rt " +
-            " RIGHT JOIN " + RoleResourceMapper.ROLE_RESOURCE_TABLE_NAME + " rrt ON rrt.resource_id = rt.id " +
-            " WHERE rt.id IN <foreach collection='roleIds' item='item' open='(' separator=',' close=')'> #{item} </foreach> " +
+            " LEFT JOIN " + RoleResourceMapper.ROLE_RESOURCE_TABLE_NAME + " rrt ON rrt.resource_id = rt.id " +
+            " WHERE rrt.role_id IN <foreach collection='roleIds' item='item' open='(' separator=',' close=')'> #{item} </foreach> " +
             " </script>")
     Set<ResourceInfo> selectByRoleIds(Set<Long> roleIds);
 
@@ -62,13 +64,25 @@ public interface ResourceMapper {
     @Select(" <script> " +
             " SELECT * FROM " + RESOURCE_TABLE_NAME +
             " WHERE resource_key = #{resourceKey} " +
-            " <if test=\"isIncludeResource = false\" > AND resource_type = 1 </if> " +
+            " AND resource_type = 1 " +
             " </script>")
-    List<GetResourceTreeRsp> selectAllByResourceKeyAndResourceType(String resourceKey, Boolean isIncludeResource);
+    List<GetResourceTreeRsp> selectAllByResourceKeyAndResourceType(String resourceKey);
 
     @Select(" SELECT * FROM " + RESOURCE_TABLE_NAME +
             " WHERE level LIKE CONCAT('%', #{level}, '%') ")
     List<ResourceInfo> selectAllLikeByLevel(String level);
+
+
+    @Select(" SELECT * FROM " + RESOURCE_TABLE_NAME +
+            " WHERE level LIKE CONCAT('%', #{level}, '%') AND resource_type = 2 ")
+    List<ResourceInfo> selectByLevelLikeAndResourceType(String level);
+
+    @Select(" <script> " +
+            " SELECT * FROM " + RESOURCE_TABLE_NAME +
+            " WHERE resource_value IN <foreach collection='resourceValueList' item='item' open='(' separator=',' close=')'> #{item} </foreach> " +
+            " AND level LIKE CONCAT('%', #{level}, '%') " +
+            " </script>")
+    List<ResourceInfo> selectByLevelLikeAndResourceValueIn(String level, List<String> resourceValueList);
 
     @Update(" <script> " +
             " <foreach collection='childList' item='item' separator=';'> " +
@@ -90,17 +104,30 @@ public interface ResourceMapper {
 
     @Select(" <script> " +
             " SELECT * FROM " + RESOURCE_TABLE_NAME +
+            " WHERE resource_pid = #{resourcePid} AND resource_type = 2" +
+            " </script>")
+    List<ResourceInfo> selectByPidAndResourceType(Long resourcePid);
+
+    @Select(" <script> " +
+            " SELECT * FROM " + RESOURCE_TABLE_NAME +
+            " WHERE resource_value IN <foreach collection='resourceValueList' item='item' open='(' separator=',' close=')'> #{item} </foreach> " +
+            " AND resource_pid = #{resourcePid} " +
+            " </script>")
+    List<ResourceInfo> selectByPidAndResourceValueIn(Long resourcePid, List<String> resourceValueList);
+
+    @Select(" <script> " +
+            " SELECT * FROM " + RESOURCE_TABLE_NAME +
             " WHERE resource_id IN <foreach collection='resourceIds' item='item' open='(' separator=',' close=')'> #{item} </foreach> " +
             " AND resource_key = #{resourceKey} " +
-            " <if test=\"isIncludeResource = false\" > AND resource_type = 1 </if> " +
+            " AND resource_type = 1 " +
             " </script>")
-    List<GetResourceTreeRsp> selectAllByResourceKeyAndResourceTypeAndResourceIdsIn(String resourceKey, Boolean isIncludeResource, Set<Long> resourceIds);
+    List<GetResourceTreeRsp> selectAllByResourceKeyAndResourceTypeAndResourceIdsIn(String resourceKey, Set<Long> resourceIds);
 
     @Select(" <script> " +
             " SELECT * FROM " + RESOURCE_TABLE_NAME +
             " WHERE resource_key = #{resourceKey} " +
             " AND resource_pid != 0 " +
-            " <if test=\"isIncludeResource = false\" > AND resource_type = 1 </if> " +
+            " <if test=\"!isIncludeResource\" > AND resource_type = 1 </if> " +
             " </script>")
     List<GetResourceTreeRsp> selectChildByResourceKeyAndResourceType(String resourceKey, Boolean isIncludeResource);
 
@@ -123,7 +150,18 @@ public interface ResourceMapper {
 
     @Select(" <script> " +
             " SELECT * FROM " + RESOURCE_TABLE_NAME +
-            " WHERE id IN <foreach collection='resourceValues' item='item' open='(' separator=',' close=')'> #{item} </foreach> " +
+            " WHERE id IN <foreach collection='levelIds' item='item' open='(' separator=',' close=')'> #{item} </foreach> " +
             " </script>")
     List<ResourceInfo> selectAllByIdIn(Set<Long> levelIds);
+
+
+    @Select(" <script> " +
+            " SELECT resource_value FROM " + RESOURCE_TABLE_NAME +
+            " WHERE resource_pid IN <foreach collection='resourceIdList' item='item' open='(' separator=',' close=')'> #{item} </foreach> " +
+            " </script>")
+    List<String> selectResourceValueByPids(List<Long> resourceIdList);
+
+    @Select(" SELECT * FROM " + RESOURCE_TABLE_NAME +
+            " WHERE resource_key = #{resourceKey} AND resource_value = #{resourceValue}")
+    Optional<ResourceInfo> selectByResourceKeyAndResourceValue(String resourceKey, String resourceValue);
 }

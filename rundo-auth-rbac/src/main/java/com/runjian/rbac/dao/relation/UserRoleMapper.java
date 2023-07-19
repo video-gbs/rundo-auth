@@ -43,10 +43,6 @@ public interface UserRoleMapper {
     Set<Long> selectUserIdByRoleId(Long roleId);
 
     @Delete(" DELETE FROM " + USER_ROLE_TABLE_NAME +
-            " WHERE role_id = #{roleId} ")
-    void deleteAllByRoleId(Long roleId);
-
-    @Delete(" DELETE FROM " + USER_ROLE_TABLE_NAME +
             " WHERE user_id = #{userId} ")
     void deleteAllByUserId(Long userId);
 
