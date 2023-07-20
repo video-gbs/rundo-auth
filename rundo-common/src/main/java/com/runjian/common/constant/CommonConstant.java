@@ -10,5 +10,4 @@ public class CommonConstant {
 
     public static final String AUTHORIZATION = "Authorization";
 
-    public static final String ADMINISTRATOR = "admin";
 }

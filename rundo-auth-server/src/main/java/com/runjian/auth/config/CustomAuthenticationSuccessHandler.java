@@ -11,15 +11,10 @@ import org.springframework.http.server.ServletServerHttpResponse;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.oauth2.core.OAuth2AccessToken;
 import org.springframework.security.oauth2.core.OAuth2RefreshToken;
-import org.springframework.security.oauth2.core.endpoint.OAuth2AccessTokenResponse;
 import org.springframework.security.oauth2.server.authorization.authentication.OAuth2AccessTokenAuthenticationToken;
 import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
-import org.springframework.util.CollectionUtils;
-
 import java.io.IOException;
 import java.time.temporal.ChronoUnit;
-import java.util.Map;
-import java.util.stream.Collectors;
 
 /**
  * @author Miracle

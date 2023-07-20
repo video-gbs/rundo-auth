@@ -35,7 +35,7 @@ import java.util.stream.Stream;
  * @date 2023/4/13 16:41
  */
 @Configuration
-@EnableWebSecurity(debug = true)
+@EnableWebSecurity
 @RequiredArgsConstructor
 public class WebSecurityConfig {
 

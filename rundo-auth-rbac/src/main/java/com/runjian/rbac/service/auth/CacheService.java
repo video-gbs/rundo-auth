@@ -58,6 +58,13 @@ public interface CacheService {
     void removeFuncCache(String methodPath);
 
     /**
+     * 判断用户数据是否存在
+     * @param resourceKey 资源key，如果为null，检查整个username
+     * @return
+     */
+    boolean isUserResourceExist(String resourceKey);
+
+    /**
      * 获取用户资源
      * @param username 用户名
      * @param resourceKey 资源分组
@@ -66,12 +73,18 @@ public interface CacheService {
     List<String> getUserResource(String username, String resourceKey);
 
     /**
-     * 设置用户资源
+     * 设置用户全部拥有的资源
      * @param username 用户名
-     * @param resourceKey 资源分组
-     * @param resourceValue 资源
+     * @param roleIds 资源id
      */
-    void setUserResource(String username, String resourceKey, List<String> resourceValue);
+    void setUserResourceCache(String username, Set<Long> roleIds);
+
+    /**
+     * 设置用户单个resourceKey拥有的资源
+     * @param username 用户名
+     * @param roleIds 资源id
+     */
+    List<String> setUserResourceCache(String username, Set<Long> roleIds, String resourceKey);
 
     /**
      * 移除用户资源缓存

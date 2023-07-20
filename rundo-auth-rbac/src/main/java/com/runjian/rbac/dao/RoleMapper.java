@@ -96,4 +96,10 @@ public interface RoleMapper {
             " WHERE id = #{id} " +
             " </script> ")
     void update(RoleInfo roleInfo);
+
+    @Select(" <script> " +
+            " SELECT role_name FROM " + ROLE_TABLE_NAME +
+            " WHERE id IN <foreach collection='roleIds' item='item' open='(' separator=',' close=')'> #{item} </foreach> " +
+            " </script>")
+    Set<String> selectRoleNameByIds(Set<Long> roleIds);
 }

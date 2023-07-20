@@ -5,11 +5,8 @@ import com.runjian.common.constant.CommonEnum;
 import com.runjian.common.constant.MarkConstant;
 import com.runjian.rbac.config.AuthProperties;
 import com.runjian.rbac.constant.MethodType;
-import com.runjian.rbac.constant.ResourceType;
-import com.runjian.rbac.dao.ResourceMapper;
 import com.runjian.rbac.dao.UserMapper;
 import com.runjian.rbac.dao.relation.UserRoleMapper;
-import com.runjian.rbac.entity.ResourceInfo;
 import com.runjian.rbac.entity.UserInfo;
 import com.runjian.rbac.service.auth.AuthSystemService;
 import com.runjian.rbac.service.auth.CacheService;
@@ -20,6 +17,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
+import org.springframework.util.StringUtils;
 
 import java.time.LocalDateTime;
 import java.util.*;
@@ -39,8 +37,6 @@ public class AuthSystemServiceImpl implements AuthSystemService {
     private final UserRoleMapper userRoleMapper;
 
     private final CacheService cacheService;
-
-    private final ResourceMapper resourceMapper;
 
     private final AuthProperties authProperties;
 
@@ -69,74 +65,10 @@ public class AuthSystemServiceImpl implements AuthSystemService {
             return authUserDto;
         }
         authUserDto.setAuthorities(roleIds.stream().map(String::valueOf).collect(Collectors.toSet()));
-        cacheService.setUserRole(username, roleIds);
-        setUserResourceCache(username, roleIds);
-
+        cacheService.setUserRole(userInfo.getUsername(), roleIds);
         return authUserDto;
     }
 
-    /**
-     * 设置用户资源缓存
-     * @param username 用户名
-     * @param roleIds 角色
-     */
-    private void setUserResourceCache(String username, Set<Long> roleIds) {
-        Set<ResourceInfo> resourceInfos = resourceMapper.selectByRoleIds(roleIds);
-        if (resourceInfos.size() > 0) {
-            Set<String> resourceKeys = resourceInfos.stream().map(ResourceInfo::getResourceKey).collect(Collectors.toSet());
-            Map<Integer, List<ResourceInfo>> typeMap = resourceInfos.stream().collect(Collectors.groupingBy(ResourceInfo::getResourceType));
-
-            // 获取按照ResourceKey分类的目录数组
-            List<ResourceInfo> catalogueList = typeMap.get(ResourceType.CATALOGUE.getCode());
-            Map<String, List<ResourceInfo>> catalogueKeyMap = null;
-            if (!CollectionUtils.isEmpty(catalogueList)){
-                catalogueKeyMap = catalogueList.stream().collect(Collectors.groupingBy(ResourceInfo::getResourceKey));
-            }
-            // 获取按照ResourceKey分类的资源数组
-            List<ResourceInfo> resourceList = typeMap.get(ResourceType.RESOURCE.getCode());
-            Map<String, List<ResourceInfo>> resourceKeyMap = null;
-            if (!CollectionUtils.isEmpty(resourceList)){
-                resourceKeyMap = resourceList.stream().collect(Collectors.groupingBy(ResourceInfo::getResourceKey));
-            }
-
-            // 循环所有的资源组
-            for (String resourceKey : resourceKeys) {
-                // 初始化资源List
-                List<String> resourceValueList = new ArrayList<>();
-                // 判断资源是否为空
-                if (Objects.nonNull(catalogueKeyMap)) {
-                    // 目录检验数组
-                    List<ResourceInfo> validCatalogueList = catalogueKeyMap.get(resourceKey);
-                    // 提取所有的Pid
-                    Set<Long> cataloguePids = validCatalogueList.stream().map(ResourceInfo::getResourcePid).collect(Collectors.toSet());
-                    // 判断资源数组是否为空
-                    if (Objects.nonNull(resourceKeyMap)) {
-                        cataloguePids.addAll(resourceKeyMap.get(resourceKey).stream().map(ResourceInfo::getResourcePid).collect(Collectors.toSet()));
-                    }
-                    // 过滤所有的父类数据
-                    List<String> childCatalogueLevelList = validCatalogueList.stream().filter(catalogueInfo -> !cataloguePids.contains(catalogueInfo.getId()))
-                            .map(resourceInfo -> resourceInfo.getLevel() + MarkConstant.MARK_SPLIT_RAIL + resourceInfo.getId()).toList();
-                    // 查询目录下的资源
-                    if (childCatalogueLevelList.size() > 0) {
-                        resourceValueList.addAll(
-                                resourceMapper.selectAllByResourceKey(resourceKey, ResourceType.RESOURCE.getCode()).stream().filter(resourceInfo -> {
-                                    for (String level : childCatalogueLevelList) {
-                                        if (resourceInfo.getLevel().startsWith(level)) {
-                                            return true;
-                                        }
-                                    }
-                                    return false;
-                                }).map(ResourceInfo::getResourceValue).toList());
-                    }
-                }
-                // 判断资源数组是否为空，不为空的话，将资源添加进去
-                if (Objects.nonNull(resourceKeyMap)){
-                    resourceValueList.addAll(resourceKeyMap.get(resourceKey).stream().map(ResourceInfo::getResourceValue).toList());
-                }
-                cacheService.setUserResource(username, resourceKey, resourceValueList);
-            }
-        }
-    }
 
     @Override
     public AuthDataDto getAuthDataByUser(String username, String scope, String reqPath, String reqMethod, String queryData, String bodyData) {
@@ -186,13 +118,13 @@ public class AuthSystemServiceImpl implements AuthSystemService {
                 String resourceCacheKey = MarkConstant.REDIS_AUTH_USER_RESOURCE + username + MarkConstant.MARK_SPLIT_SEMICOLON + key;
                 authDataDto.getResourceKeyList().add(resourceCacheKey);
                 List<String> userResource = cacheService.getUserResource(username, key);
-                if (Objects.isNull(userResource)) {
-                    setUserResourceCache(username, new HashSet<>(userRoles));
+                if (CollectionUtils.isEmpty(userResource)) {
+                    cacheService.setUserResourceCache(username, new HashSet<>(userRoles), key);
                 }
             } else {
                 JSONObject jsonObject;
                 if (Objects.equals(reqMethod, MethodType.GET.getMsg()) || Objects.equals(reqMethod, MethodType.DELETE.getMsg())){
-                    if (Objects.isNull(queryData)){
+                    if (Objects.isNull(queryData) || !StringUtils.hasText(queryData)){
                         authDataDto.setMsg(String.format("必要的参数权限校验失败，缺失参数'%s'", param));
                         authDataDto.setIsAuthorized(false);
                         return authDataDto;
@@ -217,6 +149,14 @@ public class AuthSystemServiceImpl implements AuthSystemService {
 
                 // 获取角色绑定的资源
                 List<String> userResourceValue = cacheService.getUserResource(username, key);
+                if (CollectionUtils.isEmpty(userResourceValue)){
+                    userResourceValue = cacheService.setUserResourceCache(username, new HashSet<>(userRoles), key);
+                    if (CollectionUtils.isEmpty(userResourceValue)){
+                        authDataDto.setIsAuthorized(false);
+                        authDataDto.setMsg(String.format("当前用户没有资源'%s'的权限", value));
+                        return authDataDto;
+                    }
+                }
 
                 // 判断数据是否是数组
                 if (value.startsWith("[") && value.endsWith("]")){

@@ -89,4 +89,6 @@ public class AuthUserController {
         return CommonResponse.success(authUserService.getResourceByCatalogue(pid, isIncludeChild));
     }
 
+
+
 }

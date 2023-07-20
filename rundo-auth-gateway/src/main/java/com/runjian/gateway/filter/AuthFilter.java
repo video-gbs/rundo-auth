@@ -61,7 +61,7 @@ public class AuthFilter implements GatewayFilter, Ordered {
         PostAuthReq postAuthReq;
         if (Objects.nonNull(bodyData)){
             String raw = toRaw(bodyData);
-            postAuthReq = new PostAuthReq(uri.getPath(), exchange.getRequest().getMethod().name(), JSONObject.toJSONString(queryParams), JSONObject.toJSONString(raw));
+            postAuthReq = new PostAuthReq(uri.getPath(), exchange.getRequest().getMethod().name(), JSONObject.toJSONString(queryParams), raw);
         }else {
             postAuthReq = new PostAuthReq(uri.getPath(), exchange.getRequest().getMethod().name(), JSONObject.toJSONString(queryParams), null);
         }

@@ -77,6 +77,7 @@ public class OAuth2PasswordTokenAuthenticationProvider implements Authentication
             this.logger.trace("Retrieved registered client");
         }
 
+
         if (!registeredClient.getAuthorizationGrantTypes().contains(AuthorizationGrantType.PASSWORD)){
             throw new OAuth2AuthenticationException(OAuth2ErrorCodes.UNAUTHORIZED_CLIENT);
         }

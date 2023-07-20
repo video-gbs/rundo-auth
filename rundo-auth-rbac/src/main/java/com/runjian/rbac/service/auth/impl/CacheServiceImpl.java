@@ -3,7 +3,9 @@ package com.runjian.rbac.service.auth.impl;
 import com.alibaba.fastjson2.JSONArray;
 import com.alibaba.fastjson2.JSONObject;
 import com.runjian.common.constant.MarkConstant;
+import com.runjian.rbac.constant.ResourceType;
 import com.runjian.rbac.dao.ResourceMapper;
+import com.runjian.rbac.entity.ResourceInfo;
 import com.runjian.rbac.service.auth.CacheService;
 import com.runjian.rbac.vo.dto.CacheFuncDto;
 import com.runjian.rbac.vo.response.GetResourceRootRsp;
@@ -14,12 +16,11 @@ import org.redisson.api.RList;
 import org.redisson.api.RMap;
 import org.redisson.api.RedissonClient;
 import org.springframework.stereotype.Service;
+import org.springframework.util.CollectionUtils;
 
 import java.time.Duration;
-import java.util.List;
-import java.util.Map;
-import java.util.Objects;
-import java.util.Set;
+import java.util.*;
+import java.util.stream.Collectors;
 
 /**
  * @author Miracle
@@ -79,6 +80,11 @@ public class CacheServiceImpl implements CacheService {
     }
 
     @Override
+    public boolean isUserResourceExist(String resourceKey) {
+        return redissonClient.getMap(MarkConstant.REDIS_AUTH_USER_RESOURCE + resourceKey).isExists();
+    }
+
+    @Override
     public List<String> getUserResource(String username, String resourceKey){
         Object data = redissonClient.getMap(MarkConstant.REDIS_AUTH_USER_RESOURCE + resourceKey).get(username);
         if (Objects.isNull(data)){
@@ -88,8 +94,80 @@ public class CacheServiceImpl implements CacheService {
     }
 
     @Override
-    public void setUserResource(String username, String resourceKey, List<String> resourceValue){
-        redissonClient.getMap(MarkConstant.REDIS_AUTH_USER_RESOURCE + resourceKey).put(username, JSONArray.toJSONString(resourceValue));
+    public void setUserResourceCache(String username, Set<Long> roleIds) {
+        Set<ResourceInfo> resourceInfos = resourceMapper.selectByRoleIds(roleIds);
+        if (resourceInfos.size() > 0) {
+            Set<String> resourceKeys = resourceInfos.stream().map(ResourceInfo::getResourceKey).collect(Collectors.toSet());
+            Map<Integer, List<ResourceInfo>> typeMap = resourceInfos.stream().collect(Collectors.groupingBy(ResourceInfo::getResourceType));
+
+            // 获取按照ResourceKey分类的目录数组
+            List<ResourceInfo> catalogueList = typeMap.get(ResourceType.CATALOGUE.getCode());
+            Map<String, List<ResourceInfo>> catalogueKeyMap = null;
+            if (!CollectionUtils.isEmpty(catalogueList)){
+                catalogueKeyMap = catalogueList.stream().collect(Collectors.groupingBy(ResourceInfo::getResourceKey));
+            }
+            // 获取按照ResourceKey分类的资源数组
+            List<ResourceInfo> resourceList = typeMap.get(ResourceType.RESOURCE.getCode());
+            Map<String, List<ResourceInfo>> resourceKeyMap = null;
+            if (!CollectionUtils.isEmpty(resourceList)){
+                resourceKeyMap = resourceList.stream().collect(Collectors.groupingBy(ResourceInfo::getResourceKey));
+            }
+            // 循环所有的资源组
+            for (String resourceKey : resourceKeys) {
+                List<String> resourceValueList = getResourceValueList(resourceKey,
+                        Objects.nonNull(catalogueKeyMap) ? catalogueKeyMap.getOrDefault(resourceKey, null) : null,
+                        Objects.nonNull(resourceKeyMap) ? resourceKeyMap.getOrDefault(resourceKey, null) : null
+                );
+                redissonClient.getMap(MarkConstant.REDIS_AUTH_USER_RESOURCE + resourceKey).put(username, JSONArray.toJSONString(resourceValueList));
+            }
+        }
+    }
+
+    @Override
+    public List<String> setUserResourceCache(String username, Set<Long> roleIds, String resourceKey) {
+        Set<ResourceInfo> resourceInfos = resourceMapper.selectByRoleIdsAndResourceKey(roleIds, resourceKey);
+        if (resourceInfos.size() > 0){
+            List<ResourceInfo> catalogueList = resourceInfos.stream().filter(resourceInfo -> resourceInfo.getResourceType().equals(ResourceType.CATALOGUE.getCode())).toList();
+            List<ResourceInfo> resourceList = resourceInfos.stream().filter(resourceInfo -> resourceInfo.getResourceType().equals(ResourceType.RESOURCE.getCode())).toList();
+            List<String> resourceValueList = getResourceValueList(resourceKey, catalogueList, resourceList);
+            redissonClient.getMap(MarkConstant.REDIS_AUTH_USER_RESOURCE + resourceKey).put(username, JSONArray.toJSONString(resourceValueList));
+            return resourceValueList;
+        }
+        return null;
+    }
+
+    private List<String> getResourceValueList(String resourceKey, List<ResourceInfo> catalogueList, List<ResourceInfo> resourceList) {
+        List<String> resourceValueList = new ArrayList<>();
+        // 判断资源是否为空
+        if (!CollectionUtils.isEmpty(catalogueList)) {
+            // 提取所有的Pid
+            Set<Long> cataloguePids = catalogueList.stream().map(ResourceInfo::getResourcePid).collect(Collectors.toSet());
+            // 判断资源数组是否为空
+            if (!CollectionUtils.isEmpty(resourceList)) {
+                cataloguePids.addAll(resourceList.stream().map(ResourceInfo::getResourcePid).collect(Collectors.toSet()));
+            }
+            // 过滤所有的父类数据
+            List<String> childCatalogueLevelList = catalogueList.stream().filter(catalogueInfo -> !cataloguePids.contains(catalogueInfo.getId()))
+                    .map(resourceInfo -> resourceInfo.getLevel() + MarkConstant.MARK_SPLIT_RAIL + resourceInfo.getId()).toList();
+            // 查询目录下的资源
+            if (childCatalogueLevelList.size() > 0) {
+                resourceValueList.addAll(
+                        resourceMapper.selectAllByResourceKey(resourceKey, ResourceType.RESOURCE.getCode()).stream().filter(resourceInfo -> {
+                            for (String level : childCatalogueLevelList) {
+                                if (resourceInfo.getLevel().startsWith(level)) {
+                                    return true;
+                                }
+                            }
+                            return false;
+                        }).map(ResourceInfo::getResourceValue).toList());
+            }
+        }
+        // 判断资源数组是否为空，不为空的话，将资源添加进去
+        if (!CollectionUtils.isEmpty(resourceList)){
+            resourceValueList.addAll(resourceList.stream().map(ResourceInfo::getResourceValue).toList());
+        }
+
+        return resourceValueList;
     }
 
     @Override
