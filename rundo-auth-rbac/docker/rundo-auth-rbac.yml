@@ -1,0 +1,29 @@
+version: '3'
+services:
+  auth-server:
+    image: xard-harbor.runjian.com:20443/hyy-rundo-gms/rundo-auth-rbac:${version}
+    container_name: auth-rbac
+    restart: on-failure
+    ports:
+      - 9001:9001
+    volumes:
+      - ./logs/:/opt/auth-rbac/logs/
+    environment:
+      TZ: Asia/Shanghai
+      SERVER_PORT: 9001
+      PROFILES_ACTIVE: test
+      NACOS_SERVER: 124.71.21.11:8848
+      NACOS_NAMESPACE: test
+      NACOS_USERNAME: nacos
+      NACOS_GROUP: DEFAULT_GROUP
+      NACOS_PASSWORD: rundo@nacos*2023
+    logging:
+      options:
+        max-size: '12m'
+        max-file: '10'
+    networks:
+      - proxynet
+networks:
+  proxynet:
+    external:
+      name: rundo_network
