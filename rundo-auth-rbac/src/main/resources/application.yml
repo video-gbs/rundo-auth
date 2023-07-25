@@ -6,3 +6,7 @@ spring:
     name: auth-rbac
   profiles:
     active: ${PROFILES_ACTIVE:local}
+
+# [可选] 日志配置, 一般不需要改
+logging:
+  config: classpath:logback-spring.xml

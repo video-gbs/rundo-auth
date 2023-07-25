@@ -1,5 +1,5 @@
 #FROM harbor.runjian.com/syy-open/ubuntu-jre-11:20.04
-FROM iyue/ubuntu-jdk17
+FROM cfbstudio/ubuntu-jdk17:v1
 ARG DEBIAN_FRONTEND=noninteractive
 ENV TZ=Asia/Shanghai
 
