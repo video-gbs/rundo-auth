@@ -256,7 +256,8 @@ public class RoleServiceImpl implements RoleService {
     private void deleteUserResourceCache(Long roleId) {
         List<UserInfo> userInfoList = userMapper.selectByRoleId(roleId);
         for (UserInfo userInfo : userInfoList){
-            cacheService.removeUserResourceByUsername(userInfo.getUsername());
+            cacheService.setUserResourceCache(userInfo.getUsername(), new HashSet<>(cacheService.getUserRole(userInfo.getUsername())));
+
         }
     }
 

@@ -95,6 +95,7 @@ public class CacheServiceImpl implements CacheService {
 
     @Override
     public void setUserResourceCache(String username, Set<Long> roleIds) {
+        this.removeUserResourceByUsername(username);
         Set<ResourceInfo> resourceInfos = resourceMapper.selectByRoleIds(roleIds);
         if (resourceInfos.size() > 0) {
             Set<String> resourceKeys = resourceInfos.stream().map(ResourceInfo::getResourceKey).collect(Collectors.toSet());
