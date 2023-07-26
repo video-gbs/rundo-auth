@@ -15,6 +15,7 @@ import com.runjian.rbac.vo.response.GetUserRolePageRsp;
 import io.github.yedaxia.apidocs.ApiDoc;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDateTime;
@@ -52,7 +53,8 @@ public class RoleController {
     public CommonResponse<PageInfo<GetRolePageRsp>> getRolePage(@RequestParam(defaultValue = "1") int page,
                                                                 @RequestParam(defaultValue = "10") int num,
                                                                 String roleName, String createBy,
-                                                                LocalDateTime createTimeStart, LocalDateTime createTimeEnd){
+                                                                @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss") LocalDateTime createTimeStart,
+                                                                @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss") LocalDateTime createTimeEnd){
         return CommonResponse.success(roleService.getRolePage(page, num, roleName, createBy, createTimeStart, createTimeEnd));
     }
 
