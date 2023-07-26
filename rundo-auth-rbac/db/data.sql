@@ -161,6 +161,10 @@ INSERT INTO rundo_auth_rbac.rbac_func (id, menu_id, service_name, func_name, sco
 INSERT INTO rundo_auth_rbac.rbac_func (id, menu_id, service_name, func_name, scope, path, method, disabled, create_time, update_time) VALUES (116, 19, '扩展服务', '回放--安防通道列表', 'expansion', '/expansion/play/back/videoAreaList', 1, 0, '2023-07-20 16:01:48', '2023-07-20 16:01:48');
 INSERT INTO rundo_auth_rbac.rbac_func (id, menu_id, service_name, func_name, scope, path, method, disabled, create_time, update_time) VALUES (117, 19, '扩展服务', '回放--通道列表', 'expansion', '/expansion/channel/playBackList', 1, 0, '2023-07-20 16:04:49', '2023-07-20 16:04:49');
 INSERT INTO rundo_auth_rbac.rbac_func (id, menu_id, service_name, func_name, scope, path, method, disabled, create_time, update_time) VALUES (118, 39, '权限服务', '角色关联用户', 'auth-rbac', '/rbac/role/associate', 2, 0, '2023-07-20 16:48:04', '2023-07-20 16:48:04');
+INSERT INTO rundo_auth_rbac.rbac_func (id, menu_id, service_name, func_name, scope, path, method, disabled, create_time, update_time) VALUES (119, 39, '权限服务', '资源数据查询', 'auth-rbac', '/rbac/role/resource/tree', 1, 0, '2023-07-26 16:55:56', '2023-07-26 16:55:56');
+INSERT INTO rundo_auth_rbac.rbac_func (id, menu_id, service_name, func_name, scope, path, method, disabled, create_time, update_time) VALUES (120, 39, '权限服务', '资源组查询', 'auth-rbac', '/rbac/role/resource/root', 1, 0, '2023-07-26 16:56:33', '2023-07-26 16:56:33');
+INSERT INTO rundo_auth_rbac.rbac_func (id, menu_id, service_name, func_name, scope, path, method, disabled, create_time, update_time) VALUES (121, 39, '权限服务', '获取菜单树', 'auth-rbac', '/rbac/role/menu/tree', 1, 0, '2023-07-26 17:25:53', '2023-07-26 17:25:53');
+INSERT INTO rundo_auth_rbac.rbac_func (id, menu_id, service_name, func_name, scope, path, method, disabled, create_time, update_time) VALUES (122, 39, '权限服务', '获取功能列表', 'auth-rbac', '/rbac/role/func/page', 1, 0, '2023-07-26 17:26:21', '2023-07-26 17:26:21');
 
 # 功能资源数据
 INSERT INTO rundo_auth_rbac.rbac_func_resource (id, func_id, resource_key, validate_param, disabled, create_time, update_time) VALUES (3, 69, 'safety_channel', 'channelId', 0, '2023-07-13 10:47:49', '2023-07-13 10:47:49');

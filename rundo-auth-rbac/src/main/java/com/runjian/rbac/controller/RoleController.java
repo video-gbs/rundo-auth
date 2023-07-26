@@ -5,6 +5,7 @@ import com.runjian.common.aspect.annotation.BlankStringValid;
 import com.runjian.common.aspect.annotation.IllegalStringValid;
 import com.runjian.common.config.response.CommonResponse;
 import com.runjian.common.validator.ValidatorService;
+import com.runjian.rbac.service.rbac.FuncService;
 import com.runjian.rbac.service.rbac.MenuService;
 import com.runjian.rbac.service.rbac.ResourceService;
 import com.runjian.rbac.service.rbac.RoleService;
@@ -42,6 +43,8 @@ public class RoleController {
 
     private final MenuService menuService;
 
+    private final FuncService funcService;
+
 
     /**
      * 获取资源树
@@ -74,6 +77,23 @@ public class RoleController {
     @ApiDoc(result = GetMenuTreeRsp.class)
     public CommonResponse<GetMenuTreeRsp> getMenuTree(){
         return CommonResponse.success(menuService.getMenuList(null, null));
+    }
+
+    /**
+     * 获取功能列表
+     * @param page 页数
+     * @param num 数量
+     * @param menuId 菜单id
+     * @return
+     */
+    @BlankStringValid
+    @IllegalStringValid
+    @GetMapping("/func/page")
+    @ApiDoc(result = GetFuncPageRsp.class)
+    public CommonResponse<PageInfo<GetFuncPageRsp>> getFuncPage(@RequestParam(defaultValue = "1") int page,
+                                                                @RequestParam(defaultValue = "10") int num,
+                                                                @RequestParam Long menuId){
+        return CommonResponse.success(funcService.getFuncPage(page, num, menuId, null, null, false));
     }
 
     /**
