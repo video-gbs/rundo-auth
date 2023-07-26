@@ -5,11 +5,14 @@ import com.runjian.common.aspect.annotation.BlankStringValid;
 import com.runjian.common.aspect.annotation.IllegalStringValid;
 import com.runjian.common.config.response.CommonResponse;
 import com.runjian.common.validator.ValidatorService;
+import com.runjian.rbac.service.rbac.ResourceService;
 import com.runjian.rbac.service.rbac.RoleService;
 import com.runjian.rbac.vo.request.PostAddRoleReq;
 import com.runjian.rbac.vo.request.PostRoleUserAssociateReq;
 import com.runjian.rbac.vo.request.PutRoleDisabledReq;
 import com.runjian.rbac.vo.request.PutRoleReq;
+import com.runjian.rbac.vo.response.GetResourceRootRsp;
+import com.runjian.rbac.vo.response.GetResourceTreeRsp;
 import com.runjian.rbac.vo.response.GetRolePageRsp;
 import com.runjian.rbac.vo.response.GetUserRolePageRsp;
 import io.github.yedaxia.apidocs.ApiDoc;
@@ -19,6 +22,7 @@ import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDateTime;
+import java.util.List;
 import java.util.Set;
 
 /**
@@ -35,6 +39,30 @@ public class RoleController {
     private final RoleService roleService;
 
     private final ValidatorService validatorService;
+
+    private final ResourceService resourceService;
+
+
+    /**
+     * 分页查询资源
+     * @param resourceKey 资源组
+     * @return
+     */
+    @GetMapping("/resource/tree")
+    @ApiDoc(result = GetResourceTreeRsp.class)
+    public CommonResponse<GetResourceTreeRsp> getResourcePage(@RequestParam String resourceKey){
+        return CommonResponse.success(resourceService.getResourceTree(resourceKey, true));
+    }
+
+    /**
+     * 获取根节点资源
+     * @return
+     */
+    @GetMapping("/resource/root")
+    @ApiDoc(result = GetResourceRootRsp.class)
+    public CommonResponse<List<GetResourceRootRsp>> getResourceRoot(){
+        return CommonResponse.success(resourceService.getResourceRoot());
+    }
 
     /**
      * 分页查询角色
