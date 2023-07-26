@@ -5,16 +5,14 @@ import com.runjian.common.aspect.annotation.BlankStringValid;
 import com.runjian.common.aspect.annotation.IllegalStringValid;
 import com.runjian.common.config.response.CommonResponse;
 import com.runjian.common.validator.ValidatorService;
+import com.runjian.rbac.service.rbac.MenuService;
 import com.runjian.rbac.service.rbac.ResourceService;
 import com.runjian.rbac.service.rbac.RoleService;
 import com.runjian.rbac.vo.request.PostAddRoleReq;
 import com.runjian.rbac.vo.request.PostRoleUserAssociateReq;
 import com.runjian.rbac.vo.request.PutRoleDisabledReq;
 import com.runjian.rbac.vo.request.PutRoleReq;
-import com.runjian.rbac.vo.response.GetResourceRootRsp;
-import com.runjian.rbac.vo.response.GetResourceTreeRsp;
-import com.runjian.rbac.vo.response.GetRolePageRsp;
-import com.runjian.rbac.vo.response.GetUserRolePageRsp;
+import com.runjian.rbac.vo.response.*;
 import io.github.yedaxia.apidocs.ApiDoc;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -42,6 +40,8 @@ public class RoleController {
 
     private final ResourceService resourceService;
 
+    private final MenuService menuService;
+
 
     /**
      * 分页查询资源
@@ -62,6 +62,20 @@ public class RoleController {
     @ApiDoc(result = GetResourceRootRsp.class)
     public CommonResponse<List<GetResourceRootRsp>> getResourceRoot(){
         return CommonResponse.success(resourceService.getResourceRoot());
+    }
+
+    /**
+     * 获取菜单树
+     * @param name 菜单名称
+     * @param path 菜单地址
+     * @return 菜单树
+     */
+    @BlankStringValid
+    @IllegalStringValid
+    @GetMapping("/menu/tree")
+    @ApiDoc(result = GetMenuTreeRsp.class)
+    public CommonResponse<GetMenuTreeRsp> getMenuTree(){
+        return CommonResponse.success(menuService.getMenuList(null, null));
     }
 
     /**
