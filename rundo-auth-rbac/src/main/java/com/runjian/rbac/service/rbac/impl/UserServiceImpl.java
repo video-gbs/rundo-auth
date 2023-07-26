@@ -77,7 +77,7 @@ public class UserServiceImpl implements UserService {
             } else {
                 SectionInfo sectionInfo = dataBaseService.getSectionInfo(sectionId);
                 PageHelper.startPage(page, num);
-                getUserPageRspList = userMapper.selectAllUserBySectionLevelLikeAndUsernameAndWorkName(sectionInfo.getLevel() + MarkConstant.MARK_SPLIT_RAIL + sectionInfo.getId(), username, workName);
+                getUserPageRspList = userMapper.selectAllUserBySectionLevelLikeAndUsernameAndWorkName(sectionInfo.getId(), sectionInfo.getLevel() + MarkConstant.MARK_SPLIT_RAIL + sectionInfo.getId(), username, workName);
             }
         } else {
             getUserPageRspList = userMapper.selectAllUserBySectionIdAndUsernameAndWorkName(sectionId, username, workName);

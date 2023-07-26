@@ -29,11 +29,11 @@ public interface UserMapper {
             " SELECT ut.*,st.section_name FROM " + USER_TABLE_NAME + " ut " +
             " LEFT JOIN " + SectionMapper.SECTION_TABLE_NAME + " st ON ut.section_id = st.id " +
             " WHERE ut.deleted != 1 " +
-            " AND st.level LIKE CONCAT(#{sectionLevel}, '%') " +
+            " AND (ut.section_id = #{sectionId} OR st.level LIKE CONCAT(#{sectionLevel}, '%')) " +
             " <if test=\"username != null\" > AND ut.username LIKE CONCAT('%', #{username}, '%') </if> " +
             " <if test=\"workName != null\" > AND ut.work_name LIKE CONCAT('%', #{workName}, '%') </if> " +
             " </script>")
-    List<GetUserPageRsp> selectAllUserBySectionLevelLikeAndUsernameAndWorkName(String sectionLevel, String username, String workName);
+    List<GetUserPageRsp> selectAllUserBySectionLevelLikeAndUsernameAndWorkName(Long sectionId, String sectionLevel, String username, String workName);
 
     @Select(" <script> " +
             " SELECT ut.*,st.section_name FROM " + USER_TABLE_NAME + " ut " +
