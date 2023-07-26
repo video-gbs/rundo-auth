@@ -44,7 +44,7 @@ public class RoleController {
 
 
     /**
-     * 分页查询资源
+     * 获取资源树
      * @param resourceKey 资源组
      * @return
      */
@@ -55,7 +55,7 @@ public class RoleController {
     }
 
     /**
-     * 获取根节点资源
+     * 获取资源分组
      * @return
      */
     @GetMapping("/resource/root")
@@ -66,8 +66,6 @@ public class RoleController {
 
     /**
      * 获取菜单树
-     * @param name 菜单名称
-     * @param path 菜单地址
      * @return 菜单树
      */
     @BlankStringValid
