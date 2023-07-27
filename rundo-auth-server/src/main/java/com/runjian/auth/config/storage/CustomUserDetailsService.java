@@ -7,6 +7,8 @@ import com.runjian.common.config.exception.BusinessException;
 import com.runjian.common.config.response.CommonResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.security.authentication.InternalAuthenticationServiceException;
+import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -41,14 +43,22 @@ public class CustomUserDetailsService implements UserDetailsService  {
     }
 
     @Override
-    public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        CommonResponse<AuthUserRsp> authUserRsp = authRbacApi.getAuthUser(username);
-        if (authUserRsp.isError()){
-            throw new BusinessException(BusinessErrorEnums.FEIGN_REQUEST_BUSINESS_ERROR, authUserRsp.getMsg());
-        }
-        AuthUserRsp authUser = authUserRsp.getData();
-        if (Objects.isNull(authUser)){
-            throw new UsernameNotFoundException("用户或密码错误");
+    public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException, InternalAuthenticationServiceException {
+
+        AuthUserRsp authUser;
+        try{
+            CommonResponse<AuthUserRsp> authUserRsp = authRbacApi.getAuthUser(username);
+            if (authUserRsp.isError()){
+                throw new InternalAuthenticationServiceException("权限RBAC系统访问异常：" + authUserRsp.getMsg());
+            }
+            authUser = authUserRsp.getData();
+            if (Objects.isNull(authUser)){
+                throw new UsernameNotFoundException("用户或密码错误");
+            }
+        } catch (AuthenticationException ex){
+            throw ex;
+        } catch (Exception ex){
+            throw new InternalAuthenticationServiceException("权限RBAC系统访问异常：" + ex.getMessage());
         }
 
         return User.builder().username(authUser.getUsername())
