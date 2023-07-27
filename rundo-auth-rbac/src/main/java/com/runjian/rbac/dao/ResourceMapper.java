@@ -168,7 +168,7 @@ public interface ResourceMapper {
     @Select(" <script> " +
             " SELECT rt.* FROM " + RESOURCE_TABLE_NAME + " rt " +
             " LEFT JOIN " + RoleResourceMapper.ROLE_RESOURCE_TABLE_NAME + " rrt ON rrt.resource_id = rt.id " +
-            " WHERE resource_key = #{resourceKey} AND " +
+            " WHERE rt.resource_key = #{resourceKey} AND " +
             " rrt.role_id IN <foreach collection='roleIds' item='item' open='(' separator=',' close=')'> #{item} </foreach> " +
             " </script>")
     Set<ResourceInfo> selectByRoleIdsAndResourceKey(Set<Long> roleIds, String resourceKey);
