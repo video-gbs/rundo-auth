@@ -29,6 +29,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.CollectionUtils;
 
 import java.time.LocalDateTime;
 import java.util.*;
@@ -191,7 +192,9 @@ public class RoleServiceImpl implements RoleService {
             List<FuncInfo> addFuncInfoList = null;
             if (funcIds.size() == 0){
                 roleFuncMapper.deleteAllByRoleId(roleId);
-                delFuncInfoList = funcMapper.selectAllByIds(existFuncIds);
+                if (!CollectionUtils.isEmpty(existFuncIds)){
+                    delFuncInfoList = funcMapper.selectAllByIds(existFuncIds);
+                }
             }else {
                 if (existFuncIds.size() > 0){
                     Set<Long> difference = new HashSet<>(existFuncIds);
