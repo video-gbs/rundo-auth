@@ -48,7 +48,7 @@ public class CustomUserDetailsService implements UserDetailsService  {
         }
         AuthUserRsp authUser = authUserRsp.getData();
         if (Objects.isNull(authUser)){
-            throw new BusinessException(BusinessErrorEnums.USER_LOGIN_ERROR, "用户或密码错误");
+            throw new UsernameNotFoundException("用户或密码错误");
         }
 
         return User.builder().username(authUser.getUsername())

@@ -11,10 +11,7 @@ import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.SpringSecurityMessageSource;
-import org.springframework.security.core.userdetails.User;
-import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.core.userdetails.UserDetailsChecker;
-import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.core.userdetails.*;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.oauth2.core.*;
 import org.springframework.security.oauth2.core.endpoint.OAuth2ParameterNames;
@@ -85,8 +82,6 @@ public class OAuth2PasswordTokenAuthenticationProvider implements Authentication
         if (Objects.isNull(tokenGenerator)){
             tokenGenerator = httpSecurity.getSharedObject(OAuth2TokenGenerator.class);
         }
-
-
 
         UserDetails userDetails =  userDetailsService.loadUserByUsername(oAuth2TokenPasswordAuthenticationToken.getUsername());
 
