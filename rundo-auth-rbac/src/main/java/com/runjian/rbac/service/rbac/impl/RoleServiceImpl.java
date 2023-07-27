@@ -206,7 +206,6 @@ public class RoleServiceImpl implements RoleService {
                 if (funcIds.size() > 0){
                     roleFuncMapper.saveAll(roleId, funcIds, authUser, nowTime);
                     addFuncInfoList = funcMapper.selectAllByIds(funcIds);
-
                 }
             }
             // 功能缓存角色删除处理
