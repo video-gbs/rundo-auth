@@ -58,7 +58,11 @@ public class AuthSystemServiceImpl implements AuthSystemService {
         authUserDto.setAccountNonLocked(true);
         authUserDto.setCredentialsNonExpired(true);
         LocalDateTime nowTime = LocalDateTime.now();
-        authUserDto.setAccountNonExpired(!nowTime.isBefore(userInfo.getExpiryStartTime()) && !nowTime.isAfter(userInfo.getExpiryEndTime()));
+        if (Objects.nonNull(userInfo.getExpiryEndTime())){
+            authUserDto.setAccountNonExpired(!nowTime.isBefore(userInfo.getExpiryStartTime()) && !nowTime.isAfter(userInfo.getExpiryEndTime()));
+        }else {
+            authUserDto.setAccountNonExpired(true);
+        }
         Set<Long> roleIds = userRoleMapper.selectRoleIdByUserId(userInfo.getId());
         if (roleIds.size() == 0) {
             authUserDto.setAuthorities(Collections.EMPTY_SET);
