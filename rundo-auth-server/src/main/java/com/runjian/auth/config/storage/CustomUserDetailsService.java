@@ -58,7 +58,8 @@ public class CustomUserDetailsService implements UserDetailsService  {
         } catch (AuthenticationException ex){
             throw ex;
         } catch (Exception ex){
-            throw new InternalAuthenticationServiceException("权限RBAC系统访问异常：" + ex.getMessage());
+            ex.printStackTrace();
+            throw new InternalAuthenticationServiceException("权限RBAC系统访问异常");
         }
 
         return User.builder().username(authUser.getUsername())
