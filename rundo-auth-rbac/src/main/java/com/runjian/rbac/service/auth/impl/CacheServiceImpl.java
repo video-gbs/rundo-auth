@@ -126,6 +126,9 @@ public class CacheServiceImpl implements CacheService {
 
     @Override
     public List<String> setUserResourceCache(String username, Set<Long> roleIds, String resourceKey) {
+        if (CollectionUtils.isEmpty(roleIds)){
+            return null;
+        }
         Set<ResourceInfo> resourceInfos = resourceMapper.selectByRoleIdsAndResourceKey(roleIds, resourceKey);
         if (resourceInfos.size() > 0){
             List<ResourceInfo> catalogueList = resourceInfos.stream().filter(resourceInfo -> resourceInfo.getResourceType().equals(ResourceType.CATALOGUE.getCode())).toList();
