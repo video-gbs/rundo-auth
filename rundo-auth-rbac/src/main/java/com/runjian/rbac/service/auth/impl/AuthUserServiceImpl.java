@@ -159,18 +159,26 @@ public class AuthUserServiceImpl implements AuthUserService {
             if (CollectionUtils.isEmpty(authData.getRoleIds())){
                 return null;
             }
+            List<String> userResource = cacheService.getUserResource(authData.getUsername(), resourceKey);
+
             resourceInfoList = resourceMapper.selectByRoleIdsAndResourceKeyAndResourceType(new HashSet<>(authData.getRoleIds()), resourceKey, ResourceType.CATALOGUE.getCode());
             if (CollectionUtils.isEmpty(resourceInfoList)){
                 return null;
             }
-            Set<Long> cataloguePids = resourceInfoList.stream().map(GetResourceTreeRsp::getResourcePid).collect(Collectors.toSet());
-            List<String> childCatalogueLevelList = resourceInfoList.stream().filter(catalogueInfo -> !cataloguePids.contains(catalogueInfo.getId()))
-                    .map(resourceInfo -> resourceInfo.getLevel() + MarkConstant.MARK_SPLIT_RAIL + resourceInfo.getId()).toList();
-            if (!CollectionUtils.isEmpty(childCatalogueLevelList)) {
-                for (String level : childCatalogueLevelList){
-                    resourceInfoList.addAll(resourceMapper.selectByResourceKeyAndResourceTypeAndLevelLike(resourceKey, ResourceType.CATALOGUE.getCode(), level));
+            List<ResourceInfo> resourceInfos = resourceMapper.selectAllByResourceKeyAndResourceTypeAndResourceValueIn(resourceKey, ResourceType.CATALOGUE.getCode(), userResource);
+            if (!CollectionUtils.isEmpty(resourceInfos)) {
+                for (ResourceInfo resourceInfo : resourceInfos){
+                    resourceInfoList.addAll(resourceMapper.selectByResourceKeyAndResourceTypeAndLevelLike(resourceKey, ResourceType.CATALOGUE.getCode(), resourceInfo.getLevel() + MarkConstant.MARK_SPLIT_RAIL + resourceInfo.getId()));
                 }
             }
+//            Set<Long> cataloguePids = resourceInfoList.stream().map(GetResourceTreeRsp::getResourcePid).collect(Collectors.toSet());
+//            List<String> childCatalogueLevelList = resourceInfoList.stream().filter(catalogueInfo -> !cataloguePids.contains(catalogueInfo.getId()))
+//                    .map(resourceInfo -> resourceInfo.getLevel() + MarkConstant.MARK_SPLIT_RAIL + resourceInfo.getId()).toList();
+//            if (!CollectionUtils.isEmpty(childCatalogueLevelList)) {
+//                for (String level : childCatalogueLevelList){
+//                    resourceInfoList.addAll(resourceMapper.selectByResourceKeyAndResourceTypeAndLevelLike(resourceKey, ResourceType.CATALOGUE.getCode(), level));
+//                }
+//            }
         }
 
         root.setChildList(root.recursionData(resourceInfoList, root.getLevel() + MarkConstant.MARK_SPLIT_RAIL + root.getId()));
