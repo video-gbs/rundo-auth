@@ -165,7 +165,7 @@ public class AuthUserServiceImpl implements AuthUserService {
             if (CollectionUtils.isEmpty(resourceInfoList)){
                 return null;
             }
-            List<ResourceInfo> resourceInfos = resourceMapper.selectAllByResourceKeyAndResourceTypeAndResourceValueIn(resourceKey, ResourceType.CATALOGUE.getCode(), userResource);
+            Set<ResourceInfo> resourceInfos = resourceMapper.selectAllByResourceKeyAndResourceTypeAndResourceValueIn(resourceKey, ResourceType.CATALOGUE.getCode(), userResource);
             if (!CollectionUtils.isEmpty(resourceInfos)) {
                 for (ResourceInfo resourceInfo : resourceInfos){
                     resourceInfoList.addAll(resourceMapper.selectByResourceKeyAndResourceTypeAndLevelLike(resourceKey, ResourceType.CATALOGUE.getCode(), resourceInfo.getLevel() + MarkConstant.MARK_SPLIT_RAIL + resourceInfo.getId()));

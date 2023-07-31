@@ -188,7 +188,7 @@ public interface ResourceMapper {
 
     @Select(" SELECT * FROM " + RESOURCE_TABLE_NAME +
             " WHERE resource_key = #{resourceKey} AND resource_type = #{resourceType} AND level LIKE CONCAT(#{level}, '%') ")
-    List<GetResourceTreeRsp> selectByResourceKeyAndResourceTypeAndLevelLike(String resourceKey, Integer resourceType, String level);
+    Set<GetResourceTreeRsp> selectByResourceKeyAndResourceTypeAndLevelLike(String resourceKey, Integer resourceType, String level);
 
     @Select(" <script> " +
             " SELECT * FROM " + RESOURCE_TABLE_NAME +
@@ -196,5 +196,5 @@ public interface ResourceMapper {
             " resource_key = #{resourceKey} AND " +
             " resource_value IN <foreach collection='resourceValues' item='item' open='(' separator=',' close=')'> #{item} </foreach> " +
             " </script>")
-    List<ResourceInfo> selectAllByResourceKeyAndResourceTypeAndResourceValueIn(String resourceKey, Integer resourceType, List<String> resourceValues);
+    Set<ResourceInfo> selectAllByResourceKeyAndResourceTypeAndResourceValueIn(String resourceKey, Integer resourceType, List<String> resourceValues);
 }
