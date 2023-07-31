@@ -70,15 +70,15 @@ public interface UserMapper {
     @Update(" <script> " +
             " UPDATE "  + USER_TABLE_NAME +
             " SET update_time = #{updateTime} " +
+            " , expiry_end_time = #{expiryEndTime} " +
+            " , description = #{description} " +
+            " , address = #{address} " +
+            " , work_num = #{workNum} " +
             " <if test=\"password != null\" > , password = #{password} </if> " +
             " <if test=\"workName != null\" > , work_name = #{workName} </if> " +
             " <if test=\"phone != null\" > , phone = #{phone} </if> " +
-            " <if test=\"workNum != null\" > , work_num = #{workNum} </if> " +
             " <if test=\"sectionId != null\" > , section_id = #{sectionId} </if> " +
-            " <if test=\"address != null\" > , address = #{address} </if> " +
             " <if test=\"expiryStartTime != null\" > , expiry_start_time = #{expiryStartTime} </if> " +
-            " <if test=\"expiryEndTime != null\" > , expiry_end_time = #{expiryEndTime} </if> " +
-            " <if test=\"description != null\" > , description = #{description} </if> " +
             " <if test=\"disabled != null\" > , disabled = #{disabled} </if> " +
             " WHERE id = #{id} " +
             " </script> ")
