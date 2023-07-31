@@ -105,17 +105,17 @@ public class AuthUserServiceImpl implements AuthUserService {
         if (authData.getIsAdmin()){
             cmenuTreeRspList = menuMapper.selectAllByLevelNumStartAndLevelNumEnd(levelNumStart, levelNumEnd);
         }else {
-            if (authData.getRoleIds().size() == 0){
+            if (authData.getRoleIds().isEmpty()){
                 return Collections.EMPTY_LIST;
             }
             Set<Long> menuIds = roleMenuMapper.selectMenuIdByRoleIds(authData.getRoleIds());
             cmenuTreeRspList = menuMapper.selectAllByLevelNumStartAndLevelNumEndAndMenuIdsIn(levelNumStart, levelNumEnd, menuIds);
         }
-        if (cmenuTreeRspList.size() == 0){
+        if (cmenuTreeRspList.isEmpty()){
             return Collections.EMPTY_LIST;
         }
         int i = levelNumStart;
-        while (pMenuTreeRspList.size() == 0 && i <= levelNumEnd){
+        while (pMenuTreeRspList.isEmpty() && i <= levelNumEnd){
             int finalI = i;
             pMenuTreeRspList = cmenuTreeRspList.stream().filter(getMenuTreeRsp -> getMenuTreeRsp.getLevelNum().equals(finalI)).toList();
             i++;
@@ -134,11 +134,11 @@ public class AuthUserServiceImpl implements AuthUserService {
         if (authData.getIsAdmin()){
             return funcMapper.selectAllByMenuId(menuId);
         }
-        if (authData.getRoleIds().size() == 0){
+        if (authData.getRoleIds().isEmpty()){
             return Collections.EMPTY_LIST;
         }
         List<Long> funcIds = roleFuncMapper.selectFuncIdByRoleIds(authData.getRoleIds());
-        if (funcIds.size() == 0){
+        if (funcIds.isEmpty()){
             return Collections.EMPTY_LIST;
         }
         return funcMapper.selectAllByMenuIdAndFuncIds(menuId, funcIds);

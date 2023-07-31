@@ -154,19 +154,25 @@ public class CacheServiceImpl implements CacheService {
                 cataloguePids.addAll(resourceList.stream().map(ResourceInfo::getResourcePid).collect(Collectors.toSet()));
             }
             // 过滤所有的父类数据
-            List<String> childCatalogueLevelList = catalogueList.stream().filter(catalogueInfo -> !cataloguePids.contains(catalogueInfo.getId()))
-                    .map(resourceInfo -> resourceInfo.getLevel() + MarkConstant.MARK_SPLIT_RAIL + resourceInfo.getId()).toList();
+            List<ResourceInfo> childCatalogueList = catalogueList.stream().filter(catalogueInfo -> !cataloguePids.contains(catalogueInfo.getId())).toList();
+            // 添加目录节点
+            resourceValueList.addAll(childCatalogueList.stream().map(ResourceInfo::getResourceValue).toList());
+            // 获取level
+            List<String> childCatalogueLevelList = childCatalogueList.stream().map(resourceInfo -> resourceInfo.getLevel() + MarkConstant.MARK_SPLIT_RAIL + resourceInfo.getId()).toList();
             // 查询目录下的资源
-            if (childCatalogueLevelList.size() > 0) {
-                resourceValueList.addAll(
-                        resourceMapper.selectAllByResourceKey(resourceKey, ResourceType.RESOURCE.getCode()).stream().filter(resourceInfo -> {
-                            for (String level : childCatalogueLevelList) {
-                                if (resourceInfo.getLevel().startsWith(level)) {
-                                    return true;
-                                }
-                            }
-                            return false;
-                        }).map(ResourceInfo::getResourceValue).toList());
+            if (!childCatalogueLevelList.isEmpty()) {
+                for (String level : childCatalogueLevelList) {
+                    resourceMapper.selectAllByResourceKeyAndLevelLike(resourceKey, level);
+                }
+//                resourceValueList.addAll(
+//                        resourceMapper.selectAllByResourceKey(resourceKey, ResourceType.RESOURCE.getCode()).stream().filter(resourceInfo -> {
+//                            for (String level : childCatalogueLevelList) {
+//                                if (resourceInfo.getLevel().startsWith(level)) {
+//                                    return true;
+//                                }
+//                            }
+//                            return false;
+//                        }).map(ResourceInfo::getResourceValue).toList());
             }
         }
         // 判断资源数组是否为空，不为空的话，将资源添加进去
