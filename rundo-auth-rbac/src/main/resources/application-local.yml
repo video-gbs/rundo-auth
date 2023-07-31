@@ -67,7 +67,7 @@ auth:
     roleName: ADMIN
 
 JApiDocs:
-  enable: false
+  enable: true
   docs:
     path: D:\DevTool\Environment\Nginx\nginx-1.22.0\html
     version: V1.0.0

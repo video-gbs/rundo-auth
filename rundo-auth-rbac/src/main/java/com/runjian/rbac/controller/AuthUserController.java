@@ -95,6 +95,7 @@ public class AuthUserController {
 
     /**
      * 刷新用户资源缓存
+     * @param req 刷新用户资源缓存请求体
      * @return
      */
     @PutMapping("/resource/refresh")
