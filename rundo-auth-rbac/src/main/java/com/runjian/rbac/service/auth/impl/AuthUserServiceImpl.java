@@ -159,17 +159,18 @@ public class AuthUserServiceImpl implements AuthUserService {
             if (CollectionUtils.isEmpty(authData.getRoleIds())){
                 return null;
             }
-            List<String> userResource = cacheService.getUserResource(authData.getUsername(), resourceKey);
 
-            resourceInfoList = resourceMapper.selectByRoleIdsAndResourceKeyAndResourceType(new HashSet<>(authData.getRoleIds()), resourceKey, ResourceType.CATALOGUE.getCode());
+
+            resourceInfoList = resourceMapper.selectByRoleIdsAndResourceKeyAndResourceType(new HashSet<>(authData.getRoleIds()), resourceKey);
             if (CollectionUtils.isEmpty(resourceInfoList)){
                 return null;
             }
-            Set<ResourceInfo> resourceInfos = resourceMapper.selectAllByResourceKeyAndResourceTypeAndResourceValueIn(resourceKey, ResourceType.CATALOGUE.getCode(), userResource);
-            Set<Long> cataloguePids = resourceInfos.stream().map(ResourceInfo::getResourcePid).collect(Collectors.toSet());
-            List<String> resourceInfoLevelList = resourceInfos.stream().filter(catalogueInfo -> !cataloguePids.contains(catalogueInfo.getId()))
-                    .map(resourceInfo -> resourceInfo.getLevel() + MarkConstant.MARK_SPLIT_RAIL + resourceInfo.getId()).toList();
-            if (!CollectionUtils.isEmpty(resourceInfos)) {
+            Set<Long> cataloguePids = resourceInfoList.stream().map(GetResourceTreeRsp::getResourcePid).collect(Collectors.toSet());
+            // 过滤所有的父类数据
+            resourceInfoList = resourceInfoList.stream().filter(catalogueInfo -> !cataloguePids.contains(catalogueInfo.getId())).filter(catalogueInfo -> catalogueInfo.getResourceType().equals(ResourceType.CATALOGUE.getCode())).toList();
+
+            List<String> resourceInfoLevelList = resourceInfoList.stream().map(resourceInfo -> resourceInfo.getLevel() + MarkConstant.MARK_SPLIT_RAIL + resourceInfo.getId()).toList();
+            if (!CollectionUtils.isEmpty(resourceInfoLevelList)) {
                 for (String level : resourceInfoLevelList){
                     resourceInfoList.addAll(resourceMapper.selectByResourceKeyAndResourceTypeAndLevelLike(resourceKey, ResourceType.CATALOGUE.getCode(), level));
                 }
