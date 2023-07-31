@@ -160,20 +160,20 @@ public class AuthUserServiceImpl implements AuthUserService {
                 return null;
             }
 
-
-            resourceInfoList = resourceMapper.selectByRoleIdsAndResourceKeyAndResourceType(new HashSet<>(authData.getRoleIds()), resourceKey);
-            if (CollectionUtils.isEmpty(resourceInfoList)){
+            List<GetResourceTreeRsp> roleResourceRsp = resourceMapper.selectByRoleIdsAndResourceKeyAndResourceType(new HashSet<>(authData.getRoleIds()), resourceKey);
+            resourceInfoList = new ArrayList<>(roleResourceRsp.stream().filter(catalogueInfo -> catalogueInfo.getResourceType().equals(ResourceType.CATALOGUE.getCode())).toList());
+            if (CollectionUtils.isEmpty(roleResourceRsp)){
                 return null;
             }
-            Set<Long> cataloguePids = resourceInfoList.stream().map(GetResourceTreeRsp::getResourcePid).collect(Collectors.toSet());
+            Set<Long> cataloguePids = roleResourceRsp.stream().map(GetResourceTreeRsp::getResourcePid).collect(Collectors.toSet());
             // 过滤所有的父类数据
-            resourceInfoList = resourceInfoList.stream().filter(catalogueInfo -> !cataloguePids.contains(catalogueInfo.getId())).filter(catalogueInfo -> catalogueInfo.getResourceType().equals(ResourceType.CATALOGUE.getCode())).toList();
+            List<GetResourceTreeRsp> catalogueRoleResourceRsp = roleResourceRsp.stream()
+                    .filter(catalogueInfo -> !cataloguePids.contains(catalogueInfo.getId()))
+                    .filter(catalogueInfo -> catalogueInfo.getResourceType().equals(ResourceType.CATALOGUE.getCode()))
+                    .toList();
 
-            List<String> resourceInfoLevelList = resourceInfoList.stream().map(resourceInfo -> resourceInfo.getLevel() + MarkConstant.MARK_SPLIT_RAIL + resourceInfo.getId()).toList();
-            if (!CollectionUtils.isEmpty(resourceInfoLevelList)) {
-                for (String level : resourceInfoLevelList){
-                    resourceInfoList.addAll(resourceMapper.selectByResourceKeyAndResourceTypeAndLevelLike(resourceKey, ResourceType.CATALOGUE.getCode(), level));
-                }
+            for (GetResourceTreeRsp rsp : catalogueRoleResourceRsp){
+                resourceInfoList.addAll(resourceMapper.selectByResourceKeyAndResourceTypeAndLevelLike(resourceKey, ResourceType.CATALOGUE.getCode(), rsp.getLevel() + MarkConstant.MARK_SPLIT_RAIL + rsp.getId()));
             }
 //            Set<Long> cataloguePids = resourceInfoList.stream().map(GetResourceTreeRsp::getResourcePid).collect(Collectors.toSet());
 //            List<String> childCatalogueLevelList = resourceInfoList.stream().filter(catalogueInfo -> !cataloguePids.contains(catalogueInfo.getId()))
