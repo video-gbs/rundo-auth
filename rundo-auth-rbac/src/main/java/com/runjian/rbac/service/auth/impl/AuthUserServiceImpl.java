@@ -55,8 +55,6 @@ public class AuthUserServiceImpl implements AuthUserService {
 
     private final ResourceMapper resourceMapper;
 
-    private final RoleResourceMapper roleResourceMapper;
-
     private final CacheService cacheService;
 
     @Override
@@ -161,7 +159,6 @@ public class AuthUserServiceImpl implements AuthUserService {
             if (CollectionUtils.isEmpty(authData.getRoleIds())){
                 return null;
             }
-            //Set<Long> resourceIds = roleResourceMapper.selectResourceIdByRoleIds(authData.getRoleIds());
             resourceInfoList = resourceMapper.selectByRoleIdsAndResourceKeyAndResourceType(new HashSet<>(authData.getRoleIds()), resourceKey, ResourceType.CATALOGUE.getCode());
             if (CollectionUtils.isEmpty(resourceInfoList)){
                 return null;
@@ -169,11 +166,9 @@ public class AuthUserServiceImpl implements AuthUserService {
             Set<Long> cataloguePids = resourceInfoList.stream().map(GetResourceTreeRsp::getResourcePid).collect(Collectors.toSet());
             List<String> childCatalogueLevelList = resourceInfoList.stream().filter(catalogueInfo -> !cataloguePids.contains(catalogueInfo.getId()))
                     .map(resourceInfo -> resourceInfo.getLevel() + MarkConstant.MARK_SPLIT_RAIL + resourceInfo.getId()).toList();
-            //resourceInfoList = resourceMapper.selectAllByResourceKeyAndResourceTypeAndResourceIdsIn(resourceKey, resourceIds);
             if (!CollectionUtils.isEmpty(childCatalogueLevelList)) {
                 for (String level : childCatalogueLevelList){
-                    resourceInfoList.addAll(
-                            resourceMapper.selectByResourceKeyAndResourceTypeAndLevelLike(resourceKey, ResourceType.CATALOGUE.getCode(), level));
+                    resourceInfoList.addAll(resourceMapper.selectByResourceKeyAndResourceTypeAndLevelLike(resourceKey, ResourceType.CATALOGUE.getCode(), level));
                 }
             }
         }
