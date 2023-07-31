@@ -171,7 +171,10 @@ public class AuthUserServiceImpl implements AuthUserService {
                     .map(resourceInfo -> resourceInfo.getLevel() + MarkConstant.MARK_SPLIT_RAIL + resourceInfo.getId()).toList();
             //resourceInfoList = resourceMapper.selectAllByResourceKeyAndResourceTypeAndResourceIdsIn(resourceKey, resourceIds);
             if (!CollectionUtils.isEmpty(childCatalogueLevelList)) {
-                resourceInfoList.addAll(resourceMapper.selectRspByResourceKey(resourceKey, ResourceType.CATALOGUE.getCode()));
+                for (String level : childCatalogueLevelList){
+                    resourceInfoList.addAll(
+                            resourceMapper.selectByResourceKeyAndResourceTypeAndLevelLike(resourceKey, ResourceType.CATALOGUE.getCode(), level));
+                }
             }
         }
 

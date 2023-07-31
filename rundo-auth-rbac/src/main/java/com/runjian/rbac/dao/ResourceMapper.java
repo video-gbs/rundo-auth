@@ -183,6 +183,6 @@ public interface ResourceMapper {
     List<GetResourceTreeRsp> selectByRoleIdsAndResourceKeyAndResourceType(Set<Long> roleIds, String resourceKey, Integer resourceType);
 
     @Select(" SELECT * FROM " + RESOURCE_TABLE_NAME +
-            " WHERE resource_key = #{resourceKey} AND resource_type = #{resourceType}")
-    List<GetResourceTreeRsp> selectRspByResourceKey(String resourceKey, Integer resourceType);
+            " WHERE resource_key = #{resourceKey} AND resource_type = #{resourceType} AND level LIKE CONCAT('%', #{level}, '%')")
+    List<GetResourceTreeRsp> selectByResourceKeyAndResourceTypeAndLevelLike(String resourceKey, Integer resourceType, String level);
 }
