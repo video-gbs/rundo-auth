@@ -172,4 +172,17 @@ public interface ResourceMapper {
             " rrt.role_id IN <foreach collection='roleIds' item='item' open='(' separator=',' close=')'> #{item} </foreach> " +
             " </script>")
     Set<ResourceInfo> selectByRoleIdsAndResourceKey(Set<Long> roleIds, String resourceKey);
+
+    @Select(" <script> " +
+            " SELECT rt.* FROM " + RESOURCE_TABLE_NAME + " rt " +
+            " LEFT JOIN " + RoleResourceMapper.ROLE_RESOURCE_TABLE_NAME + " rrt ON rrt.resource_id = rt.id " +
+            " WHERE rt.resource_key = #{resourceKey} AND " +
+            " rt.resource_type = #{resourceType} AND " +
+            " rrt.role_id IN <foreach collection='roleIds' item='item' open='(' separator=',' close=')'> #{item} </foreach> " +
+            " </script>")
+    List<GetResourceTreeRsp> selectByRoleIdsAndResourceKeyAndResourceType(Set<Long> roleIds, String resourceKey, Integer resourceType);
+
+    @Select(" SELECT * FROM " + RESOURCE_TABLE_NAME +
+            " WHERE resource_key = #{resourceKey} AND resource_type = #{resourceType}")
+    List<GetResourceTreeRsp> selectRspByResourceKey(String resourceKey, Integer resourceType);
 }

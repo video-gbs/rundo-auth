@@ -158,15 +158,31 @@ public class AuthUserServiceImpl implements AuthUserService {
         if (authData.getIsAdmin()){
             resourceInfoList = resourceMapper.selectAllByResourceKeyAndResourceType(resourceKey);
         }else {
-            if (authData.getRoleIds().size() == 0){
+            if (CollectionUtils.isEmpty(authData.getRoleIds())){
                 return null;
             }
-            Set<Long> resourceIds = roleResourceMapper.selectResourceIdByRoleIds(authData.getRoleIds());
-            resourceInfoList = resourceMapper.selectAllByResourceKeyAndResourceTypeAndResourceIdsIn(resourceKey, resourceIds);
+            //Set<Long> resourceIds = roleResourceMapper.selectResourceIdByRoleIds(authData.getRoleIds());
+            resourceInfoList = resourceMapper.selectByRoleIdsAndResourceKeyAndResourceType(new HashSet<>(authData.getRoleIds()), resourceKey, ResourceType.CATALOGUE.getCode());
+            if (CollectionUtils.isEmpty(resourceInfoList)){
+                return null;
+            }
+            Set<Long> cataloguePids = resourceInfoList.stream().map(GetResourceTreeRsp::getResourcePid).collect(Collectors.toSet());
+            List<String> childCatalogueLevelList = resourceInfoList.stream().filter(catalogueInfo -> !cataloguePids.contains(catalogueInfo.getId()))
+                    .map(resourceInfo -> resourceInfo.getLevel() + MarkConstant.MARK_SPLIT_RAIL + resourceInfo.getId()).toList();
+            //resourceInfoList = resourceMapper.selectAllByResourceKeyAndResourceTypeAndResourceIdsIn(resourceKey, resourceIds);
+            if (!CollectionUtils.isEmpty(childCatalogueLevelList)) {
+                resourceInfoList.addAll(
+                        resourceMapper.selectAllByResourceKey(resourceKey, ResourceType.CATALOGUE.getCode()).stream().filter(resourceInfo -> {
+                            for (String level : childCatalogueLevelList) {
+                                if (resourceInfo.getLevel().startsWith(level)) {
+                                    return true;
+                                }
+                            }
+                            return false;
+                        }).toList());
+            }
         }
-        if (resourceInfoList.size() == 0){
-            return null;
-        }
+
         root.setChildList(root.recursionData(resourceInfoList, root.getLevel() + MarkConstant.MARK_SPLIT_RAIL + root.getId()));
         return root;
     }
