@@ -100,7 +100,7 @@ public class CacheServiceImpl implements CacheService {
             return;
         }
         Set<ResourceInfo> resourceInfos = resourceMapper.selectByRoleIds(roleIds);
-        if (resourceInfos.size() > 0) {
+        if (!resourceInfos.isEmpty()) {
             Set<String> resourceKeys = resourceInfos.stream().map(ResourceInfo::getResourceKey).collect(Collectors.toSet());
             Map<Integer, List<ResourceInfo>> typeMap = resourceInfos.stream().collect(Collectors.groupingBy(ResourceInfo::getResourceType));
 
@@ -133,7 +133,7 @@ public class CacheServiceImpl implements CacheService {
             return null;
         }
         Set<ResourceInfo> resourceInfos = resourceMapper.selectByRoleIdsAndResourceKey(roleIds, resourceKey);
-        if (resourceInfos.size() > 0){
+        if (!resourceInfos.isEmpty()){
             List<ResourceInfo> catalogueList = resourceInfos.stream().filter(resourceInfo -> resourceInfo.getResourceType().equals(ResourceType.CATALOGUE.getCode())).toList();
             List<ResourceInfo> resourceList = resourceInfos.stream().filter(resourceInfo -> resourceInfo.getResourceType().equals(ResourceType.RESOURCE.getCode())).toList();
             List<String> resourceValueList = getResourceValueList(resourceKey, catalogueList, resourceList);
@@ -164,15 +164,6 @@ public class CacheServiceImpl implements CacheService {
                 for (String level : childCatalogueLevelList) {
                     resourceValueList.addAll(resourceMapper.selectResourceValueByResourceKeyAndLevelLike(resourceKey, level));
                 }
-//                resourceValueList.addAll(
-//                        resourceMapper.selectAllByResourceKey(resourceKey, ResourceType.RESOURCE.getCode()).stream().filter(resourceInfo -> {
-//                            for (String level : childCatalogueLevelList) {
-//                                if (resourceInfo.getLevel().startsWith(level)) {
-//                                    return true;
-//                                }
-//                            }
-//                            return false;
-//                        }).map(ResourceInfo::getResourceValue).toList());
             }
         }
         // 判断资源数组是否为空，不为空的话，将资源添加进去

@@ -246,4 +246,13 @@ public class AuthUserServiceImpl implements AuthUserService {
         }
         return getCatalogueResourceRspList;
     }
+
+    @Override
+    public void refreshUserResource(String resourceKey) {
+        AuthDataDto authData = authUtils.getAuthData();
+        if (authData.getIsAdmin()){
+            return;
+        }
+        cacheService.setUserResourceCache(authData.getUsername(), new HashSet<>(authData.getRoleIds()), resourceKey);
+    }
 }

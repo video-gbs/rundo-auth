@@ -88,7 +88,7 @@ public class ResourceServiceImpl implements ResourceService {
     @Override
     @Transactional(rollbackFor = Exception.class)
     public void batchAddResource(Long resourcePid, Integer resourceType, Map<String, String> resourceMap) {
-        if (resourceMap.size() == 0){
+        if (resourceMap.isEmpty()){
             return;
         }
 
@@ -97,7 +97,7 @@ public class ResourceServiceImpl implements ResourceService {
             throw new BusinessException(BusinessErrorEnums.VALID_ILLEGAL_OPERATION, "不能在资源下添加资源");
         }
         Set<String> existValues = resourceMapper.selectResourceValueByResourceKeyAndResourceValueIn(pResourceInfo.getResourceKey(), resourceMap.keySet());
-        if (existValues.size() > 0){
+        if (!existValues.isEmpty()){
             for (String resourceValue : existValues){
                 resourceMap.remove(resourceValue);
             }
@@ -118,7 +118,7 @@ public class ResourceServiceImpl implements ResourceService {
             resourceInfo.setLevel(pResourceInfo.getLevel() + MarkConstant.MARK_SPLIT_RAIL + pResourceInfo.getId());
             resourceInfoList.add(resourceInfo);
         }
-        if (resourceInfoList.size() > 0){
+        if (!resourceInfoList.isEmpty()){
             resourceMapper.batchAdd(resourceInfoList);
             cacheService.removeUserResourceByResourceKey(pResourceInfo.getResourceKey());
         }

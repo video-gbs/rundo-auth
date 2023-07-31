@@ -48,4 +48,9 @@ public interface AuthUserService {
      * @return
      */
     List<GetCatalogueResourceRsp> getResourceByCatalogue(Long pid, Boolean isIncludeChild);
+
+    /**
+     * 刷新用户缓存
+     */
+    void refreshUserResource(String resourceKey);
 }

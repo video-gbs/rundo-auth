@@ -1,7 +1,9 @@
 package com.runjian.rbac.controller;
 
 import com.runjian.common.config.response.CommonResponse;
+import com.runjian.common.validator.ValidatorService;
 import com.runjian.rbac.service.auth.AuthUserService;
+import com.runjian.rbac.vo.request.PutRefreshUserResourceReq;
 import com.runjian.rbac.vo.response.*;
 import io.github.yedaxia.apidocs.ApiDoc;
 import lombok.RequiredArgsConstructor;
@@ -22,6 +24,8 @@ import java.util.List;
 public class AuthUserController {
 
     private final AuthUserService authUserService;
+
+    private final ValidatorService validatorService;
 
     /**
      * 登出系统
@@ -87,6 +91,17 @@ public class AuthUserController {
     @ApiDoc(result = GetCatalogueResourceRsp.class)
     public CommonResponse<List<GetCatalogueResourceRsp>> getCatalogueResourceRsp(@RequestParam Long pid, @RequestParam Boolean isIncludeChild){
         return CommonResponse.success(authUserService.getResourceByCatalogue(pid, isIncludeChild));
+    }
+
+    /**
+     * 刷新用户资源缓存
+     * @return
+     */
+    @PutMapping("/resource/refresh")
+    public CommonResponse<?> refreshUserResource(@RequestBody PutRefreshUserResourceReq req){
+        validatorService.validateRequest(req);
+        authUserService.refreshUserResource(req.getResourceKey());
+        return CommonResponse.success();
     }
 
 
