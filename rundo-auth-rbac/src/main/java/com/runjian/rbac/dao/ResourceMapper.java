@@ -69,18 +69,18 @@ public interface ResourceMapper {
     List<GetResourceTreeRsp> selectAllByResourceKeyAndResourceType(String resourceKey);
 
     @Select(" SELECT * FROM " + RESOURCE_TABLE_NAME +
-            " WHERE level LIKE CONCAT('%', #{level}, '%') ")
+            " WHERE level LIKE CONCAT(#{level}, '%') ")
     List<ResourceInfo> selectAllLikeByLevel(String level);
 
 
     @Select(" SELECT * FROM " + RESOURCE_TABLE_NAME +
-            " WHERE level LIKE CONCAT('%', #{level}, '%') AND resource_type = 2 ")
+            " WHERE level LIKE CONCAT(#{level}, '%') AND resource_type = 2 ")
     List<ResourceInfo> selectByLevelLikeAndResourceType(String level);
 
     @Select(" <script> " +
             " SELECT * FROM " + RESOURCE_TABLE_NAME +
             " WHERE resource_value IN <foreach collection='resourceValueList' item='item' open='(' separator=',' close=')'> #{item} </foreach> " +
-            " AND level LIKE CONCAT('%', #{level}, '%') " +
+            " AND level LIKE CONCAT(#{level}, '%') " +
             " </script>")
     List<ResourceInfo> selectByLevelLikeAndResourceValueIn(String level, List<String> resourceValueList);
 
@@ -149,7 +149,7 @@ public interface ResourceMapper {
     List<ResourceInfo> selectAllByResourceKey(String resourceKey, Integer resourceType);
 
     @Select(" SELECT resource_value FROM " + RESOURCE_TABLE_NAME +
-            " WHERE resource_key = #{resourceKey} AND level LIKE CONCAT('%', #{level}, '%') ")
+            " WHERE resource_key = #{resourceKey} AND level LIKE CONCAT(#{level}, '%') ")
     List<String> selectResourceValueByResourceKeyAndLevelLike(String resourceKey, String level);
 
     @Select(" <script> " +
@@ -187,6 +187,6 @@ public interface ResourceMapper {
     List<GetResourceTreeRsp> selectByRoleIdsAndResourceKeyAndResourceType(Set<Long> roleIds, String resourceKey, Integer resourceType);
 
     @Select(" SELECT * FROM " + RESOURCE_TABLE_NAME +
-            " WHERE resource_key = #{resourceKey} AND resource_type = #{resourceType} AND level LIKE CONCAT('%', #{level}, '%') ")
+            " WHERE resource_key = #{resourceKey} AND resource_type = #{resourceType} AND level LIKE CONCAT(#{level}, '%') ")
     List<GetResourceTreeRsp> selectByResourceKeyAndResourceTypeAndLevelLike(String resourceKey, Integer resourceType, String level);
 }
