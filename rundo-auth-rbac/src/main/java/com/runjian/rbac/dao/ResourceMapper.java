@@ -148,9 +148,9 @@ public interface ResourceMapper {
             " WHERE resource_key = #{resourceKey} AND resource_type = #{resourceType}")
     List<ResourceInfo> selectAllByResourceKey(String resourceKey, Integer resourceType);
 
-    @Select(" SELECT * FROM " + RESOURCE_TABLE_NAME +
+    @Select(" SELECT resource_value FROM " + RESOURCE_TABLE_NAME +
             " WHERE resource_key = #{resourceKey} AND level LIKE CONCAT('%', #{level}, '%') ")
-    List<ResourceInfo> selectAllByResourceKeyAndLevelLike(String resourceKey, String level);
+    List<String> selectResourceValueByResourceKeyAndLevelLike(String resourceKey, String level);
 
     @Select(" <script> " +
             " SELECT * FROM " + RESOURCE_TABLE_NAME +

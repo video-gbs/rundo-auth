@@ -162,7 +162,7 @@ public class CacheServiceImpl implements CacheService {
             // 查询目录下的资源
             if (!childCatalogueLevelList.isEmpty()) {
                 for (String level : childCatalogueLevelList) {
-                    resourceMapper.selectAllByResourceKeyAndLevelLike(resourceKey, level);
+                    resourceValueList.addAll(resourceMapper.selectResourceValueByResourceKeyAndLevelLike(resourceKey, level));
                 }
 //                resourceValueList.addAll(
 //                        resourceMapper.selectAllByResourceKey(resourceKey, ResourceType.RESOURCE.getCode()).stream().filter(resourceInfo -> {
