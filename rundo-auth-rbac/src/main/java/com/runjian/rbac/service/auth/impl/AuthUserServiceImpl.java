@@ -166,9 +166,12 @@ public class AuthUserServiceImpl implements AuthUserService {
                 return null;
             }
             Set<ResourceInfo> resourceInfos = resourceMapper.selectAllByResourceKeyAndResourceTypeAndResourceValueIn(resourceKey, ResourceType.CATALOGUE.getCode(), userResource);
+            Set<Long> cataloguePids = resourceInfos.stream().map(ResourceInfo::getResourcePid).collect(Collectors.toSet());
+            List<String> resourceInfoLevelList = resourceInfos.stream().filter(catalogueInfo -> !cataloguePids.contains(catalogueInfo.getId()))
+                    .map(resourceInfo -> resourceInfo.getLevel() + MarkConstant.MARK_SPLIT_RAIL + resourceInfo.getId()).toList();
             if (!CollectionUtils.isEmpty(resourceInfos)) {
-                for (ResourceInfo resourceInfo : resourceInfos){
-                    resourceInfoList.addAll(resourceMapper.selectByResourceKeyAndResourceTypeAndLevelLike(resourceKey, ResourceType.CATALOGUE.getCode(), resourceInfo.getLevel() + MarkConstant.MARK_SPLIT_RAIL + resourceInfo.getId()));
+                for (String level : resourceInfoLevelList){
+                    resourceInfoList.addAll(resourceMapper.selectByResourceKeyAndResourceTypeAndLevelLike(resourceKey, ResourceType.CATALOGUE.getCode(), level));
                 }
             }
 //            Set<Long> cataloguePids = resourceInfoList.stream().map(GetResourceTreeRsp::getResourcePid).collect(Collectors.toSet());
