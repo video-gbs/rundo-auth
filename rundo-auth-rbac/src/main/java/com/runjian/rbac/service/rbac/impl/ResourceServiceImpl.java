@@ -2,6 +2,7 @@ package com.runjian.rbac.service.rbac.impl;
 
 import com.runjian.common.config.exception.BusinessErrorEnums;
 import com.runjian.common.config.exception.BusinessException;
+import com.runjian.common.constant.LogTemplate;
 import com.runjian.common.constant.MarkConstant;
 import com.runjian.rbac.constant.ResourceType;
 import com.runjian.rbac.dao.relation.FuncResourceMapper;
@@ -156,7 +157,7 @@ public class ResourceServiceImpl implements ResourceService {
             cacheService.removeUserResourceByResourceKey(pResourceInfo.getResourceKey());
             dataSourceTransactionManager.commit(transaction);
         }catch (TransactionException exception){
-            exception.printStackTrace();
+            log.error(LogTemplate.ERROR_LOG_TEMPLATE, "资源服务", "删除失败", exception);
             dataSourceTransactionManager.rollback(transaction);
         }
     }
@@ -185,11 +186,17 @@ public class ResourceServiceImpl implements ResourceService {
         resourceInfo.setResourcePid(pResourceInfo.getId());
         resourceInfo.setSort(nowTime.toInstant(ZoneOffset.of("+8")).toEpochMilli());
         resourceInfo.setUpdateTime(nowTime);
-        List<ResourceInfo> childList = resourceMapper.selectAllLikeByLevel(oldLevel + MarkConstant.MARK_SPLIT_RAIL + resourceInfo.getId());
-        childList.add(resourceInfo);
-        resourceMapper.updateAll(childList);
-        roleResourceMapper.deleteAllByResourceId(resourceInfo.getId());
-        cacheService.removeUserResourceByResourceKey(pResourceInfo.getResourceKey());
+        TransactionStatus transaction = dataSourceTransactionManager.getTransaction(transactionDefinition);
+        try{
+            List<ResourceInfo> childList = resourceMapper.selectAllLikeByLevel(oldLevel + MarkConstant.MARK_SPLIT_RAIL + resourceInfo.getId());
+            childList.add(resourceInfo);
+            resourceMapper.updateAll(childList);
+            roleResourceMapper.deleteAllByResourceId(resourceInfo.getId());
+            cacheService.removeUserResourceByResourceKey(pResourceInfo.getResourceKey());
+        }catch (TransactionException exception){
+            log.error(LogTemplate.ERROR_LOG_TEMPLATE, "资源服务", "父子移动失败", exception);
+            dataSourceTransactionManager.rollback(transaction);
+        }
     }
 
     @Override
