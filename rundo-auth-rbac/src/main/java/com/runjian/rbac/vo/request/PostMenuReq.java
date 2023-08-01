@@ -60,7 +60,7 @@ public class PostMenuReq {
     /**
      * 菜单图标
      */
-    @Size(min = 1, max = 250, message = "菜单图标长度范围1~250")
+    @Size(max = 250, message = "菜单图标长度范围1~250")
     private String icon;
 
     /**
