@@ -52,7 +52,7 @@ public class UserServiceImpl implements UserService {
     public PageInfo<GetUserPageRsp> getUserPage(int page, int num, Long roleId, String username, Boolean isBinding) {
         Set<Long> bindingUser = userRoleMapper.selectUserIdByRoleId(roleId);
         PageHelper.startPage(page, num);
-        if (bindingUser.size() > 0){
+        if (!bindingUser.isEmpty()){
             if (isBinding){
                 return new PageInfo<>(userMapper.selectByUserIdsInAndUsername(bindingUser, username));
             } else {
@@ -113,7 +113,7 @@ public class UserServiceImpl implements UserService {
         userInfo.setCreateBy(authData.getUsername());
         userMapper.save(userInfo);
 
-        if (roleIds.size() > 0) {
+        if (!roleIds.isEmpty()) {
             userRoleMapper.saveAllByRoleIds(userInfo.getId(), roleIds, authData.getUsername(), nowTime);
         }
         log.warn(LogTemplate.PROCESS_LOG_MSG_TEMPLATE, "用户服务", "添加用户成功", String.format("用户'%s' 执行添加 用户'%s'", authData.getUsername(), username));
@@ -172,10 +172,10 @@ public class UserServiceImpl implements UserService {
             return;
         }
 
-        if (roleIds.size() == 0) {
+        if (roleIds.isEmpty()) {
             userRoleMapper.deleteAllByUserId(userId);
         } else {
-            if (existRoleIds.size() > 0) {
+            if (!existRoleIds.isEmpty()) {
                 Set<Long> difference = new HashSet<>(existRoleIds);
                 // 求交集
                 difference.retainAll(roleIds);
@@ -187,7 +187,7 @@ public class UserServiceImpl implements UserService {
                 userRoleMapper.deleteAllByUserIdAndRoleIds(userId, existRoleIds);
             }
             // 保存新的角色
-            if (roleIds.size() > 0) {
+            if (!roleIds.isEmpty()) {
                 userRoleMapper.saveAllByRoleIds(userInfo.getId(), roleIds, authData.getUsername(), nowTime);
             }
         }
@@ -200,7 +200,7 @@ public class UserServiceImpl implements UserService {
     @Override
     @Transactional(rollbackFor = Exception.class)
     public void batchDeleteUser(Set<Long> userIds) {
-        if (userIds.size() == 0) {
+        if (userIds.isEmpty()) {
             return;
         }
         AuthDataDto authData = authUtils.getAuthData();

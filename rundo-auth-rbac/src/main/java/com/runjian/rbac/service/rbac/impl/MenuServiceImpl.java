@@ -39,7 +39,7 @@ public class MenuServiceImpl implements MenuService {
     public GetMenuTreeRsp getMenuList(String name, String path) {
         List<GetMenuTreeRsp> getMenuTreeRspList = menuMapper.selectByNameLikeAndPathLike(name, path);
         GetMenuTreeRsp rootMenuTree = GetMenuTreeRsp.getRootMenuTree();
-        if (getMenuTreeRspList.size() == 0){
+        if (getMenuTreeRspList.isEmpty()){
             return rootMenuTree;
         }
         if(Objects.nonNull(name) || Objects.nonNull(path)){
@@ -50,7 +50,7 @@ public class MenuServiceImpl implements MenuService {
                 ids.addAll(Arrays.stream(level.split(MarkConstant.MARK_SPLIT_RAIL)).map(Long::parseLong).toList());
             }
             ids.remove(rootMenuTree.getId());
-            if (ids.size() == 0){
+            if (ids.isEmpty()){
                 rootMenuTree.setChildList(getMenuTreeRspList);
                 return rootMenuTree;
             }

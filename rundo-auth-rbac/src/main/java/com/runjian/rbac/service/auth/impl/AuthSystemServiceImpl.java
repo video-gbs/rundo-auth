@@ -64,7 +64,7 @@ public class AuthSystemServiceImpl implements AuthSystemService {
             authUserDto.setAccountNonExpired(true);
         }
         Set<Long> roleIds = userRoleMapper.selectRoleIdByUserId(userInfo.getId());
-        if (roleIds.size() == 0) {
+        if (roleIds.isEmpty()) {
             authUserDto.setAuthorities(Collections.EMPTY_SET);
             return authUserDto;
         }

@@ -168,20 +168,20 @@ public class RoleServiceImpl implements RoleService {
         roleInfo.setUpdateTime(nowTime);
         roleMapper.update(roleInfo);
         if (Objects.nonNull(menuIds)){
-            if (menuIds.size() == 0){
+            if (menuIds.isEmpty()){
                 roleMenuMapper.deleteAllByRoleId(roleId);
             }else {
                 Set<Long> existMenuIds = roleMenuMapper.selectMenuIdByRoleId(roleId);
-                if (existMenuIds.size() > 0){
+                if (!existMenuIds.isEmpty()){
                     Set<Long> difference = new HashSet<>(existMenuIds);
                     difference.retainAll(menuIds);
                     existMenuIds.removeAll(difference);
                     menuIds.removeAll(difference);
-                    if (existMenuIds.size() > 0){
+                    if (!existMenuIds.isEmpty()){
                         roleMenuMapper.deleteAllByRoleIdAndMenuIds(roleId, existMenuIds);
                     }
                 }
-                if (menuIds.size() > 0){
+                if (!menuIds.isEmpty()){
                     roleMenuMapper.saveAll(roleId, menuIds, authUser, nowTime);
                 }
             }
@@ -191,23 +191,23 @@ public class RoleServiceImpl implements RoleService {
             Set<Long> existFuncIds = roleFuncMapper.selectFuncIdByRoleId(roleId);
             List<FuncInfo> delFuncInfoList = null;
             List<FuncInfo> addFuncInfoList = null;
-            if (funcIds.size() == 0){
+            if (funcIds.isEmpty()){
                 roleFuncMapper.deleteAllByRoleId(roleId);
                 if (!CollectionUtils.isEmpty(existFuncIds)){
                     delFuncInfoList = funcMapper.selectAllByIds(existFuncIds);
                 }
             }else {
-                if (existFuncIds.size() > 0){
+                if (!existFuncIds.isEmpty()){
                     Set<Long> difference = new HashSet<>(existFuncIds);
                     difference.retainAll(funcIds);
                     existFuncIds.removeAll(difference);
                     funcIds.removeAll(difference);
-                    if (existFuncIds.size() > 0){
+                    if (!existFuncIds.isEmpty()){
                         roleFuncMapper.deleteAllByRoleIdAndFuncIds(roleId, existFuncIds);
                         delFuncInfoList = funcMapper.selectAllByIds(existFuncIds);
                     }
                 }
-                if (funcIds.size() > 0){
+                if (!funcIds.isEmpty()){
                     roleFuncMapper.saveAll(roleId, funcIds, authUser, nowTime);
                     addFuncInfoList = funcMapper.selectAllByIds(funcIds);
                 }
@@ -233,20 +233,20 @@ public class RoleServiceImpl implements RoleService {
         }
 
         if (Objects.nonNull(resourceIds)){
-            if (resourceIds.size() == 0){
+            if (resourceIds.isEmpty()){
                 roleResourceMapper.deleteAllByRoleId(roleId);
             }else {
                 Set<Long> existSourceIds = roleResourceMapper.selectResourceIdByRoleId(roleId);
-                if (existSourceIds.size() > 0){
+                if (!existSourceIds.isEmpty()){
                     Set<Long> difference = new HashSet<>(existSourceIds);
                     difference.retainAll(resourceIds);
                     existSourceIds.removeAll(difference);
                     resourceIds.removeAll(difference);
-                    if (existSourceIds.size() > 0){
+                    if (!existSourceIds.isEmpty()){
                         roleResourceMapper.deleteAllByRoleIdAndResourceIds(roleId, existSourceIds);
                     }
                 }
-                if (resourceIds.size() > 0){
+                if (!resourceIds.isEmpty()){
                     roleResourceMapper.saveAll(roleId, resourceIds, authUser, nowTime);
                 }
             }
@@ -266,7 +266,7 @@ public class RoleServiceImpl implements RoleService {
     @Override
     @Transactional(rollbackFor = Exception.class)
     public void batchDeleteRoles(Set<Long> roleIds) {
-        if (roleIds.size() == 0){
+        if (roleIds.isEmpty()){
             return;
         }
         roleMapper.batchUpdateDeleted(roleIds, CommonEnum.ENABLE.getCode(), LocalDateTime.now());

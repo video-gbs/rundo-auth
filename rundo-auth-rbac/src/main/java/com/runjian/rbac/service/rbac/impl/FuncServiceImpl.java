@@ -58,7 +58,7 @@ public class FuncServiceImpl implements FuncService {
     @PostConstruct
     public void initFuncCache() {
         List<FuncInfo> funcInfoList = funcMapper.selectAll();
-        if (funcInfoList.size() == 0){
+        if (funcInfoList.isEmpty()){
             return;
         }
         List<Long> funcIds = funcInfoList.stream().map(FuncInfo::getId).toList();

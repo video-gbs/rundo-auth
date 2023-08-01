@@ -55,7 +55,7 @@ public class DictServiceImpl implements DictService {
 
     @Override
     public void batchDelete(Set<Long> dictIds) {
-        if (dictIds.size() == 0){
+        if (dictIds.isEmpty()){
             return;
         }
         dictMapper.batchDeleted(dictIds);
