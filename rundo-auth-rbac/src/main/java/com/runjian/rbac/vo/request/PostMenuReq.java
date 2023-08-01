@@ -33,7 +33,7 @@ public class PostMenuReq {
      * 菜单类型
      */
     @NotNull(message = "非法菜单类型不能为空")
-    @Range(min = 1, max = 2, message = "非法菜单类型")
+    @Range(min = 0, max = 2, message = "非法菜单类型")
     private Integer menuType;
 
     /**
