@@ -6,6 +6,7 @@ import com.runjian.common.constant.MarkConstant;
 import com.runjian.rbac.constant.ResourceType;
 import com.runjian.rbac.dao.relation.FuncResourceMapper;
 import com.runjian.rbac.dao.ResourceMapper;
+import com.runjian.rbac.dao.relation.RoleResourceMapper;
 import com.runjian.rbac.entity.ResourceInfo;
 import com.runjian.rbac.service.auth.CacheService;
 import com.runjian.rbac.service.rbac.DataBaseService;
@@ -44,6 +45,8 @@ public class ResourceServiceImpl implements ResourceService {
     private final CacheService cacheService;
 
     private final DataSourceTransactionManager dataSourceTransactionManager;
+
+    private final RoleResourceMapper roleResourceMapper;
 
     private final TransactionDefinition transactionDefinition;
 
@@ -185,6 +188,7 @@ public class ResourceServiceImpl implements ResourceService {
         List<ResourceInfo> childList = resourceMapper.selectAllLikeByLevel(oldLevel + MarkConstant.MARK_SPLIT_RAIL + resourceInfo.getId());
         childList.add(resourceInfo);
         resourceMapper.updateAll(childList);
+        roleResourceMapper.deleteAllByResourceId(resourceInfo.getId());
         cacheService.removeUserResourceByResourceKey(pResourceInfo.getResourceKey());
     }
 
