@@ -80,7 +80,7 @@ public interface ResourceMapper {
     @Select(" <script> " +
             " SELECT * FROM " + RESOURCE_TABLE_NAME +
             " WHERE resource_value IN <foreach collection='resourceValueList' item='item' open='(' separator=',' close=')'> #{item} </foreach> " +
-            " AND level LIKE CONCAT(#{level}, '%') " +
+            " AND level LIKE CONCAT(#{level}, '%') AND resource_type = 2 " +
             " </script>")
     List<ResourceInfo> selectByLevelLikeAndResourceValueIn(String level, List<String> resourceValueList);
 
@@ -111,7 +111,7 @@ public interface ResourceMapper {
     @Select(" <script> " +
             " SELECT * FROM " + RESOURCE_TABLE_NAME +
             " WHERE resource_value IN <foreach collection='resourceValueList' item='item' open='(' separator=',' close=')'> #{item} </foreach> " +
-            " AND resource_pid = #{resourcePid} " +
+            " AND resource_pid = #{resourcePid} AND resource_type = 2 " +
             " </script>")
     List<ResourceInfo> selectByPidAndResourceValueIn(Long resourcePid, List<String> resourceValueList);
 

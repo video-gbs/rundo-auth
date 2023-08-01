@@ -107,7 +107,7 @@ public class FuncController {
 
     /**
      * 获取功能资源信息
-     * @param funcId
+     * @param funcId 功能id
      * @return
      */
     @GetMapping("/resource/list")
