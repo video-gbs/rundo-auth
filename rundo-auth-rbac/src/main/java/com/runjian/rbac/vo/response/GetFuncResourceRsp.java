@@ -33,6 +33,11 @@ public class GetFuncResourceRsp {
     private String validateParam;
 
     /**
+     * 是否启用多维校验
+     */
+    private Integer enableMultiCheck;
+
+    /**
      * 是否禁用
      */
     private Integer disabled;
