@@ -35,4 +35,11 @@ public class PutFuncResourceReq {
     @Size(max = 250, message = "校验参数过长")
     private String validateParam;
 
+    /**
+     * 是否启用多维校验
+     */
+    @NotNull(message = "多维校验不能为空")
+    @Range(min = 0, max = 1, message = "非法多维校验值")
+    private Integer enableMultiCheck;
+
 }

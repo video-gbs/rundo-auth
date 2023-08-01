@@ -29,6 +29,11 @@ public class FuncResourceRel {
     private String validateParam;
 
     /**
+     * 多维校验
+     */
+    private Integer enableMultiCheck;
+
+    /**
      * 是否禁用
      */
     private Integer disabled;

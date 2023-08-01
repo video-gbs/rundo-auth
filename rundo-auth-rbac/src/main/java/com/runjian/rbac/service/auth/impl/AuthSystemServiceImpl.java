@@ -113,10 +113,13 @@ public class AuthSystemServiceImpl implements AuthSystemService {
             return authDataDto;
         }
 
+        boolean isMultiCheckSuccess = true;
+        String errorMsg = null;
         // 遍历功能参数进行校验
         for (CacheFuncDto.FuncResourceData funcResourceData : funcCache.getFuncResourceDataList()) {
             String key = funcResourceData.getResourceKey();
             String param = funcResourceData.getValidateParam();
+            boolean enableMultiCheck = CommonEnum.getBoolean(funcResourceData.getEnableMultiCheck());
             // 判断参数是否为空，若为空交由API自己判断
             if (Objects.isNull(param)) {
                 cacheService.refreshUserResourceRefreshMark(key, username, new HashSet<>(userRoles));
@@ -125,20 +128,27 @@ public class AuthSystemServiceImpl implements AuthSystemService {
                     String resourceCacheKey = MarkConstant.REDIS_AUTH_USER_RESOURCE + username + MarkConstant.MARK_SPLIT_SEMICOLON + key;
                     authDataDto.getResourceKeyList().add(resourceCacheKey);
                 }
+                isMultiCheckSuccess = true;
             } else {
                 JSONObject jsonObject;
                 if (Objects.equals(reqMethod, MethodType.GET.getMsg()) || Objects.equals(reqMethod, MethodType.DELETE.getMsg())){
                     if (Objects.isNull(queryData) || !StringUtils.hasText(queryData)){
-                        authDataDto.setMsg(String.format("必要的参数权限校验失败，缺失参数'%s'", param));
-                        authDataDto.setIsAuthorized(false);
-                        return authDataDto;
+                        isMultiCheckSuccess = false;
+                        if (enableMultiCheck){
+                            continue;
+                        }
+                        errorMsg = String.format("必要的参数权限校验失败，缺失参数'%s'", param);
+                        break;
                     }
                     jsonObject = JSONObject.parseObject(queryData);
                 }else {
                     if (Objects.isNull(bodyData)) {
-                        authDataDto.setMsg(String.format("必要的参数权限校验失败，缺失参数'%s'", param));
-                        authDataDto.setIsAuthorized(false);
-                        return authDataDto;
+                        isMultiCheckSuccess = false;
+                        if (enableMultiCheck){
+                            continue;
+                        }
+                        errorMsg = String.format("必要的参数权限校验失败，缺失参数'%s'", param);
+                        break;
                     }
                     jsonObject = JSONObject.parseObject(bodyData);
                 }
@@ -146,18 +156,24 @@ public class AuthSystemServiceImpl implements AuthSystemService {
                 String value = jsonObject.getString(param);
                 // 判断参数是否存在
                 if (Objects.isNull(value)) {
-                    authDataDto.setMsg(String.format("必要的参数权限校验失败，缺失参数'%s'", param));
-                    authDataDto.setIsAuthorized(false);
-                    return authDataDto;
+                    isMultiCheckSuccess = false;
+                    if (enableMultiCheck){
+                        continue;
+                    }
+                    errorMsg = String.format("必要的参数权限校验失败，缺失参数'%s'", param);
+                    break;
                 }
 
                 // 获取角色绑定的资源
                 cacheService.refreshUserResourceRefreshMark(key, username, new HashSet<>(userRoles));
                 List<String> userResourceValue = cacheService.getUserResource(username, key);
                 if (CollectionUtils.isEmpty(userResourceValue)){
-                    authDataDto.setIsAuthorized(false);
-                    authDataDto.setMsg(String.format("当前用户没有资源'%s'的权限", value));
-                    return authDataDto;
+                    isMultiCheckSuccess = false;
+                    if (enableMultiCheck){
+                        continue;
+                    }
+                    errorMsg = String.format("当前用户没有资源'%s'的权限", value);
+                    break;
                 }
 
                 // 判断数据是否是数组
@@ -165,21 +181,33 @@ public class AuthSystemServiceImpl implements AuthSystemService {
                     List<String> values = jsonObject.getList(param, String.class);
                     // 判断用户是否包含该资源的权限
                     if (!new HashSet<>(userResourceValue).containsAll(values)){
-                        authDataDto.setIsAuthorized(false);
-                        authDataDto.setMsg(String.format("当前用户没有资源'%s'的权限", value));
-                        return authDataDto;
+                        isMultiCheckSuccess = false;
+                        if (enableMultiCheck){
+                            continue;
+                        }
+                        errorMsg = String.format("当前用户没有资源'%s'的权限", value);
+                        break;
                     }
                 } else {
                     // 判断用户是否包含该资源的权限
                     if (!userResourceValue.contains(value)){
-                        authDataDto.setIsAuthorized(false);
-                        authDataDto.setMsg(String.format("当前用户没有资源'%s'的权限", value));
-                        return authDataDto;
+                        isMultiCheckSuccess = false;
+                        if (enableMultiCheck){
+                            continue;
+                        }
+                        errorMsg = String.format("当前用户没有资源'%s'的权限", value);
+                        break;
                     }
                 }
+                isMultiCheckSuccess = true;
             }
         }
+        if (isMultiCheckSuccess){
+            authDataDto.setIsAuthorized(true);
+            return authDataDto;
+        }
         authDataDto.setIsAuthorized(true);
+        authDataDto.setMsg(errorMsg);
         return authDataDto;
     }
 

@@ -123,7 +123,7 @@ public class FuncController {
     @PostMapping("/resource/associate")
     public CommonResponse<?> associateResource(@RequestBody PostFuncAssociateResourceReq req){
         validatorService.validateRequest(req);
-        funcService.associateResource(req.getFuncId(), req.getResourceKey(), req.getValidateParam());
+        funcService.associateResource(req.getFuncId(), req.getResourceKey(), req.getValidateParam(), req.getEnableMultiCheck());
         return CommonResponse.success();
     }
 
@@ -147,7 +147,7 @@ public class FuncController {
     @PutMapping("/resource/update")
     public CommonResponse<?> updateFuncResource(@RequestBody PutFuncResourceReq req){
         validatorService.validateRequest(req);
-        funcService.updateFuncResource(req.getFuncResourceId(), req.getResourceKey(), req.getValidateParam());
+        funcService.updateFuncResource(req.getFuncResourceId(), req.getResourceKey(), req.getValidateParam(), req.getEnableMultiCheck());
         return CommonResponse.success();
     }
 

@@ -32,6 +32,13 @@ public class PostFuncAssociateResourceReq {
     /**
      * 需要校验的param
      */
+    @Size(max = 250, message = "需要校验的param值过长")
     private String validateParam;
+
+    /**
+     * 是否启用多维校验
+     */
+    @Range(min = 0, max = 1, message = "非法多维校验值")
+    private Integer enableMultiCheck;
 
 }

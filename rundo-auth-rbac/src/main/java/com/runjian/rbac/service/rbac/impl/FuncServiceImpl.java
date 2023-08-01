@@ -181,7 +181,7 @@ public class FuncServiceImpl implements FuncService {
 
     @Override
     @Transactional(rollbackFor = Exception.class)
-    public void associateResource(Long funcId, String resourceKey, String validateParam) {
+    public void associateResource(Long funcId, String resourceKey, String validateParam, Integer enableMultiCheck) {
         LocalDateTime nowTime = LocalDateTime.now();
         FuncInfo funcInfo = dataBaseService.getFuncInfo(funcId);
         FuncResourceRel funcResourceRel = new FuncResourceRel();
@@ -191,10 +191,11 @@ public class FuncServiceImpl implements FuncService {
         funcResourceRel.setDisabled(CommonEnum.DISABLE.getCode());
         funcResourceRel.setUpdateTime(nowTime);
         funcResourceRel.setCreateTime(nowTime);
+        funcResourceRel.setEnableMultiCheck(enableMultiCheck);
         funcResourceMapper.save(funcResourceRel);
         String key = MethodType.getByCode(funcInfo.getMethod()) + MarkConstant.MARK_SPLIT_SEMICOLON + funcInfo.getPath();
         CacheFuncDto funcCache = cacheService.getFuncCache(key);
-        funcCache.getFuncResourceDataList().add(new CacheFuncDto.FuncResourceData(resourceKey, validateParam));
+        funcCache.getFuncResourceDataList().add(new CacheFuncDto.FuncResourceData(funcResourceRel));
         cacheService.setFuncCache(key, funcCache);
     }
 
@@ -214,7 +215,7 @@ public class FuncServiceImpl implements FuncService {
         FuncInfo funcInfo = dataBaseService.getFuncInfo(funcResourceRel.getFuncId());
         String key = MethodType.getByCode(funcInfo.getMethod()) + MarkConstant.MARK_SPLIT_SEMICOLON + funcInfo.getPath();
         CacheFuncDto funcCache = cacheService.getFuncCache(key);
-        CacheFuncDto.FuncResourceData funcResourceData = new CacheFuncDto.FuncResourceData(funcResourceRel.getResourceKey(), funcResourceRel.getValidateParam());
+        CacheFuncDto.FuncResourceData funcResourceData = new CacheFuncDto.FuncResourceData(funcResourceRel);
         if (CommonEnum.getBoolean(disabled)){
             funcCache.getFuncResourceDataList().remove(funcResourceData);
         }else {
@@ -225,17 +226,19 @@ public class FuncServiceImpl implements FuncService {
 
     @Override
     @Transactional(rollbackFor = Exception.class)
-    public void updateFuncResource(Long funcResourceId, String resourceKey, String validateParam) {
+    public void updateFuncResource(Long funcResourceId, String resourceKey, String validateParam, Integer enableMultiCheck) {
         Optional<FuncResourceRel> funcResourceRelOp = funcResourceMapper.selectById(funcResourceId);
         if (funcResourceRelOp.isEmpty()){
             throw new BusinessException(BusinessErrorEnums.VALID_NO_OBJECT_FOUND, String.format("关系资源 %s 不存在，请重新刷新", funcResourceId));
         }
         FuncResourceRel funcResourceRel = funcResourceRelOp.get();
+        resetCacheFuncResource(funcResourceRel, null);
         funcResourceRel.setResourceKey(resourceKey);
         funcResourceRel.setValidateParam(validateParam);
+        funcResourceRel.setEnableMultiCheck(enableMultiCheck);
         funcResourceMapper.update(funcResourceRel);
+        resetCacheFuncResource(funcResourceRel, funcResourceRel);
 
-        removeCacheFuncResource(funcResourceRel);
     }
 
     @Override
@@ -247,7 +250,7 @@ public class FuncServiceImpl implements FuncService {
         }
         funcResourceMapper.deleteById(funcResourceId);
         FuncResourceRel funcResourceRel = funcResourceRelOp.get();
-        removeCacheFuncResource(funcResourceRel);
+        resetCacheFuncResource(funcResourceRel, null);
     }
 
     /**
@@ -267,11 +270,14 @@ public class FuncServiceImpl implements FuncService {
      * 移除功能资源缓存
      * @param funcResourceRel 功能资源关系数据
      */
-    private void removeCacheFuncResource(FuncResourceRel funcResourceRel) {
+    private void resetCacheFuncResource(FuncResourceRel funcResourceRel, FuncResourceRel newFuncResourceRel) {
         FuncInfo funcInfo = dataBaseService.getFuncInfo(funcResourceRel.getFuncId());
         String key = MethodType.getByCode(funcInfo.getMethod()) + MarkConstant.MARK_SPLIT_SEMICOLON + funcInfo.getPath();
         CacheFuncDto funcCache = cacheService.getFuncCache(key);
-        funcCache.getFuncResourceDataList().remove(new CacheFuncDto.FuncResourceData(funcResourceRel.getResourceKey(), funcResourceRel.getValidateParam()));
+        funcCache.getFuncResourceDataList().remove(new CacheFuncDto.FuncResourceData(funcResourceRel));
+        if (Objects.nonNull(newFuncResourceRel)){
+            funcCache.getFuncResourceDataList().add(new CacheFuncDto.FuncResourceData(newFuncResourceRel));
+        }
         cacheService.setFuncCache(key, funcCache);
     }
 }
