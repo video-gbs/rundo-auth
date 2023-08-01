@@ -159,6 +159,8 @@ public class AuthUserServiceImpl implements AuthUserService {
             if (CollectionUtils.isEmpty(authData.getRoleIds())){
                 return null;
             }
+            // 刷新缓存
+            cacheService.refreshUserResourceRefreshMark(resourceKey, authData.getUsername(), new HashSet<>(authData.getRoleIds()));
 
             List<GetResourceTreeRsp> roleResourceRsp = resourceMapper.selectByRoleIdsAndResourceKeyAndResourceType(new HashSet<>(authData.getRoleIds()), resourceKey);
             resourceInfoList = new ArrayList<>(roleResourceRsp.stream().filter(catalogueInfo -> catalogueInfo.getResourceType().equals(ResourceType.CATALOGUE.getCode())).toList());
@@ -175,14 +177,6 @@ public class AuthUserServiceImpl implements AuthUserService {
             for (GetResourceTreeRsp rsp : catalogueRoleResourceRsp){
                 resourceInfoList.addAll(resourceMapper.selectByResourceKeyAndResourceTypeAndLevelLike(resourceKey, ResourceType.CATALOGUE.getCode(), rsp.getLevel() + MarkConstant.MARK_SPLIT_RAIL + rsp.getId()));
             }
-//            Set<Long> cataloguePids = resourceInfoList.stream().map(GetResourceTreeRsp::getResourcePid).collect(Collectors.toSet());
-//            List<String> childCatalogueLevelList = resourceInfoList.stream().filter(catalogueInfo -> !cataloguePids.contains(catalogueInfo.getId()))
-//                    .map(resourceInfo -> resourceInfo.getLevel() + MarkConstant.MARK_SPLIT_RAIL + resourceInfo.getId()).toList();
-//            if (!CollectionUtils.isEmpty(childCatalogueLevelList)) {
-//                for (String level : childCatalogueLevelList){
-//                    resourceInfoList.addAll(resourceMapper.selectByResourceKeyAndResourceTypeAndLevelLike(resourceKey, ResourceType.CATALOGUE.getCode(), level));
-//                }
-//            }
         }
 
         root.setChildList(root.recursionData(resourceInfoList, root.getLevel() + MarkConstant.MARK_SPLIT_RAIL + root.getId()));
@@ -204,6 +198,8 @@ public class AuthUserServiceImpl implements AuthUserService {
                 resourceInfoList = resourceMapper.selectByPidAndResourceType(pid);
             }
         }else {
+            // 刷新缓存
+            cacheService.refreshUserResourceRefreshMark(pResourceInfo.getResourceKey(), authData.getUsername(), new HashSet<>(authData.getRoleIds()));
             List<String> userResourceList = cacheService.getUserResource(authData.getUsername(), pResourceInfo.getResourceKey());
             if (!CollectionUtils.isEmpty(userResourceList)){
                 if (isIncludeChild){
@@ -253,6 +249,7 @@ public class AuthUserServiceImpl implements AuthUserService {
         if (authData.getIsAdmin()){
             return;
         }
-        cacheService.setUserResourceCache(authData.getUsername(), new HashSet<>(authData.getRoleIds()), resourceKey);
+        cacheService.refreshUserResourceRefreshMark(resourceKey, authData.getUsername(), new HashSet<>(authData.getRoleIds()));
     }
+
 }

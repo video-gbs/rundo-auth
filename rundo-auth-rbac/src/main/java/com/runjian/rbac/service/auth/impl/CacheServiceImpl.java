@@ -185,6 +185,22 @@ public class CacheServiceImpl implements CacheService {
     @Override
     public void removeUserResourceByResourceKey(String resourceKey) {
         redissonClient.getMap(MarkConstant.REDIS_AUTH_USER_RESOURCE + resourceKey).delete();
+        this.removeUserResourceRefreshMark(resourceKey);
+    }
+
+    @Override
+    public void removeUserResourceRefreshMark(String resourceKey) {
+        redissonClient.getMap(MarkConstant.REDIS_AUTH_USER_RESOURCE_MARK + resourceKey).delete();
+    }
+
+    @Override
+    public void refreshUserResourceRefreshMark(String resourceKey, String username, Set<Long> roleIds) {
+        RMap<Object, Object> map = redissonClient.getMap(MarkConstant.REDIS_AUTH_USER_RESOURCE_MARK + resourceKey);
+        Object mark = map.get(username);
+        if (Objects.isNull(mark)){
+            this.setUserResourceCache(username, roleIds, resourceKey);
+            map.put(username, true);
+        }
     }
 
 }

@@ -119,11 +119,11 @@ public class AuthSystemServiceImpl implements AuthSystemService {
             String param = funcResourceData.getValidateParam();
             // 判断参数是否为空，若为空交由API自己判断
             if (Objects.isNull(param)) {
-                String resourceCacheKey = MarkConstant.REDIS_AUTH_USER_RESOURCE + username + MarkConstant.MARK_SPLIT_SEMICOLON + key;
-                authDataDto.getResourceKeyList().add(resourceCacheKey);
+                cacheService.refreshUserResourceRefreshMark(key, username, new HashSet<>(userRoles));
                 List<String> userResource = cacheService.getUserResource(username, key);
-                if (CollectionUtils.isEmpty(userResource)) {
-                    cacheService.setUserResourceCache(username, new HashSet<>(userRoles), key);
+                if (!CollectionUtils.isEmpty(userResource)) {
+                    String resourceCacheKey = MarkConstant.REDIS_AUTH_USER_RESOURCE + username + MarkConstant.MARK_SPLIT_SEMICOLON + key;
+                    authDataDto.getResourceKeyList().add(resourceCacheKey);
                 }
             } else {
                 JSONObject jsonObject;
@@ -152,14 +152,12 @@ public class AuthSystemServiceImpl implements AuthSystemService {
                 }
 
                 // 获取角色绑定的资源
+                cacheService.refreshUserResourceRefreshMark(key, username, new HashSet<>(userRoles));
                 List<String> userResourceValue = cacheService.getUserResource(username, key);
                 if (CollectionUtils.isEmpty(userResourceValue)){
-                    userResourceValue = cacheService.setUserResourceCache(username, new HashSet<>(userRoles), key);
-                    if (CollectionUtils.isEmpty(userResourceValue)){
-                        authDataDto.setIsAuthorized(false);
-                        authDataDto.setMsg(String.format("当前用户没有资源'%s'的权限", value));
-                        return authDataDto;
-                    }
+                    authDataDto.setIsAuthorized(false);
+                    authDataDto.setMsg(String.format("当前用户没有资源'%s'的权限", value));
+                    return authDataDto;
                 }
 
                 // 判断数据是否是数组

@@ -97,4 +97,18 @@ public interface CacheService {
      * @param resourceKey 资源key
      */
     void removeUserResourceByResourceKey(String resourceKey);
+
+    /**
+     * 移除用户资源刷新标志
+     * @param resourceKey 资源key
+     */
+    void removeUserResourceRefreshMark(String resourceKey);
+
+    /**
+     * 刷新用户缓存
+     * @param resourceKey 资源key
+     * @param username 用户名
+     * @return
+     */
+    void refreshUserResourceRefreshMark(String resourceKey, String username, Set<Long> roleIds);
 }

@@ -77,6 +77,7 @@ public class ResourceServiceImpl implements ResourceService {
         resourceInfo.setUpdateTime(nowTime);
         resourceInfo.setCreateTime(nowTime);
         resourceMapper.save(resourceInfo);
+        cacheService.removeUserResourceByResourceKey(resourceKey);
     }
 
     @Override

@@ -146,6 +146,7 @@ public class RoleServiceImpl implements RoleService {
                 roleIds.add(roleId);
             }
             cacheService.setUserRole(userInfo.getUsername(), roleIds);
+            cacheService.setUserResourceCache(userInfo.getUsername(), roleIds);
         }
         log.warn(LogTemplate.PROCESS_LOG_MSG_TEMPLATE, "角色服务", "禁用角色成功", String.format("用户'%s' 执行禁用 角色'%s'", authUtils.getAuthData().getUsername(), roleInfo));
     }
@@ -259,7 +260,6 @@ public class RoleServiceImpl implements RoleService {
         List<UserInfo> userInfoList = userMapper.selectByRoleId(roleId);
         for (UserInfo userInfo : userInfoList){
             cacheService.setUserResourceCache(userInfo.getUsername(), new HashSet<>(cacheService.getUserRole(userInfo.getUsername())));
-
         }
     }
 

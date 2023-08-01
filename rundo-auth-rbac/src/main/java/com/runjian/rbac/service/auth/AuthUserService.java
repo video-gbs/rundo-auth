@@ -51,6 +51,8 @@ public interface AuthUserService {
 
     /**
      * 刷新用户缓存
+     * @param resourceKey 资源key
      */
     void refreshUserResource(String resourceKey);
+
 }

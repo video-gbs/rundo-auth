@@ -105,6 +105,4 @@ public class AuthUserController {
         return CommonResponse.success();
     }
 
-
-
 }

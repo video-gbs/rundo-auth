@@ -31,13 +31,9 @@ public class MarkConstant {
     /*******************************用户相关****************************************/
 
     /*******************************feign错误解析****************************************/
-
-
-
+    
     public static final String REDIS_AUTH_USER_ROLE = "AUTH_USER_ROLE:";
     public static final String REDIS_AUTH_FUNC = "AUTH_FUNC";
-    public static final String REDIS_AUTH_RESOURCE_ROLE = "AUTH_RESOURCE_ROLE";
-    public static final String REDIS_AUTH_USER_RESOURCE_LEVEL = "AUTH_USER_RESOURCE_LEVEL:";
-
     public static final String REDIS_AUTH_USER_RESOURCE = "AUTH_USER_RESOURCE:";
+    public static final String REDIS_AUTH_USER_RESOURCE_MARK = "AUTH_USER_RESOURCE_MARK:";
 }
