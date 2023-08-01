@@ -232,13 +232,18 @@ public class FuncServiceImpl implements FuncService {
             throw new BusinessException(BusinessErrorEnums.VALID_NO_OBJECT_FOUND, String.format("关系资源 %s 不存在，请重新刷新", funcResourceId));
         }
         FuncResourceRel funcResourceRel = funcResourceRelOp.get();
+        Boolean isDisabled = CommonEnum.getBoolean(funcResourceRel.getDisabled());
+        if (!isDisabled){
+            resetCacheFuncResource(funcResourceRel, null);
+        }
         resetCacheFuncResource(funcResourceRel, null);
         funcResourceRel.setResourceKey(resourceKey);
         funcResourceRel.setValidateParam(validateParam);
         funcResourceRel.setEnableMultiCheck(enableMultiCheck);
         funcResourceMapper.update(funcResourceRel);
-        resetCacheFuncResource(funcResourceRel, funcResourceRel);
-
+        if (!isDisabled){
+            resetCacheFuncResource(funcResourceRel, funcResourceRel);
+        }
     }
 
     @Override

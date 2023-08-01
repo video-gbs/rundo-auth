@@ -23,11 +23,6 @@ public class GetFuncResourceRsp {
     private String resourceKey;
 
     /**
-     * 是否校验
-     */
-    private Integer validated;
-
-    /**
      * 校验参数
      */
     private String validateParam;
