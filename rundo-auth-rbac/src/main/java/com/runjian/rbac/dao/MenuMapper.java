@@ -89,7 +89,8 @@ public interface MenuMapper {
 
     @Select(" <script> " +
             " SELECT * FROM " + MENU_TABLE_NAME +
-            " WHERE  level_num &gt;= #{levelNumStart}" +
+            " WHERE  level_num &gt;= #{levelNumStart} " +
+            " AND menu_type != 0 " +
             " <if test=\"levelNumEnd != null\" > AND level_num &lt;= #{levelNumEnd} </if> " +
             " </script> ")
     List<GetMenuTreeRsp> selectAllByLevelNumStartAndLevelNumEnd(Integer levelNumStart, Integer levelNumEnd);
@@ -99,6 +100,7 @@ public interface MenuMapper {
             " WHERE id IN <foreach collection='menuIds' item='item' open='(' separator=',' close=')'> #{item} </foreach> " +
             " AND level_num &gt;= #{levelNumStart} " +
             " AND disabled = 0 " +
+            " AND menu_type != 0 " +
             " <if test=\"levelNumEnd != null\" > AND level_num &lt;= #{levelNumEnd} </if> " +
             " </script> ")
     List<GetMenuTreeRsp> selectAllByLevelNumStartAndLevelNumEndAndMenuIdsIn(Integer levelNumStart, Integer levelNumEnd, Set<Long> menuIds);
