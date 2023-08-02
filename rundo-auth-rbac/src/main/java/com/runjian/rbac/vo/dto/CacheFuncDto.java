@@ -71,6 +71,9 @@ public class CacheFuncDto {
 
         @Override
         public boolean equals(Object o){
+            if (o == this){
+                return true;
+            }
             if (o instanceof FuncResourceData funcResourceData){
                 if (!StringUtils.equals(funcResourceData.getResourceKey(), this.resourceKey)){
                     return false;
