@@ -4,6 +4,7 @@ import com.alibaba.fastjson2.JSONObject;
 import com.runjian.common.constant.CommonEnum;
 import com.runjian.common.constant.MarkConstant;
 import com.runjian.rbac.config.AuthProperties;
+import com.runjian.rbac.constant.AuthStringEnum;
 import com.runjian.rbac.constant.MethodType;
 import com.runjian.rbac.dao.UserMapper;
 import com.runjian.rbac.dao.relation.UserRoleMapper;
@@ -85,7 +86,7 @@ public class AuthSystemServiceImpl implements AuthSystemService {
         List<Long> userRoles = cacheService.getUserRole(username);
 
         if (Objects.isNull(userRoles) || userRoles.isEmpty()) {
-            authDataDto.setMsg("当前用户没有任何角色的权限");
+            authDataDto.setMsg(AuthStringEnum.USER_NO_ROLE.getFormat(null));
             authDataDto.setIsAuthorized(false);
             return authDataDto;
         }
@@ -102,7 +103,7 @@ public class AuthSystemServiceImpl implements AuthSystemService {
         List<String> scopeList = Arrays.asList(scope.split(","));
         // 判断客户端是否有系统领域权限 || 判断客户端是否有当前接口的系统服务权限 || 判断该功能是否有权限角色绑定 || 判断角色是否包含该功能的权限
         if (scopeList.isEmpty() || nonIntersection(scopeList, Arrays.asList("all", funcCache.getScope())) || funcCache.getRoleIds().isEmpty() || nonIntersection(userRoles, funcCache.getRoleIds())) {
-            authDataDto.setMsg(String.format("当前用户没有功能'%s'的权限", funcCache.getFuncName()));
+            authDataDto.setMsg(AuthStringEnum.USER_NO_FUNC.getFormat(funcCache.getFuncName()));
             authDataDto.setIsAuthorized(false);
             return authDataDto;
         }
@@ -113,13 +114,19 @@ public class AuthSystemServiceImpl implements AuthSystemService {
             return authDataDto;
         }
 
-        boolean isMultiCheckSuccess = true;
         String errorMsg = null;
+        Map<String, Boolean> multiCheckMap = new HashMap<>(funcCache.getFuncResourceDataList().size());
         // 遍历功能参数进行校验
         for (CacheFuncDto.FuncResourceData funcResourceData : funcCache.getFuncResourceDataList()) {
             String key = funcResourceData.getResourceKey();
             String param = funcResourceData.getValidateParam();
             boolean enableMultiCheck = CommonEnum.getBoolean(funcResourceData.getEnableMultiCheck());
+            if (enableMultiCheck){
+                Boolean multiCheck = multiCheckMap.get(param);
+                if (Objects.nonNull(multiCheck) && multiCheck){
+                    continue;
+                }
+            }
             // 判断参数是否为空，若为空交由API自己判断
             if (Objects.isNull(param)) {
                 cacheService.refreshUserResourceRefreshMark(key, username, new HashSet<>(userRoles));
@@ -128,26 +135,26 @@ public class AuthSystemServiceImpl implements AuthSystemService {
                     String resourceCacheKey = MarkConstant.REDIS_AUTH_USER_RESOURCE + username + MarkConstant.MARK_SPLIT_SEMICOLON + key;
                     authDataDto.getResourceKeyList().add(resourceCacheKey);
                 }
-                isMultiCheckSuccess = true;
             } else {
                 JSONObject jsonObject;
                 if (Objects.equals(reqMethod, MethodType.GET.getMsg()) || Objects.equals(reqMethod, MethodType.DELETE.getMsg())){
                     if (Objects.isNull(queryData) || !StringUtils.hasText(queryData)){
-                        isMultiCheckSuccess = false;
+                        multiCheckMap.put(param, false);
                         if (enableMultiCheck){
                             continue;
                         }
-                        errorMsg = String.format("必要的参数权限校验失败，缺失参数'%s'", param);
+
+                        errorMsg = AuthStringEnum.USER_NO_FUNC_PARAM.getFormat(param);
                         break;
                     }
                     jsonObject = JSONObject.parseObject(queryData);
                 }else {
                     if (Objects.isNull(bodyData)) {
-                        isMultiCheckSuccess = false;
+                        multiCheckMap.put(param, false);
                         if (enableMultiCheck){
                             continue;
                         }
-                        errorMsg = String.format("必要的参数权限校验失败，缺失参数'%s'", param);
+                        errorMsg = AuthStringEnum.USER_NO_FUNC_PARAM.getFormat(param);
                         break;
                     }
                     jsonObject = JSONObject.parseObject(bodyData);
@@ -156,11 +163,11 @@ public class AuthSystemServiceImpl implements AuthSystemService {
                 String value = jsonObject.getString(param);
                 // 判断参数是否存在
                 if (Objects.isNull(value)) {
-                    isMultiCheckSuccess = false;
+                    multiCheckMap.put(param, false);
                     if (enableMultiCheck){
                         continue;
                     }
-                    errorMsg = String.format("必要的参数权限校验失败，缺失参数'%s'", param);
+                    errorMsg = AuthStringEnum.USER_NO_FUNC_PARAM.getFormat(param);
                     break;
                 }
 
@@ -168,11 +175,11 @@ public class AuthSystemServiceImpl implements AuthSystemService {
                 cacheService.refreshUserResourceRefreshMark(key, username, new HashSet<>(userRoles));
                 List<String> userResourceValue = cacheService.getUserResource(username, key);
                 if (CollectionUtils.isEmpty(userResourceValue)){
-                    isMultiCheckSuccess = false;
+                    multiCheckMap.put(param, false);
                     if (enableMultiCheck){
                         continue;
                     }
-                    errorMsg = String.format("当前用户没有资源'%s'的权限", value);
+                    errorMsg = AuthStringEnum.USER_NO_FUNC_RESOURCE.getFormat(value);
                     break;
                 }
 
@@ -181,63 +188,53 @@ public class AuthSystemServiceImpl implements AuthSystemService {
                     List<String> values = jsonObject.getList(param, String.class);
                     // 判断用户是否包含该资源的权限
                     if (!new HashSet<>(userResourceValue).containsAll(values)){
-                        isMultiCheckSuccess = false;
+                        multiCheckMap.put(param, false);
                         if (enableMultiCheck){
                             continue;
                         }
-                        errorMsg = String.format("当前用户没有资源'%s'的权限", value);
+                        errorMsg = AuthStringEnum.USER_NO_FUNC_RESOURCE.getFormat(value);
                         break;
                     }
                 } else {
                     // 判断用户是否包含该资源的权限
                     if (!userResourceValue.contains(value)){
-                        isMultiCheckSuccess = false;
+                        multiCheckMap.put(param, false);
                         if (enableMultiCheck){
                             continue;
                         }
-                        errorMsg = String.format("当前用户没有资源'%s'的权限", value);
+                        errorMsg = AuthStringEnum.USER_NO_FUNC_RESOURCE.getFormat(value);
                         break;
                     }
                 }
-                isMultiCheckSuccess = true;
             }
+            multiCheckMap.put(param, true);
         }
-        if (isMultiCheckSuccess){
-            authDataDto.setIsAuthorized(true);
+        if (multiCheckMap.containsValue(false)){
+            authDataDto.setIsAuthorized(false);
+            authDataDto.setMsg(errorMsg);
             return authDataDto;
         }
+
         authDataDto.setIsAuthorized(true);
-        authDataDto.setMsg(errorMsg);
         return authDataDto;
     }
 
     @Override
     public AuthDataDto getAuthDataByClient(String scope, String reqPath, String reqMethod) {
         AuthDataDto authDataDto = new AuthDataDto();
-        Boolean result = checkFuncAuth(scope, reqPath, reqMethod);
-        if (Objects.isNull(result) || result){
-            authDataDto.setIsAuthorized(true);
-            return authDataDto;
-        }
-        authDataDto.setIsAuthorized(false);
-        authDataDto.setMsg("客户端无访问该功能的权限");
-        return authDataDto;
-    }
-
-    private Boolean checkFuncAuth(String scope, String reqPath, String reqMethod){
         String funcKey = reqMethod + MarkConstant.MARK_SPLIT_SEMICOLON + reqPath;
         CacheFuncDto funcCache = cacheService.getFuncCache(funcKey);
-        // 判断是否是保护的参数
-        if (Objects.isNull(funcCache)) {
-            return true;
+        if (Objects.nonNull(funcCache)){
+            List<String> scopeList = Arrays.asList(scope.split(","));
+            if (scopeList.isEmpty() || nonIntersection(scopeList, Arrays.asList("all", funcCache.getScope()))) {
+                authDataDto.setIsAuthorized(false);
+                authDataDto.setMsg(AuthStringEnum.CLIENT_NO_FUNC.getFormat(funcCache.getFuncName()));
+                return authDataDto;
+            }
         }
-        List<String> scopeList = Arrays.asList(scope.split(","));
-        if (scopeList.isEmpty() || nonIntersection(scopeList, Arrays.asList("all", funcCache.getScope()))) {
-            return false;
-        }
-        return null;
+        authDataDto.setIsAuthorized(true);
+        return authDataDto;
     }
-
 
     /**
      * 判断两个数组存在交集
