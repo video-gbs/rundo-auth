@@ -181,7 +181,7 @@ public class FuncServiceImpl implements FuncService {
 
     @Override
     @Transactional(rollbackFor = Exception.class)
-    public void associateResource(Long funcId, String resourceKey, String validateParam, Integer enableMultiCheck) {
+    public void associateResource(Long funcId, String resourceKey, String validateParam, String multiGroup) {
         LocalDateTime nowTime = LocalDateTime.now();
         FuncInfo funcInfo = dataBaseService.getFuncInfo(funcId);
         FuncResourceRel funcResourceRel = new FuncResourceRel();
@@ -191,7 +191,7 @@ public class FuncServiceImpl implements FuncService {
         funcResourceRel.setDisabled(CommonEnum.DISABLE.getCode());
         funcResourceRel.setUpdateTime(nowTime);
         funcResourceRel.setCreateTime(nowTime);
-        funcResourceRel.setEnableMultiCheck(enableMultiCheck);
+        funcResourceRel.setMultiGroup(multiGroup);
         funcResourceMapper.save(funcResourceRel);
         String key = MethodType.getByCode(funcInfo.getMethod()) + MarkConstant.MARK_SPLIT_SEMICOLON + funcInfo.getPath();
         CacheFuncDto funcCache = cacheService.getFuncCache(key);
@@ -226,7 +226,7 @@ public class FuncServiceImpl implements FuncService {
 
     @Override
     @Transactional(rollbackFor = Exception.class)
-    public void updateFuncResource(Long funcResourceId, String resourceKey, String validateParam, Integer enableMultiCheck) {
+    public void updateFuncResource(Long funcResourceId, String resourceKey, String validateParam, String multiGroup) {
         Optional<FuncResourceRel> funcResourceRelOp = funcResourceMapper.selectById(funcResourceId);
         if (funcResourceRelOp.isEmpty()){
             throw new BusinessException(BusinessErrorEnums.VALID_NO_OBJECT_FOUND, String.format("关系资源 %s 不存在，请重新刷新", funcResourceId));
@@ -239,7 +239,7 @@ public class FuncServiceImpl implements FuncService {
         resetCacheFuncResource(funcResourceRel, null);
         funcResourceRel.setResourceKey(resourceKey);
         funcResourceRel.setValidateParam(validateParam);
-        funcResourceRel.setEnableMultiCheck(enableMultiCheck);
+        funcResourceRel.setMultiGroup(multiGroup);
         funcResourceMapper.update(funcResourceRel);
         if (!isDisabled){
             resetCacheFuncResource(funcResourceRel, funcResourceRel);

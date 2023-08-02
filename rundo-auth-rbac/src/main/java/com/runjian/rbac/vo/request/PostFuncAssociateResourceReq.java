@@ -38,7 +38,7 @@ public class PostFuncAssociateResourceReq {
     /**
      * 是否启用多维校验
      */
-    @Range(min = 0, max = 1, message = "非法多维校验值")
-    private Integer enableMultiCheck;
+    @Size(max = 100, message = "非法多维校验值")
+    private String multiGroup;
 
 }

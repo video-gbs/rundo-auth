@@ -75,7 +75,7 @@ public interface FuncService {
      * @param resourceKey 资源key
      * @param validateParam 校验参数
      */
-    void associateResource(Long funcId, String resourceKey, String validateParam, Integer enableMultiCheck);
+    void associateResource(Long funcId, String resourceKey, String validateParam, String multiGroup);
 
 
     /**
@@ -91,7 +91,7 @@ public interface FuncService {
      * @param resourceKey 资源key
      * @param validateParam 校验参数
      */
-    void updateFuncResource(Long funcResourceId, String resourceKey, String validateParam, Integer enableMultiCheck);
+    void updateFuncResource(Long funcResourceId, String resourceKey, String validateParam, String multiGroup);
 
     /**
      * 删除关联资源

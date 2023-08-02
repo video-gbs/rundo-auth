@@ -31,7 +31,7 @@ public class FuncResourceRel {
     /**
      * 多维校验
      */
-    private Integer enableMultiCheck;
+    private String multiGroup;
 
     /**
      * 是否禁用

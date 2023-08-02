@@ -57,7 +57,7 @@ public class CacheFuncDto {
         /**
          * 是否启用多维校验
          */
-        private Integer enableMultiCheck;
+        private String multiGroup;
 
         /**
          * 根据关系数据创建
@@ -67,7 +67,7 @@ public class CacheFuncDto {
         public FuncResourceData (FuncResourceRel funcResourceRel){
             this.resourceKey = funcResourceRel.getResourceKey();
             this.validateParam = funcResourceRel.getValidateParam();
-            this.enableMultiCheck = funcResourceRel.getEnableMultiCheck();
+            this.multiGroup = funcResourceRel.getMultiGroup();
         }
 
         @Override
@@ -75,7 +75,7 @@ public class CacheFuncDto {
             if (o instanceof FuncResourceData funcResourceData){
                 if (funcResourceData.getResourceKey().equals(this.resourceKey)){
                     if(Objects.nonNull(funcResourceData.validateParam) && Objects.nonNull(this.validateParam)){
-                        return  funcResourceData.getEnableMultiCheck().equals(this.enableMultiCheck);
+                        return  funcResourceData.getMultiGroup().equals(this.validateParam);
                     }
                     return true;
                 }

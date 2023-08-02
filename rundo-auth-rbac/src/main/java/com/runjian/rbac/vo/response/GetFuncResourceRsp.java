@@ -30,7 +30,7 @@ public class GetFuncResourceRsp {
     /**
      * 是否启用多维校验
      */
-    private Integer enableMultiCheck;
+    private String multiGroup;
 
     /**
      * 是否禁用

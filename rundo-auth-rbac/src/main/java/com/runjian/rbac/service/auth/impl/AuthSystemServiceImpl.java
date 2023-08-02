@@ -120,12 +120,15 @@ public class AuthSystemServiceImpl implements AuthSystemService {
         for (CacheFuncDto.FuncResourceData funcResourceData : funcCache.getFuncResourceDataList()) {
             String key = funcResourceData.getResourceKey();
             String param = funcResourceData.getValidateParam();
-            boolean enableMultiCheck = CommonEnum.getBoolean(funcResourceData.getEnableMultiCheck());
+            String multiGroup = funcResourceData.getMultiGroup();
+            boolean enableMultiCheck = Objects.nonNull(multiGroup);
             if (enableMultiCheck){
-                Boolean multiCheck = multiCheckMap.get(param);
+                Boolean multiCheck = multiCheckMap.get(multiGroup);
                 if (Objects.nonNull(multiCheck) && multiCheck){
                     continue;
                 }
+            }else {
+                multiGroup = UUID.randomUUID().toString();
             }
             // 判断参数是否为空，若为空交由API自己判断
             if (Objects.isNull(param)) {
@@ -139,7 +142,7 @@ public class AuthSystemServiceImpl implements AuthSystemService {
                 JSONObject jsonObject;
                 if (Objects.equals(reqMethod, MethodType.GET.getMsg()) || Objects.equals(reqMethod, MethodType.DELETE.getMsg())){
                     if (Objects.isNull(queryData) || !StringUtils.hasText(queryData)){
-                        multiCheckMap.put(param, false);
+                        multiCheckMap.put(multiGroup, false);
                         if (enableMultiCheck){
                             continue;
                         }
@@ -150,7 +153,7 @@ public class AuthSystemServiceImpl implements AuthSystemService {
                     jsonObject = JSONObject.parseObject(queryData);
                 }else {
                     if (Objects.isNull(bodyData)) {
-                        multiCheckMap.put(param, false);
+                        multiCheckMap.put(multiGroup, false);
                         if (enableMultiCheck){
                             continue;
                         }
@@ -163,7 +166,7 @@ public class AuthSystemServiceImpl implements AuthSystemService {
                 String value = jsonObject.getString(param);
                 // 判断参数是否存在
                 if (Objects.isNull(value)) {
-                    multiCheckMap.put(param, false);
+                    multiCheckMap.put(multiGroup, false);
                     if (enableMultiCheck){
                         continue;
                     }
@@ -175,7 +178,7 @@ public class AuthSystemServiceImpl implements AuthSystemService {
                 cacheService.refreshUserResourceRefreshMark(key, username, new HashSet<>(userRoles));
                 List<String> userResourceValue = cacheService.getUserResource(username, key);
                 if (CollectionUtils.isEmpty(userResourceValue)){
-                    multiCheckMap.put(param, false);
+                    multiCheckMap.put(multiGroup, false);
                     if (enableMultiCheck){
                         continue;
                     }
@@ -188,7 +191,7 @@ public class AuthSystemServiceImpl implements AuthSystemService {
                     List<String> values = jsonObject.getList(param, String.class);
                     // 判断用户是否包含该资源的权限
                     if (!new HashSet<>(userResourceValue).containsAll(values)){
-                        multiCheckMap.put(param, false);
+                        multiCheckMap.put(multiGroup, false);
                         if (enableMultiCheck){
                             continue;
                         }
@@ -198,7 +201,7 @@ public class AuthSystemServiceImpl implements AuthSystemService {
                 } else {
                     // 判断用户是否包含该资源的权限
                     if (!userResourceValue.contains(value)){
-                        multiCheckMap.put(param, false);
+                        multiCheckMap.put(multiGroup, false);
                         if (enableMultiCheck){
                             continue;
                         }
@@ -207,14 +210,13 @@ public class AuthSystemServiceImpl implements AuthSystemService {
                     }
                 }
             }
-            multiCheckMap.put(param, true);
+            multiCheckMap.put(multiGroup, true);
         }
         if (multiCheckMap.containsValue(false)){
             authDataDto.setIsAuthorized(false);
             authDataDto.setMsg(errorMsg);
             return authDataDto;
         }
-
         authDataDto.setIsAuthorized(true);
         return authDataDto;
     }
