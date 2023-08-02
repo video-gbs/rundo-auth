@@ -1,11 +1,10 @@
 package com.runjian.rbac.vo.dto;
 
 import com.runjian.rbac.entity.relation.FuncResourceRel;
-import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import org.hibernate.validator.constraints.Range;
+import org.apache.commons.lang3.StringUtils;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -73,21 +72,26 @@ public class CacheFuncDto {
         @Override
         public boolean equals(Object o){
             if (o instanceof FuncResourceData funcResourceData){
-                if (funcResourceData.getResourceKey().equals(this.resourceKey)){
-                    if(Objects.nonNull(funcResourceData.validateParam) && Objects.nonNull(this.validateParam)){
-                        return  funcResourceData.getMultiGroup().equals(this.validateParam);
-                    }
-                    return true;
+                if (!StringUtils.equals(funcResourceData.getResourceKey(), this.resourceKey)){
+                    return false;
                 }
+                if (!StringUtils.equals(funcResourceData.getValidateParam(), this.validateParam)){
+                    return false;
+                }
+                return StringUtils.equals(funcResourceData.getMultiGroup(), this.multiGroup);
             }
             return false;
         }
 
+
         @Override
         public int hashCode(){
-            int result = resourceKey.hashCode();
-            if (Objects.nonNull(validateParam)){
-                return 17 * result + validateParam.hashCode();
+            int result = this.resourceKey.hashCode();
+            if (Objects.nonNull(this.validateParam)){
+                result = 17 * result + this.validateParam.hashCode();
+            }
+            if (Objects.nonNull(this.multiGroup)){
+                result = 17 * result + this.multiGroup.hashCode();
             }
             return result;
         }

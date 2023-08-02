@@ -236,7 +236,6 @@ public class FuncServiceImpl implements FuncService {
         if (!isDisabled){
             resetCacheFuncResource(funcResourceRel, null);
         }
-        resetCacheFuncResource(funcResourceRel, null);
         funcResourceRel.setResourceKey(resourceKey);
         funcResourceRel.setValidateParam(validateParam);
         funcResourceRel.setMultiGroup(multiGroup);
