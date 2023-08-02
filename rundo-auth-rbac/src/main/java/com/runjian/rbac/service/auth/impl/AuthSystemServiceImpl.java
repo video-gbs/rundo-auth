@@ -121,7 +121,7 @@ public class AuthSystemServiceImpl implements AuthSystemService {
             String key = funcResourceData.getResourceKey();
             String param = funcResourceData.getValidateParam();
             String multiGroup = funcResourceData.getMultiGroup();
-            boolean enableMultiCheck = Objects.nonNull(multiGroup);
+            boolean enableMultiCheck = StringUtils.hasText(multiGroup);
             if (enableMultiCheck){
                 Boolean multiCheck = multiCheckMap.get(multiGroup);
                 if (Objects.nonNull(multiCheck) && multiCheck){
