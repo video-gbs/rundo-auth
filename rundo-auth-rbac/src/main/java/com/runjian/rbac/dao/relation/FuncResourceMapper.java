@@ -27,7 +27,7 @@ public interface FuncResourceMapper {
     void deleteAllByResourceIds(Set<Long> resourceIds);
 
     @Insert(" INSERT INTO " + FUNC_RESOURCE_TABLE_NAME +
-            " (func_id, resource_key, validate_param, enable_multi_check, disabled, create_time, update_time) " +
+            " (func_id, resource_key, validate_param, multi_group, disabled, create_time, update_time) " +
             " VALUES " +
             " (#{funcId}, #{resourceKey}, #{validateParam}, #{enableMultiCheck}, #{disabled}, #{createTime}, #{updateTime})")
     void save(FuncResourceRel funcResourceRel);
@@ -41,7 +41,7 @@ public interface FuncResourceMapper {
             " WHERE func_id = #{funcId} ")
     List<GetFuncResourceRsp> selectByFuncId(Long funcId);
 
-    @Select(" SELECT resource_key, validate_param, enable_multi_check FROM " + FUNC_RESOURCE_TABLE_NAME +
+    @Select(" SELECT resource_key, validate_param, multi_group FROM " + FUNC_RESOURCE_TABLE_NAME +
             " WHERE func_id = #{funcId} ")
     List<CacheFuncDto.FuncResourceData> selectFuncResourceDataByFuncId(Long funcId);
 
@@ -61,7 +61,7 @@ public interface FuncResourceMapper {
 
     @Update(" UPDATE "  + FUNC_RESOURCE_TABLE_NAME +
             " SET update_time = #{updateTime}, " +
-            " enable_multi_check = #{enableMultiCheck}, " +
+            " multi_group = #{enableMultiCheck}, " +
             " resource_key = #{resourceKey}, " +
             " validate_param = #{validateParam} " +
             " WHERE id = #{id} ")
