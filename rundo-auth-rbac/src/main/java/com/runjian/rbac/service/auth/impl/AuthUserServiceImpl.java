@@ -223,7 +223,7 @@ public class AuthUserServiceImpl implements AuthUserService {
         for (List<Long> idList : levelMap.values()){
             levelIds.addAll(idList);
         }
-        levelIds.remove(0L);
+
         Map<Long, String> resourceNameMap = resourceMapper.selectAllByIdIn(levelIds).stream().collect(Collectors.toMap(ResourceInfo::getId, ResourceInfo::getResourceName));
         //resourceNameMap.put(0L, "根节点");
         List<GetCatalogueResourceRsp> getCatalogueResourceRspList = new ArrayList<>(resourceInfoList.size());
@@ -233,6 +233,7 @@ public class AuthUserServiceImpl implements AuthUserService {
             getCatalogueResourceRsp.setResourceName(resourceInfo.getResourceName());
             getCatalogueResourceRsp.setResourceValue(resourceInfo.getResourceValue());
             List<Long> ids = levelMap.get(resourceInfo.getId());
+            ids.remove(0L);
             StringBuilder stringBuilder = new StringBuilder();
             for (Long id : ids){
                 stringBuilder.append("/");
