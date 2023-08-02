@@ -29,7 +29,7 @@ public interface FuncResourceMapper {
     @Insert(" INSERT INTO " + FUNC_RESOURCE_TABLE_NAME +
             " (func_id, resource_key, validate_param, multi_group, disabled, create_time, update_time) " +
             " VALUES " +
-            " (#{funcId}, #{resourceKey}, #{validateParam}, #{enableMultiCheck}, #{disabled}, #{createTime}, #{updateTime})")
+            " (#{funcId}, #{resourceKey}, #{validateParam}, #{multiGroup}, #{disabled}, #{createTime}, #{updateTime})")
     void save(FuncResourceRel funcResourceRel);
 
     @Delete(" DELETE FROM " + FUNC_RESOURCE_TABLE_NAME +
@@ -61,7 +61,7 @@ public interface FuncResourceMapper {
 
     @Update(" UPDATE "  + FUNC_RESOURCE_TABLE_NAME +
             " SET update_time = #{updateTime}, " +
-            " multi_group = #{enableMultiCheck}, " +
+            " multi_group = #{multiGroup}, " +
             " resource_key = #{resourceKey}, " +
             " validate_param = #{validateParam} " +
             " WHERE id = #{id} ")
