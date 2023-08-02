@@ -225,7 +225,6 @@ public class AuthUserServiceImpl implements AuthUserService {
         }
 
         Map<Long, String> resourceNameMap = resourceMapper.selectAllByIdIn(levelIds).stream().collect(Collectors.toMap(ResourceInfo::getId, ResourceInfo::getResourceName));
-        //resourceNameMap.put(0L, "根节点");
         List<GetCatalogueResourceRsp> getCatalogueResourceRspList = new ArrayList<>(resourceInfoList.size());
         for (ResourceInfo resourceInfo : resourceInfoList){
             GetCatalogueResourceRsp getCatalogueResourceRsp = new GetCatalogueResourceRsp();
