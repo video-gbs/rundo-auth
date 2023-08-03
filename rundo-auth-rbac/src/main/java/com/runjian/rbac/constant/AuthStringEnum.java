@@ -16,7 +16,7 @@ public enum AuthStringEnum {
     USER_NO_ROLE("当前用户没有任何角色的权限"),
     USER_NO_FUNC("当前用户没有功能'%s'的权限"),
     USER_NO_FUNC_PARAM("必要的参数权限校验失败，缺失参数'%s'"),
-    USER_NO_FUNC_RESOURCE("当前用户没有资源'%s'的权限"),
+    USER_NO_FUNC_RESOURCE("当前用户该资源的操作权限"),
     CLIENT_NO_FUNC("当前用户没有功能'%s'的权限")
     ;
 

@@ -182,7 +182,7 @@ public class AuthSystemServiceImpl implements AuthSystemService {
                     if (enableMultiCheck){
                         continue;
                     }
-                    errorMsg = AuthStringEnum.USER_NO_FUNC_RESOURCE.getFormat(value);
+                    errorMsg = AuthStringEnum.USER_NO_FUNC_RESOURCE.getMsg();
                     break;
                 }
 
@@ -195,7 +195,7 @@ public class AuthSystemServiceImpl implements AuthSystemService {
                         if (enableMultiCheck){
                             continue;
                         }
-                        errorMsg = AuthStringEnum.USER_NO_FUNC_RESOURCE.getFormat(value);
+                        errorMsg = AuthStringEnum.USER_NO_FUNC_RESOURCE.getMsg();
                         break;
                     }
                 } else {
@@ -205,7 +205,7 @@ public class AuthSystemServiceImpl implements AuthSystemService {
                         if (enableMultiCheck){
                             continue;
                         }
-                        errorMsg = AuthStringEnum.USER_NO_FUNC_RESOURCE.getFormat(value);
+                        errorMsg = AuthStringEnum.USER_NO_FUNC_RESOURCE.getMsg();
                         break;
                     }
                 }
