@@ -143,21 +143,20 @@ public class AuthSystemServiceImpl implements AuthSystemService {
                 if (Objects.equals(reqMethod, MethodType.GET.getMsg()) || Objects.equals(reqMethod, MethodType.DELETE.getMsg())){
                     if (Objects.isNull(queryData) || !StringUtils.hasText(queryData)){
                         multiCheckMap.put(multiGroup, false);
+                        errorMsg = AuthStringEnum.USER_NO_FUNC_PARAM.getFormat(param);
                         if (enableMultiCheck){
                             continue;
                         }
-
-                        errorMsg = AuthStringEnum.USER_NO_FUNC_PARAM.getFormat(param);
                         break;
                     }
                     jsonObject = JSONObject.parseObject(queryData);
                 }else {
                     if (Objects.isNull(bodyData)) {
                         multiCheckMap.put(multiGroup, false);
+                        errorMsg = AuthStringEnum.USER_NO_FUNC_PARAM.getFormat(param);
                         if (enableMultiCheck){
                             continue;
                         }
-                        errorMsg = AuthStringEnum.USER_NO_FUNC_PARAM.getFormat(param);
                         break;
                     }
                     jsonObject = JSONObject.parseObject(bodyData);
@@ -167,10 +166,10 @@ public class AuthSystemServiceImpl implements AuthSystemService {
                 // 判断参数是否存在
                 if (Objects.isNull(value)) {
                     multiCheckMap.put(multiGroup, false);
+                    errorMsg = AuthStringEnum.USER_NO_FUNC_PARAM.getFormat(param);
                     if (enableMultiCheck){
                         continue;
                     }
-                    errorMsg = AuthStringEnum.USER_NO_FUNC_PARAM.getFormat(param);
                     break;
                 }
 
@@ -179,10 +178,10 @@ public class AuthSystemServiceImpl implements AuthSystemService {
                 List<String> userResourceValue = cacheService.getUserResource(username, key);
                 if (CollectionUtils.isEmpty(userResourceValue)){
                     multiCheckMap.put(multiGroup, false);
+                    errorMsg = AuthStringEnum.USER_NO_FUNC_RESOURCE.getMsg();
                     if (enableMultiCheck){
                         continue;
                     }
-                    errorMsg = AuthStringEnum.USER_NO_FUNC_RESOURCE.getMsg();
                     break;
                 }
 
@@ -192,20 +191,20 @@ public class AuthSystemServiceImpl implements AuthSystemService {
                     // 判断用户是否包含该资源的权限
                     if (!new HashSet<>(userResourceValue).containsAll(values)){
                         multiCheckMap.put(multiGroup, false);
+                        errorMsg = AuthStringEnum.USER_NO_FUNC_RESOURCE.getMsg();
                         if (enableMultiCheck){
                             continue;
                         }
-                        errorMsg = AuthStringEnum.USER_NO_FUNC_RESOURCE.getMsg();
                         break;
                     }
                 } else {
                     // 判断用户是否包含该资源的权限
                     if (!userResourceValue.contains(value)){
                         multiCheckMap.put(multiGroup, false);
+                        errorMsg = AuthStringEnum.USER_NO_FUNC_RESOURCE.getMsg();
                         if (enableMultiCheck){
                             continue;
                         }
-                        errorMsg = AuthStringEnum.USER_NO_FUNC_RESOURCE.getMsg();
                         break;
                     }
                 }
