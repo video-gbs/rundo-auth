@@ -103,6 +103,9 @@ public class FuncServiceImpl implements FuncService {
     @Override
     @Transactional(rollbackFor = Exception.class)
     public void addFunc(Long menuId, String serviceName, String funcName, String scope, String path, Integer method) {
+        if (path.endsWith("/")){
+            path = path.substring(0, path.length() - 1);
+        }
         Optional<FuncInfo> funcInfoOp = funcMapper.selectByPath(path);
         if (funcInfoOp.isPresent()){
             throw new BusinessException(BusinessErrorEnums.VALID_OBJECT_IS_EXIST, String.format("重复定义的资源路径 %s", path));
@@ -145,6 +148,9 @@ public class FuncServiceImpl implements FuncService {
     @Override
     @Transactional(rollbackFor = Exception.class)
     public void updateFunc(Long id, Long menuId, String serviceName, String funcName, String scope, String path, Integer method) {
+        if (path.endsWith("/")){
+            path = path.substring(0, path.length() - 1);
+        }
         FuncInfo funcInfo = dataBaseService.getFuncInfo(id);
         if (!funcInfo.getPath().equals(path) || !funcInfo.getMethod().equals(method)){
             Optional<FuncInfo> funcInfoOp = funcMapper.selectByPathAndMethod(method, path);
