@@ -121,6 +121,7 @@ public class FuncServiceImpl implements FuncService {
         CacheFuncDto cacheFuncDto = new CacheFuncDto();
         cacheFuncDto.setScope(scope);
         cacheFuncDto.setFuncName(funcName);
+        cacheFuncDto.setDisabled(CommonEnum.DISABLE.getCode());
         cacheService.setFuncCache(MethodType.getByCode(funcInfo.getMethod()) + MarkConstant.MARK_SPLIT_SEMICOLON + funcInfo.getPath(), cacheFuncDto);
     }
 
@@ -128,14 +129,15 @@ public class FuncServiceImpl implements FuncService {
     @Transactional(rollbackFor = Exception.class)
     public void updateDisabled(Long id, Integer disabled) {
         FuncInfo funcInfo = dataBaseService.getFuncInfo(id);
+        if (funcInfo.getDisabled().equals(disabled)){
+            return;
+        }
         funcInfo.setDisabled(disabled);
         funcInfo.setUpdateTime(LocalDateTime.now());
         String key = MethodType.getByCode(funcInfo.getMethod()) + MarkConstant.MARK_SPLIT_SEMICOLON + funcInfo.getPath();
-        if (CommonEnum.getBoolean(disabled)){
-            cacheService.removeFuncCache(key);
-        }else {
-            addFuncCache(funcInfo);
-        }
+        CacheFuncDto funcCache = cacheService.getFuncCache(key);
+        funcCache.setDisabled(disabled);
+        cacheService.setFuncCache(key, funcCache);
         funcMapper.updateDisabled(funcInfo);
     }
 

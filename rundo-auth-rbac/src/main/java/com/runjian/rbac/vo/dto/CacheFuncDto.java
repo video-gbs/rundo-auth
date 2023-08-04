@@ -28,6 +28,11 @@ public class CacheFuncDto {
     private String funcName;
 
     /**
+     * 是否禁用
+     */
+    private Integer disabled;
+
+    /**
      * 角色数组
      */
     private List<Long> roleIds = new ArrayList<>();

@@ -100,6 +100,13 @@ public class AuthSystemServiceImpl implements AuthSystemService {
             return authDataDto;
         }
 
+        // 判断功能是否禁用
+        if (CommonEnum.getBoolean(funcCache.getDisabled())){
+            authDataDto.setIsAuthorized(false);
+            authDataDto.setMsg(AuthStringEnum.FUNC_IS_DISABLED.getMsg());
+            return authDataDto;
+        }
+
         List<String> scopeList = Arrays.asList(scope.split(","));
         // 判断客户端是否有系统领域权限 || 判断客户端是否有当前接口的系统服务权限 || 判断该功能是否有权限角色绑定 || 判断角色是否包含该功能的权限
         if (scopeList.isEmpty() || nonIntersection(scopeList, Arrays.asList("all", funcCache.getScope())) || funcCache.getRoleIds().isEmpty() || nonIntersection(userRoles, funcCache.getRoleIds())) {
