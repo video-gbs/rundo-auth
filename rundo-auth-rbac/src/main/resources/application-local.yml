@@ -23,9 +23,9 @@ spring:
   datasource:
     type: com.alibaba.druid.pool.DruidDataSource
     driver-class-name: com.mysql.cj.jdbc.Driver
-    url: jdbc:mysql://${DATABASE_HOST:124.71.16.209}:${DATABASE_PORT:3306}/${DATABASE_NAME:rundo_auth_rbac}?useUnicode=true&characterEncoding=UTF8&rewriteBatchedStatements=true&serverTimezone=PRC&useSSL=false&allowMultiQueries=true&autoReconnect=true
+    url: jdbc:mysql://${DATABASE_HOST:127.0.0.1}:${DATABASE_PORT:3306}/${DATABASE_NAME:rundo_auth_rbac}?useUnicode=true&characterEncoding=UTF8&rewriteBatchedStatements=true&serverTimezone=PRC&useSSL=false&allowMultiQueries=true&autoReconnect=true
     username: ${DATABASE_USER:root}
-    password: ${DATABASE_PWD:rundomysql}
+    password: ${DATABASE_PWD:abc123}
     druid:
       query-timeout: 3
       transaction-query-timeout: 3
@@ -51,15 +51,6 @@ spring:
       use-global-data-source-stat: true # 合并多个DruidDataSource的监控数据
       # 通过connectProperties属性来打开mergeSql功能；慢SQL记录
       connection-properties: druid.stat.mergeSql=true;druid.stat.slowSqlMillis=1000
-      stat-view-servlet:
-        # 访问白名单
-        allow: 127.0.0.1
-        enabled: true
-        url-pattern: /druid/*
-        login-username: druid
-        login-password: rundodruid
-        # 允许重置监控数据
-        reset-enable: true
       web-stat-filter:
         # 配置统计页面过滤
         enabled: true
