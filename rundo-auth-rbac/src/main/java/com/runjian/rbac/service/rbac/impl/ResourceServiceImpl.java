@@ -122,7 +122,7 @@ public class ResourceServiceImpl implements ResourceService {
         long sort = nowTime.toInstant(ZoneOffset.of("+8")).toEpochMilli();
         for (Map.Entry<String, String> resource: resourceMap.entrySet()){
             ResourceInfo resourceInfo = new ResourceInfo();
-            resourceInfo.setResourcePid(pResourceInfo.getResourcePid());
+            resourceInfo.setResourcePid(pResourceInfo.getId());
             resourceInfo.setResourceType(resourceType);
             resourceInfo.setResourceName(resource.getValue());
             resourceInfo.setResourceKey(pResourceInfo.getResourceKey());
