@@ -193,6 +193,7 @@ public class ResourceServiceImpl implements ResourceService {
             resourceMapper.updateAll(childList);
             roleResourceMapper.deleteAllByResourceId(resourceInfo.getId());
             cacheService.removeUserResourceByResourceKey(pResourceInfo.getResourceKey());
+            dataSourceTransactionManager.commit(transaction);
         }catch (TransactionException exception){
             log.error(LogTemplate.ERROR_LOG_TEMPLATE, "资源服务", "父子移动失败", exception);
             dataSourceTransactionManager.rollback(transaction);
