@@ -1,7 +1,5 @@
 package com.runjian.rbac.dao;
 
-
-import com.github.pagehelper.PageInfo;
 import com.runjian.rbac.entity.FuncInfo;
 import com.runjian.rbac.vo.response.GetFuncPageRsp;
 import com.runjian.rbac.vo.response.GetFuncRsp;
