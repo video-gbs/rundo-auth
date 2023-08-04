@@ -46,9 +46,10 @@ public class AuthFilter implements GatewayFilter, Ordered {
     public Mono<Void> filter(ServerWebExchange exchange, GatewayFilterChain chain) {
         ServerHttpRequest request = exchange.getRequest();
         String url = request.getURI().getPath();
-        if (url.endsWith("/")){
-            url = url.substring(0, url.length() - 1);
-        }
+        log.error(url);
+//        if (url.endsWith("/")){
+//            url = url.substring(0, url.length() - 1);
+//        }
         if (CheckUtils.checkPath(url, authProperties.getAuthPrefix())){
             return chain.filter(exchange);
         }
