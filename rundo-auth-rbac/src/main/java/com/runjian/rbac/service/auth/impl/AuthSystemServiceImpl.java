@@ -103,7 +103,7 @@ public class AuthSystemServiceImpl implements AuthSystemService {
         // 判断功能是否禁用
         if (CommonEnum.getBoolean(funcCache.getDisabled())){
             authDataDto.setIsAuthorized(false);
-            authDataDto.setMsg(AuthStringEnum.FUNC_IS_DISABLED.getMsg());
+            authDataDto.setMsg(AuthStringEnum.FUNC_IS_DISABLED.getFormat(funcCache.getFuncName()));
             return authDataDto;
         }
 
