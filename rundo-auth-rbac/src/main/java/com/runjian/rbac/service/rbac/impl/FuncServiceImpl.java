@@ -69,6 +69,7 @@ public class FuncServiceImpl implements FuncService {
             CacheFuncDto cacheFuncDto = new CacheFuncDto();
             cacheFuncDto.setScope(funcInfo.getScope());
             cacheFuncDto.setFuncName(funcInfo.getFuncName());
+            cacheFuncDto.setDisabled(funcInfo.getDisabled());
             List<RoleFuncRel> roleFuncRels = roleFuncMap.get(funcInfo.getId());
             if (!CollectionUtils.isEmpty(roleFuncRels)) {
                 cacheFuncDto.setRoleIds(roleFuncRels.stream().map(RoleFuncRel::getRoleId).toList());
