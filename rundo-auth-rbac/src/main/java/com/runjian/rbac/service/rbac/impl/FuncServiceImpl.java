@@ -266,6 +266,7 @@ public class FuncServiceImpl implements FuncService {
      */
     private void addFuncCache(FuncInfo funcInfo) {
         CacheFuncDto cacheFuncDto = new CacheFuncDto();
+        cacheFuncDto.setDisabled(funcInfo.getDisabled());
         cacheFuncDto.setScope(funcInfo.getScope());
         cacheFuncDto.setFuncName(funcInfo.getFuncName());
         cacheFuncDto.setRoleIds(roleFuncMapper.selectRoleIdsByFuncId(funcInfo.getId()));
