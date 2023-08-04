@@ -91,13 +91,23 @@ public class ResourceServiceImpl implements ResourceService {
 
 
     @Override
-    @Transactional(rollbackFor = Exception.class)
     public void batchAddResource(Long resourcePid, Integer resourceType, Map<String, String> resourceMap) {
         if (resourceMap.isEmpty()){
             return;
         }
+        addResource(dataBaseService.getResourceInfo(resourcePid), resourceType, resourceMap);
 
-        ResourceInfo pResourceInfo = dataBaseService.getResourceInfo(resourcePid);
+    }
+
+    @Override
+    public void batchAddResourceByKv(String resourceKey, String pResourceValue, Integer resourceType, Map<String, String> resourceMap) {
+        if (resourceMap.isEmpty()){
+            return;
+        }
+        addResource(dataBaseService.getResourceInfo(resourceKey, pResourceValue), resourceType, resourceMap);
+    }
+
+    private void addResource(ResourceInfo pResourceInfo, Integer resourceType, Map<String, String> resourceMap) {
         if (pResourceInfo.getResourceType().equals(ResourceType.RESOURCE.getCode())){
             throw new BusinessException(BusinessErrorEnums.VALID_ILLEGAL_OPERATION, "不能在资源下添加资源");
         }
@@ -112,7 +122,7 @@ public class ResourceServiceImpl implements ResourceService {
         long sort = nowTime.toInstant(ZoneOffset.of("+8")).toEpochMilli();
         for (Map.Entry<String, String> resource: resourceMap.entrySet()){
             ResourceInfo resourceInfo = new ResourceInfo();
-            resourceInfo.setResourcePid(resourcePid);
+            resourceInfo.setResourcePid(pResourceInfo.getResourcePid());
             resourceInfo.setResourceType(resourceType);
             resourceInfo.setResourceName(resource.getValue());
             resourceInfo.setResourceKey(pResourceInfo.getResourceKey());
@@ -124,11 +134,19 @@ public class ResourceServiceImpl implements ResourceService {
             resourceInfoList.add(resourceInfo);
         }
         if (!resourceInfoList.isEmpty()){
-            resourceMapper.batchAdd(resourceInfoList);
-            cacheService.removeUserResourceByResourceKey(pResourceInfo.getResourceKey());
+            TransactionStatus transaction = dataSourceTransactionManager.getTransaction(transactionDefinition);
+            try {
+                resourceMapper.batchAdd(resourceInfoList);
+                cacheService.removeUserResourceByResourceKey(pResourceInfo.getResourceKey());
+                dataSourceTransactionManager.commit(transaction);
+            }catch (Exception exception){
+                log.error(LogTemplate.ERROR_LOG_TEMPLATE, "资源服务", "批量添加失败", exception);
+                dataSourceTransactionManager.rollback(transaction);
+            }
         }
-
     }
+
+
 
     @Override
     public void updateResource(Long resourceId, String resourceName, String resourceValue) {
@@ -156,7 +174,7 @@ public class ResourceServiceImpl implements ResourceService {
             resourceMapper.batchDelete(resourceIds);
             cacheService.removeUserResourceByResourceKey(pResourceInfo.getResourceKey());
             dataSourceTransactionManager.commit(transaction);
-        }catch (TransactionException exception){
+        }catch (Exception exception){
             log.error(LogTemplate.ERROR_LOG_TEMPLATE, "资源服务", "删除失败", exception);
             dataSourceTransactionManager.rollback(transaction);
         }
@@ -194,7 +212,7 @@ public class ResourceServiceImpl implements ResourceService {
             roleResourceMapper.deleteAllByResourceId(resourceInfo.getId());
             cacheService.removeUserResourceByResourceKey(pResourceInfo.getResourceKey());
             dataSourceTransactionManager.commit(transaction);
-        }catch (TransactionException exception){
+        }catch (Exception exception){
             log.error(LogTemplate.ERROR_LOG_TEMPLATE, "资源服务", "父子移动失败", exception);
             dataSourceTransactionManager.rollback(transaction);
         }

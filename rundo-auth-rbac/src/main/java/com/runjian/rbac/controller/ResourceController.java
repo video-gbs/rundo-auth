@@ -76,6 +76,18 @@ public class ResourceController {
     }
 
     /**
+     * 批量添加资源
+     * @param req 批量添加资源请求体
+     * @return
+     */
+    @PostMapping("/batch/add/kv")
+    public CommonResponse<?> batchAddResource(@RequestBody PostBatchResourceKvReq req){
+        validatorService.validateRequest(req);
+        resourceService.batchAddResourceByKv(req.getResourceKey(), req.getPResourceValue(), req.getResourceType(), req.getResourceMap());
+        return CommonResponse.success();
+    }
+
+    /**
      * 修改资源
      * @param req 修改资源请求体
      * @return

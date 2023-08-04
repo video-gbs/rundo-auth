@@ -43,6 +43,15 @@ public interface ResourceService {
     void batchAddResource(Long resourcePid, Integer resourceType, Map<String, String> resourceMap);
 
     /**
+     * 添加资源
+     * @param resourceKey 资源key
+     * @param pResourceValue 资源父value
+     * @param resourceType 资源类型
+     * @param resourceMap 数据
+     */
+    void batchAddResourceByKv(String resourceKey, String pResourceValue, Integer resourceType, Map<String, String> resourceMap);
+
+    /**
      * 修改资源
      * @param resourceId 资源id
      * @param resourceName 资源名称
