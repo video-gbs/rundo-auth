@@ -45,8 +45,11 @@ public class AuthFilter implements GatewayFilter, Ordered {
     @Override
     public Mono<Void> filter(ServerWebExchange exchange, GatewayFilterChain chain) {
         ServerHttpRequest request = exchange.getRequest();
-        URI uri = request.getURI();
-        if (CheckUtils.checkPath(uri.getPath(), authProperties.getAuthPrefix())){
+        String url = request.getURI().getPath();
+        if (url.endsWith("/")){
+            url = url.substring(0, url.length() - 1);
+        }
+        if (CheckUtils.checkPath(url, authProperties.getAuthPrefix())){
             return chain.filter(exchange);
         }
         String authToken = request.getHeaders().getFirst(AuthProperties.AUTHORIZATION_HEADER_TOKEN);
@@ -61,9 +64,9 @@ public class AuthFilter implements GatewayFilter, Ordered {
         PostAuthReq postAuthReq;
         if (Objects.nonNull(bodyData)){
             String raw = toRaw(bodyData);
-            postAuthReq = new PostAuthReq(uri.getPath(), exchange.getRequest().getMethod().name(), JSONObject.toJSONString(queryParams), raw);
+            postAuthReq = new PostAuthReq(url, exchange.getRequest().getMethod().name(), JSONObject.toJSONString(queryParams), raw);
         }else {
-            postAuthReq = new PostAuthReq(uri.getPath(), exchange.getRequest().getMethod().name(), JSONObject.toJSONString(queryParams), null);
+            postAuthReq = new PostAuthReq(url, exchange.getRequest().getMethod().name(), JSONObject.toJSONString(queryParams), null);
         }
 
         return WebClient.builder()
