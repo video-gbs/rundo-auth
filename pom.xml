@@ -26,12 +26,11 @@
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
         <spring-boot.version>3.0.5</spring-boot.version>
         <fastjson2.version>2.0.21</fastjson2.version>
-        <druid.version>1.2.15</druid.version>
+        <druid3.version>1.2.18</druid3.version>
         <guava.version>31.1-jre</guava.version>
         <japidocs.version>1.4.4</japidocs.version>
         <spring-cloud.version>2021.0.4</spring-cloud.version>
         <passay.version>1.6.3</passay.version>
-        <druid.version>1.2.17</druid.version>
         <redisson.version>3.20.1</redisson.version>
         <spring.authorization.server.version>1.0.1</spring.authorization.server.version>
         <mysql.connector.version>8.0.32</mysql.connector.version>
@@ -77,8 +76,8 @@
             </dependency>
             <dependency>
                 <groupId>com.alibaba</groupId>
-                <artifactId>druid-spring-boot-starter</artifactId>
-                <version>${druid.version}</version>
+                <artifactId>druid-spring-boot-3-starter</artifactId>
+                <version>${druid3.version}</version>
             </dependency>
             <dependency>
                 <groupId>org.redisson</groupId>
