@@ -43,15 +43,16 @@ spring:
       time-between-eviction-runs-millis: 60000  # 配置間隔多久才進行一次檢測，檢測需要關閉的空閒連線，單位是毫秒
       min-evictable-idle-time-millis: 600000    # 配置一個連線在池中最小生存的時間，單位是毫秒
       use-global-data-source-stat: true # 合并多个DruidDataSource的监控数据
-      filters: config,stat,slf4j,wall            # 配置监控统计拦截的filters，监控统计用的filter:sta, 日志用的filter:log4j, 防御sql注入的filter:wall
+      filters: config,stat,slf4j            # 配置监控统计拦截的filters，监控统计用的filter:sta, 日志用的filter:log4j, 防御sql注入的filter:wall
       filter:
         stat:
           log-slow-sql: true
           slow-sql-millis: 3000
+          db-type: mysql
         wall:
           config:
             multi-statement-allow: true
-          db-type: mysql
+            none-base-statement-allow: true
       stat-view-servlet:
         # 访问白名单
         allow: 127.0.0.1
