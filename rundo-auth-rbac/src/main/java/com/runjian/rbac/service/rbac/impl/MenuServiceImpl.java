@@ -54,8 +54,9 @@ public class MenuServiceImpl implements MenuService {
                 rootMenuTree.setChildList(getMenuTreeRspList);
                 return rootMenuTree;
             }
+            ids.addAll(getMenuTreeRspList.stream().map(GetMenuTreeRsp::getId).toList());
             List<GetMenuTreeRsp> pMenuTreeRspList = menuMapper.selectAllByIds(ids);
-            pMenuTreeRspList.addAll(getMenuTreeRspList);
+            //pMenuTreeRspList.addAll(getMenuTreeRspList);
             rootMenuTree.setChildList(rootMenuTree.recursionData(pMenuTreeRspList, rootMenuTree.getLevel()));
             return rootMenuTree;
         }
