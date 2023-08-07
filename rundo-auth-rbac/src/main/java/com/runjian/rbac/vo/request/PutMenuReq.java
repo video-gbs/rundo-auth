@@ -22,13 +22,6 @@ public class PutMenuReq {
     private Long id;
 
     /**
-     * 菜单父id
-     */
-    @NotNull(message = "菜单父Id不能为空")
-    @Min(value = 0, message = "非法菜单父id")
-    private Long menuPid;
-
-    /**
      * 菜单排序
      */
     @NotNull(message = "菜单排序不能为空")

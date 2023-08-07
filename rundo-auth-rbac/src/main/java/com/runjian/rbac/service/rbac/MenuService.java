@@ -43,7 +43,6 @@ public interface MenuService {
     /**
      * 修改菜单
      * @param id 菜单id
-     * @param menuPid 菜单负id
      * @param menuSort 菜单排序
      * @param menuType 菜单类型
      * @param path 跳转url
@@ -54,7 +53,7 @@ public interface MenuService {
      * @param isFullScreen 是否全屏
      * @param disabled 是否禁用
      */
-    void updateMenu(Long id, Long menuPid, Integer menuSort, Integer menuType, String path, String component, String name, String icon, String description, Integer isFullScreen, Integer disabled);
+    void updateMenu(Long id, Integer menuSort, Integer menuType, String path, String component, String name, String icon, String description, Integer isFullScreen, Integer disabled);
 
     /**
      * 删除菜单

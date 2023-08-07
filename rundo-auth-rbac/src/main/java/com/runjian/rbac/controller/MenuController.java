@@ -81,7 +81,7 @@ public class MenuController {
     @PutMapping("/update")
     public CommonResponse<?> update(@RequestBody PutMenuReq req){
         validatorService.validateRequest(req);
-        menuService.updateMenu(req.getId(), req.getMenuPid(), req.getMenuSort(),
+        menuService.updateMenu(req.getId(), req.getMenuSort(),
                 req.getMenuType(), req.getPath(), req.getComponent(),
                 req.getName(), req.getIcon(), req.getDescription(), req.getIsFullScreen(), req.getDisabled());
         return CommonResponse.success();

@@ -111,20 +111,8 @@ public class MenuServiceImpl implements MenuService {
     }
 
     @Override
-    public void updateMenu(Long id, Long menuPid, Integer menuSort, Integer menuType, String path, String component, String name, String icon, String description, Integer isFullScreen, Integer disabled) {
+    public void updateMenu(Long id, Integer menuSort, Integer menuType, String path, String component, String name, String icon, String description, Integer isFullScreen, Integer disabled) {
         MenuInfo cMenuInfo = dataBaseService.getMenuInfo(id);
-        if (!cMenuInfo.getMenuPid().equals(menuPid)){
-            MenuInfo pMenuInfo;
-            cMenuInfo.setMenuPid(menuPid);
-            if (menuPid.equals(0L)){
-                cMenuInfo.setLevel("0");
-                cMenuInfo.setLevelNum(1);
-            }else {
-                pMenuInfo = dataBaseService.getMenuInfo(menuPid);
-                cMenuInfo.setLevel(pMenuInfo.getLevel() + MarkConstant.MARK_SPLIT_RAIL + pMenuInfo.getId());
-                cMenuInfo.setLevelNum(pMenuInfo.getLevelNum() + 1);
-            }
-        }
         cMenuInfo.setSort(menuSort);
         cMenuInfo.setMenuType(menuType);
         cMenuInfo.setPath(path);
