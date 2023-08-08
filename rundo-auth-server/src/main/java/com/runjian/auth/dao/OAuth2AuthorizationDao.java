@@ -4,6 +4,7 @@ import com.runjian.auth.entity.OAuth2AuthorizationInfo;
 import org.apache.ibatis.annotations.*;
 import org.springframework.stereotype.Repository;
 
+import java.time.LocalDateTime;
 import java.util.Optional;
 
 /**
@@ -106,4 +107,12 @@ public interface OAuth2AuthorizationDao {
     Optional<OAuth2AuthorizationInfo> findByRefreshTokenValue(String token);
 
 
+    @Delete(" DELETE FROM " + OAUTH2_AUTHORIZATION_TABLE_NAME)
+    void deleteAll();
+
+    @Delete(" <script>" +
+            " DELETE FROM " + OAUTH2_AUTHORIZATION_TABLE_NAME
+            + " WHERE (refresh_token_expires_at IS NULL AND access_token_expires_at &lt;= #{nowTime}) OR refresh_token_expires_at &lt;= #{nowTime} "+
+            " </script>")
+    void deleteOutTimeToken(LocalDateTime nowTime);
 }

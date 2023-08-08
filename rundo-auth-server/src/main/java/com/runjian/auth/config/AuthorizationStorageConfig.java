@@ -8,6 +8,7 @@ import com.runjian.auth.config.storage.IbatisRegisteredClientRepository;
 import com.runjian.auth.dao.OAuth2AuthorizationConsentDao;
 import com.runjian.auth.dao.OAuth2AuthorizationDao;
 import com.runjian.auth.dao.OAuth2RegisteredClientDao;
+import jakarta.annotation.PostConstruct;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -41,6 +42,7 @@ public class AuthorizationStorageConfig {
 
     private final ObjectMapper objectMapper;
 
+
     public AuthorizationStorageConfig(PasswordEncoder passwordEncoder){
         this.passwordEncoder = passwordEncoder;
         this.objectMapper = new ObjectMapper();
@@ -49,6 +51,8 @@ public class AuthorizationStorageConfig {
         this.objectMapper.registerModules(securityModules);
         this.objectMapper.registerModule(new OAuth2AuthorizationServerJackson2Module());
     }
+
+
 
     /**
      * 客户端配置

@@ -10,6 +10,16 @@ import com.runjian.auth.vo.response.AuthDataRsp;
 public interface AuthService {
 
     /**
+     * 初始化
+     */
+    void init();
+
+    /**
+     * 定期清理过期时间
+     */
+    void clearOutTimeToken();
+
+    /**
      * 鉴权
      * @param reqUrl 访问url
      * @param reqMethod 访问方式

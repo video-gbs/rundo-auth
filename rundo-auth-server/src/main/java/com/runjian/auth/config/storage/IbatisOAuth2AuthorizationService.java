@@ -4,6 +4,7 @@ import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.runjian.auth.dao.OAuth2AuthorizationDao;
 import com.runjian.auth.entity.OAuth2AuthorizationInfo;
+import jakarta.annotation.PostConstruct;
 import lombok.RequiredArgsConstructor;
 import org.springframework.dao.DataRetrievalFailureException;
 import org.springframework.security.oauth2.core.AuthorizationGrantType;
@@ -40,6 +41,7 @@ public class IbatisOAuth2AuthorizationService implements OAuth2AuthorizationServ
     private final RegisteredClientRepository registeredClientRepository;
 
     private final ObjectMapper objectMapper;
+
 
     @Override
     @Transactional(rollbackFor = Exception.class)

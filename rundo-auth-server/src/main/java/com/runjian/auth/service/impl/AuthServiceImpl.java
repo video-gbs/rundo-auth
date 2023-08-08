@@ -9,13 +9,17 @@ import com.runjian.common.config.exception.BusinessErrorEnums;
 import com.runjian.common.config.exception.BusinessException;
 import com.runjian.common.config.response.CommonResponse;
 import com.runjian.common.constant.CommonConstant;
+import jakarta.annotation.PostConstruct;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.security.oauth2.core.OAuth2Token;
 import org.springframework.security.oauth2.server.authorization.OAuth2Authorization;
 import org.springframework.security.oauth2.server.authorization.OAuth2AuthorizationService;
 import org.springframework.stereotype.Service;
+
+import java.time.LocalDateTime;
 import java.util.Objects;
 
 /**
@@ -35,6 +39,18 @@ public class AuthServiceImpl implements AuthService {
     private final OAuth2AuthorizationService authorizationService;
 
     private final OAuth2AuthorizationDao authorizationDao;
+
+    @Override
+    @PostConstruct
+    public void init() {
+        authorizationDao.deleteAll();
+    }
+
+    @Override
+    @Scheduled(cron = "0 0 0 * * ?")
+    public void clearOutTimeToken() {
+        authorizationDao.deleteOutTimeToken(LocalDateTime.now());
+    }
 
     @Override
     public AuthDataRsp authenticate(String reqPath, String reqMethod, String queryData, String bodyData) {
