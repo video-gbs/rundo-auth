@@ -107,6 +107,9 @@ public class AuthUserServiceImpl implements AuthUserService {
                 return Collections.EMPTY_LIST;
             }
             Set<Long> menuIds = roleMenuMapper.selectMenuIdByRoleIds(authData.getRoleIds());
+            if (menuIds.isEmpty()){
+                return Collections.EMPTY_LIST;
+            }
             cmenuTreeRspList = menuMapper.selectAllByLevelNumStartAndLevelNumEndAndMenuIdsIn(levelNumStart, levelNumEnd, menuIds);
         }
         if (cmenuTreeRspList.isEmpty()){
