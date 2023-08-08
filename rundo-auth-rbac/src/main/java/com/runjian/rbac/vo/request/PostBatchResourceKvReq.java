@@ -1,5 +1,6 @@
 package com.runjian.rbac.vo.request;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
@@ -26,7 +27,7 @@ public class PostBatchResourceKvReq {
      * 资源value
      */
     @NotBlank(message = "父资源value不能为空")
-    private String pResourceValue;
+    private String parentResourceValue;
 
     /**
      * 资源类型 1-目录 2-资源

@@ -26,5 +26,5 @@ public class PutResourceFsMoveKvReq {
      * 资源value
      */
     @NotBlank(message = "父资源value不能为空")
-    private String pResourceValue;
+    private String parentResourceValue;
 }

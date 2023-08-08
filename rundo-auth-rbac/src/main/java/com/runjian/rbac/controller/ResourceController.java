@@ -82,7 +82,7 @@ public class ResourceController {
     @PostMapping("/batch/add/kv")
     public CommonResponse<?> batchAddResource(@RequestBody PostBatchResourceKvReq req){
         validatorService.validateRequest(req);
-        resourceService.batchAddResourceByKv(req.getResourceKey(), req.getPResourceValue(), req.getResourceType(), req.getResourceMap());
+        resourceService.batchAddResourceByKv(req.getResourceKey(), req.getParentResourceValue(), req.getResourceType(), req.getResourceMap());
         return CommonResponse.success();
     }
 
@@ -153,7 +153,7 @@ public class ResourceController {
     @PutMapping("/move/fs/kv")
     public CommonResponse<?> fsMove(@RequestBody PutResourceFsMoveKvReq req){
         validatorService.validateRequest(req);
-        resourceService.fsMoveByKv(req.getResourceKey(), req.getResourceValue(), req.getPResourceValue());
+        resourceService.fsMoveByKv(req.getResourceKey(), req.getResourceValue(), req.getParentResourceValue());
         return CommonResponse.success();
     }
 
