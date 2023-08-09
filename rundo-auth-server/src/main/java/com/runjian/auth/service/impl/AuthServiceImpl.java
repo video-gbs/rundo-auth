@@ -58,11 +58,11 @@ public class AuthServiceImpl implements AuthService {
         String jwtToken = request.getHeader(CommonConstant.AUTHORIZATION).split(" ")[1];
         OAuth2Authorization authorization = this.authorizationService.findByToken(jwtToken, null);
         if (Objects.isNull(authorization)){
-            return AuthDataRsp.getFailureRsp("非法token,请重新登录", HttpStatus.UNAUTHORIZED.value());
+            return AuthDataRsp.getFailureRsp(BusinessErrorEnums.USER_TOKEN_INVALID);
         }
         OAuth2Authorization.Token<OAuth2Token> authorizedToken = authorization.getToken(jwtToken);
         if (Objects.isNull(authorizedToken) || !authorizedToken.isActive()){
-            return AuthDataRsp.getFailureRsp("非法token,请重新登录", HttpStatus.UNAUTHORIZED.value());
+            return AuthDataRsp.getFailureRsp(BusinessErrorEnums.USER_TOKEN_INVALID);
         }
 
         CommonResponse<AuthDataRsp> authDataDtoCommonResponse = authRbacApi.authUserApi(new PostAuthUserApiReq(authorization.getPrincipalName(), String.join(",", authorization.getAuthorizedScopes()), reqMethod, reqPath, queryData, bodyData));

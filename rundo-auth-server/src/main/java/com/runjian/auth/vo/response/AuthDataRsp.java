@@ -1,5 +1,6 @@
 package com.runjian.auth.vo.response;
 
+import com.runjian.common.config.exception.BusinessErrorEnums;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -57,10 +58,10 @@ public class AuthDataRsp {
      * @param msg 消息
      * @return
      */
-    public static AuthDataRsp getFailureRsp(String msg, Integer statusCode){
+    public static AuthDataRsp getFailureRsp(BusinessErrorEnums businessErrorEnums){
         AuthDataRsp authDataRsp = new AuthDataRsp();
-        authDataRsp.setMsg(msg);
-        authDataRsp.setStatusCode(statusCode);
+        authDataRsp.setMsg(businessErrorEnums.getErrMsg());
+        authDataRsp.setStatusCode(businessErrorEnums.getState());
         return authDataRsp;
     }
 
