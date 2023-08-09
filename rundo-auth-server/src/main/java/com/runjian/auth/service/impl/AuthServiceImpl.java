@@ -13,6 +13,7 @@ import jakarta.annotation.PostConstruct;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.HttpStatus;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.security.oauth2.core.OAuth2Token;
 import org.springframework.security.oauth2.server.authorization.OAuth2Authorization;
@@ -57,11 +58,11 @@ public class AuthServiceImpl implements AuthService {
         String jwtToken = request.getHeader(CommonConstant.AUTHORIZATION).split(" ")[1];
         OAuth2Authorization authorization = this.authorizationService.findByToken(jwtToken, null);
         if (Objects.isNull(authorization)){
-            return AuthDataRsp.getFailureRsp("非法token,请重新登录", 401);
+            return AuthDataRsp.getFailureRsp("非法token,请重新登录", HttpStatus.UNAUTHORIZED.value());
         }
         OAuth2Authorization.Token<OAuth2Token> authorizedToken = authorization.getToken(jwtToken);
         if (Objects.isNull(authorizedToken) || !authorizedToken.isActive()){
-            return AuthDataRsp.getFailureRsp("非法token,请重新登录", 401);
+            return AuthDataRsp.getFailureRsp("非法token,请重新登录", HttpStatus.UNAUTHORIZED.value());
         }
 
         CommonResponse<AuthDataRsp> authDataDtoCommonResponse = authRbacApi.authUserApi(new PostAuthUserApiReq(authorization.getPrincipalName(), String.join(",", authorization.getAuthorizedScopes()), reqMethod, reqPath, queryData, bodyData));

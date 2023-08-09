@@ -61,7 +61,6 @@ public class AuthDataRsp {
         AuthDataRsp authDataRsp = new AuthDataRsp();
         authDataRsp.setMsg(msg);
         authDataRsp.setStatusCode(statusCode);
-        authDataRsp.setStatusCode(statusCode);
         return authDataRsp;
     }
 

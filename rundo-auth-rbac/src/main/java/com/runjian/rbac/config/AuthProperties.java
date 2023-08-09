@@ -6,6 +6,7 @@ import jakarta.annotation.PostConstruct;
 import lombok.Data;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpStatus;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
 import java.util.Set;
@@ -66,7 +67,7 @@ public class AuthProperties {
 
         this.adminData = new AuthDataDto();
         this.adminData.setIsAdmin(true);
-        this.adminData.setStatusCode(200);
+        this.adminData.setStatusCode(HttpStatus.OK.value());
         this.adminData.setUsername(adminUsername);
     }
 

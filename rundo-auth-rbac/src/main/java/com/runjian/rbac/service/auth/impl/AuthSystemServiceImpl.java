@@ -16,6 +16,7 @@ import com.runjian.rbac.vo.dto.CacheFuncDto;
 import com.runjian.rbac.vo.dto.AuthUserDto;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
 import org.springframework.util.StringUtils;
@@ -88,7 +89,7 @@ public class AuthSystemServiceImpl implements AuthSystemService {
 
         if (Objects.isNull(userRoles) || userRoles.isEmpty()) {
             authDataDto.setMsg(AuthStringEnum.USER_NO_ROLE.getFormat(null));
-            authDataDto.setStatusCode(403);
+            authDataDto.setStatusCode(HttpStatus.FORBIDDEN.value());
             return authDataDto;
         }
         authDataDto.setRoleIds(userRoles);
@@ -102,7 +103,7 @@ public class AuthSystemServiceImpl implements AuthSystemService {
 
         // 判断功能是否禁用
         if (CommonEnum.getBoolean(funcCache.getDisabled())){
-            authDataDto.setStatusCode(403);
+            authDataDto.setStatusCode(HttpStatus.FORBIDDEN.value());
             authDataDto.setMsg(AuthStringEnum.FUNC_IS_DISABLED.getFormat(funcCache.getFuncName()));
             return authDataDto;
         }
@@ -111,7 +112,7 @@ public class AuthSystemServiceImpl implements AuthSystemService {
         // 判断客户端是否有系统领域权限 || 判断客户端是否有当前接口的系统服务权限 || 判断该功能是否有权限角色绑定 || 判断角色是否包含该功能的权限
         if (scopeList.isEmpty() || nonIntersection(scopeList, Arrays.asList("all", funcCache.getScope())) || funcCache.getRoleIds().isEmpty() || nonIntersection(userRoles, funcCache.getRoleIds())) {
             authDataDto.setMsg(AuthStringEnum.USER_NO_FUNC.getFormat(funcCache.getFuncName()));
-            authDataDto.setStatusCode(403);
+            authDataDto.setStatusCode(HttpStatus.FORBIDDEN.value());
             return authDataDto;
         }
 
@@ -218,7 +219,7 @@ public class AuthSystemServiceImpl implements AuthSystemService {
             multiCheckMap.put(multiGroup, true);
         }
         if (multiCheckMap.containsValue(false)){
-            authDataDto.setStatusCode(403);
+            authDataDto.setStatusCode(HttpStatus.FORBIDDEN.value());
             authDataDto.setMsg(errorMsg);
             return authDataDto;
         }
@@ -233,12 +234,12 @@ public class AuthSystemServiceImpl implements AuthSystemService {
         if (Objects.nonNull(funcCache)){
             List<String> scopeList = Arrays.asList(scope.split(","));
             if (scopeList.isEmpty() || nonIntersection(scopeList, Arrays.asList("all", funcCache.getScope()))) {
-                authDataDto.setStatusCode(403);
+                authDataDto.setStatusCode(HttpStatus.FORBIDDEN.value());
                 authDataDto.setMsg(AuthStringEnum.CLIENT_NO_FUNC.getFormat(funcCache.getFuncName()));
                 return authDataDto;
             }
         }
-        authDataDto.setStatusCode(200);
+        authDataDto.setStatusCode(HttpStatus.OK.value());
         return authDataDto;
     }
 
