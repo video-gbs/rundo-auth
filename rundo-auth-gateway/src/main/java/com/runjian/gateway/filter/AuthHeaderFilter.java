@@ -31,7 +31,7 @@ public class AuthHeaderFilter implements GatewayFilter, Ordered {
         }
         AuthDataDto authDataDto = JSONObject.parseObject(JSONObject.toJSONString(successData), AuthDataDto.class);
         HttpStatus authHttpStatus = HttpStatus.valueOf(authDataDto.getStatusCode());
-        if (authHttpStatus.is2xxSuccessful()){
+        if (!HttpStatus.OK.equals(authHttpStatus)){
             ServerHttpResponse response = exchange.getResponse();
             response.setStatusCode(authHttpStatus);
             return response.writeAndFlushWith(Mono.just(ByteBufMono.just(response.bufferFactory().wrap(JSONObject.toJSONString(CommonResponse.failure(BusinessErrorEnums.USER_NO_AUTH, authDataDto.getMsg())).getBytes()))));
