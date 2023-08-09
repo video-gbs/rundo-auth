@@ -66,7 +66,7 @@ public class AuthProperties {
 
         this.adminData = new AuthDataDto();
         this.adminData.setIsAdmin(true);
-        this.adminData.setIsAuthorized(true);
+        this.adminData.setStatusCode(200);
         this.adminData.setUsername(adminUsername);
     }
 
