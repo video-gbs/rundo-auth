@@ -1,5 +1,6 @@
 package com.runjian.rbac.vo.dto;
 
+import com.runjian.rbac.constant.AuthStringEnum;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -20,10 +21,9 @@ import java.util.Map;
 public class AuthDataDto {
 
     /**
-     * 是否授权
+     * 状态码
      */
-    private Boolean isAuthorized;
-
+    private Integer statusCode;
     /**
      * 是否是超管
      */
@@ -53,6 +53,7 @@ public class AuthDataDto {
      * 授权的资源
      */
     private List<String> resourceKeyList = new ArrayList<>();
+
 
 
 

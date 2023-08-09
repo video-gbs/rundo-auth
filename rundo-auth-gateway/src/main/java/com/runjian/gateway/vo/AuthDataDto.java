@@ -18,7 +18,7 @@ public class AuthDataDto {
     /**
      * 是否授权
      */
-    private Boolean isAuthorized;
+    private Integer statusCode;
 
     /**
      * 是否是超管

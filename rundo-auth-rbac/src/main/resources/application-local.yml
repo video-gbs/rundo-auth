@@ -15,10 +15,10 @@ spring:
       - optional:nacos:${spring.application.name}-${spring.profiles.active}.yml
   data:
     redis:
-      host: ${REDIS_HOST:127.0.0.1}
-      port: ${REDIS_PORT:6379}
+      host: ${REDIS_HOST:124.71.16.209}
+      port: ${REDIS_PORT:6378}
       database: ${REDIS_DB:6}
-      password:
+      password: rundoredis
       timeout: 10000
   datasource:
     type: com.alibaba.druid.pool.DruidDataSource

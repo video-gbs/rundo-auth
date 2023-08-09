@@ -83,11 +83,12 @@ public class AuthSystemServiceImpl implements AuthSystemService {
         AuthDataDto authDataDto = new AuthDataDto();
         authDataDto.setIsAdmin(false);
         authDataDto.setUsername(username);
+        authDataDto.setStatusCode(200);
         List<Long> userRoles = cacheService.getUserRole(username);
 
         if (Objects.isNull(userRoles) || userRoles.isEmpty()) {
             authDataDto.setMsg(AuthStringEnum.USER_NO_ROLE.getFormat(null));
-            authDataDto.setIsAuthorized(false);
+            authDataDto.setStatusCode(403);
             return authDataDto;
         }
         authDataDto.setRoleIds(userRoles);
@@ -96,13 +97,12 @@ public class AuthSystemServiceImpl implements AuthSystemService {
 
         // 判断是否是保护的参数
         if (Objects.isNull(funcCache)) {
-            authDataDto.setIsAuthorized(true);
             return authDataDto;
         }
 
         // 判断功能是否禁用
         if (CommonEnum.getBoolean(funcCache.getDisabled())){
-            authDataDto.setIsAuthorized(false);
+            authDataDto.setStatusCode(403);
             authDataDto.setMsg(AuthStringEnum.FUNC_IS_DISABLED.getFormat(funcCache.getFuncName()));
             return authDataDto;
         }
@@ -111,13 +111,12 @@ public class AuthSystemServiceImpl implements AuthSystemService {
         // 判断客户端是否有系统领域权限 || 判断客户端是否有当前接口的系统服务权限 || 判断该功能是否有权限角色绑定 || 判断角色是否包含该功能的权限
         if (scopeList.isEmpty() || nonIntersection(scopeList, Arrays.asList("all", funcCache.getScope())) || funcCache.getRoleIds().isEmpty() || nonIntersection(userRoles, funcCache.getRoleIds())) {
             authDataDto.setMsg(AuthStringEnum.USER_NO_FUNC.getFormat(funcCache.getFuncName()));
-            authDataDto.setIsAuthorized(false);
+            authDataDto.setStatusCode(403);
             return authDataDto;
         }
 
         // 判断是否需要参数校验
         if (CollectionUtils.isEmpty(funcCache.getFuncResourceDataList())) {
-            authDataDto.setIsAuthorized(true);
             return authDataDto;
         }
 
@@ -219,11 +218,10 @@ public class AuthSystemServiceImpl implements AuthSystemService {
             multiCheckMap.put(multiGroup, true);
         }
         if (multiCheckMap.containsValue(false)){
-            authDataDto.setIsAuthorized(false);
+            authDataDto.setStatusCode(403);
             authDataDto.setMsg(errorMsg);
             return authDataDto;
         }
-        authDataDto.setIsAuthorized(true);
         return authDataDto;
     }
 
@@ -235,12 +233,12 @@ public class AuthSystemServiceImpl implements AuthSystemService {
         if (Objects.nonNull(funcCache)){
             List<String> scopeList = Arrays.asList(scope.split(","));
             if (scopeList.isEmpty() || nonIntersection(scopeList, Arrays.asList("all", funcCache.getScope()))) {
-                authDataDto.setIsAuthorized(false);
+                authDataDto.setStatusCode(403);
                 authDataDto.setMsg(AuthStringEnum.CLIENT_NO_FUNC.getFormat(funcCache.getFuncName()));
                 return authDataDto;
             }
         }
-        authDataDto.setIsAuthorized(true);
+        authDataDto.setStatusCode(200);
         return authDataDto;
     }
 

@@ -16,9 +16,9 @@ import java.util.List;
 public class AuthDataRsp {
 
     /**
-     * 是否授权
+     * 状态码
      */
-    private Boolean isAuthorized;
+    private Integer statusCode;
 
     /**
      * 是否是超管
@@ -51,15 +51,17 @@ public class AuthDataRsp {
     private String resourceKey;
 
 
+
     /**
      * 获取失败返回
      * @param msg 消息
      * @return
      */
-    public static AuthDataRsp getFailureRsp(String msg){
+    public static AuthDataRsp getFailureRsp(String msg, Integer statusCode){
         AuthDataRsp authDataRsp = new AuthDataRsp();
         authDataRsp.setMsg(msg);
         authDataRsp.setIsAuthorized(false);
+        authDataRsp.setStatusCode(statusCode);
         return authDataRsp;
     }
 
