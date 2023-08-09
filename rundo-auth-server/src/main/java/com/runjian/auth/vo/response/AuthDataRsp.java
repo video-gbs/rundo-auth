@@ -60,7 +60,7 @@ public class AuthDataRsp {
     public static AuthDataRsp getFailureRsp(String msg, Integer statusCode){
         AuthDataRsp authDataRsp = new AuthDataRsp();
         authDataRsp.setMsg(msg);
-        authDataRsp.setIsAuthorized(false);
+        authDataRsp.setStatusCode(statusCode);
         authDataRsp.setStatusCode(statusCode);
         return authDataRsp;
     }
