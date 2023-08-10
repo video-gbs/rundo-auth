@@ -60,6 +60,7 @@ public class PostAddUserReq implements ValidatorFunction {
     /**
      * 工作名称
      */
+    @NotBlank(message = "工作名称不能为空")
     @Size(max = 32, message = "非法名称，长度范围1~32")
     private String workName;
 
