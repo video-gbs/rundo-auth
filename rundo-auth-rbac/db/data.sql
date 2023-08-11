@@ -1,186 +1,211 @@
 # 字典数据
-INSERT INTO rundo_auth_rbac.rbac_dict (id, group_name, group_code, item_name, item_value, description, create_time, update_time) VALUES (12, '设备类型', 'DeviceTypes', 'DVR', '1', '', '2023-07-19 15:10:43', '2023-07-19 15:10:43');
-INSERT INTO rundo_auth_rbac.rbac_dict (id, group_name, group_code, item_name, item_value, description, create_time, update_time) VALUES (13, '设备类型', 'DeviceTypes', 'NVR', '2', '', '2023-07-19 15:11:53', '2023-07-19 15:11:53');
-INSERT INTO rundo_auth_rbac.rbac_dict (id, group_name, group_code, item_name, item_value, description, create_time, update_time) VALUES (14, '外观类型', 'Appearance', '枪机', '1', '', '2023-07-19 15:11:56', '2023-07-19 15:11:56');
-INSERT INTO rundo_auth_rbac.rbac_dict (id, group_name, group_code, item_name, item_value, description, create_time, update_time) VALUES (15, '设备类型', 'DeviceTypes', 'CVR', '3', '', '2023-07-19 15:12:04', '2023-07-19 15:12:04');
-INSERT INTO rundo_auth_rbac.rbac_dict (id, group_name, group_code, item_name, item_value, description, create_time, update_time) VALUES (16, '外观类型', 'Appearance', '球机', '2', '', '2023-07-19 15:12:08', '2023-07-19 15:12:08');
-INSERT INTO rundo_auth_rbac.rbac_dict (id, group_name, group_code, item_name, item_value, description, create_time, update_time) VALUES (17, '设备类型', 'DeviceTypes', 'DVS', '4', '', '2023-07-19 15:12:17', '2023-07-19 15:12:17');
-INSERT INTO rundo_auth_rbac.rbac_dict (id, group_name, group_code, item_name, item_value, description, create_time, update_time) VALUES (18, '外观类型', 'Appearance', '半球', '3', '', '2023-07-19 15:12:21', '2023-07-19 15:12:21');
-INSERT INTO rundo_auth_rbac.rbac_dict (id, group_name, group_code, item_name, item_value, description, create_time, update_time) VALUES (19, '设备类型', 'DeviceTypes', 'IPC', '5', '', '2023-07-19 15:12:28', '2023-07-19 15:12:28');
-INSERT INTO rundo_auth_rbac.rbac_dict (id, group_name, group_code, item_name, item_value, description, create_time, update_time) VALUES (20, '外观类型', 'Appearance', '云台枪机', '4', '', '2023-07-19 15:12:38', '2023-07-19 15:12:38');
-INSERT INTO rundo_auth_rbac.rbac_dict (id, group_name, group_code, item_name, item_value, description, create_time, update_time) VALUES (21, '外观类型', 'Appearance', 'AR球机', '5', '', '2023-07-19 15:12:50', '2023-07-19 15:12:50');
-INSERT INTO rundo_auth_rbac.rbac_dict (id, group_name, group_code, item_name, item_value, description, create_time, update_time) VALUES (22, '外观类型', 'Appearance', '全景', '6', '', '2023-07-19 15:13:02', '2023-07-19 15:13:02');
-INSERT INTO rundo_auth_rbac.rbac_dict (id, group_name, group_code, item_name, item_value, description, create_time, update_time) VALUES (23, '外观类型', 'Appearance', '其它', '7', '', '2023-07-19 15:13:14', '2023-07-19 15:13:14');
-INSERT INTO rundo_auth_rbac.rbac_dict (id, group_name, group_code, item_name, item_value, description, create_time, update_time) VALUES (24, '应用分类', 'AppTypes', 'Func', '1', '功能应用', '2023-07-19 15:13:29', '2023-07-19 15:13:29');
-INSERT INTO rundo_auth_rbac.rbac_dict (id, group_name, group_code, item_name, item_value, description, create_time, update_time) VALUES (25, '应用分类', 'AppTypes', 'Conf', '2', '配置应用', '2023-07-19 15:13:41', '2023-07-19 15:13:41');
-INSERT INTO rundo_auth_rbac.rbac_dict (id, group_name, group_code, item_name, item_value, description, create_time, update_time) VALUES (26, '应用分类', 'AppTypes', 'Dev', '3', '配置应用', '2023-07-19 15:13:55', '2023-07-19 15:13:55');
-INSERT INTO rundo_auth_rbac.rbac_dict (id, group_name, group_code, item_name, item_value, description, create_time, update_time) VALUES (27, '朝向', 'Toward', '东', '1', '', '2023-07-19 15:15:05', '2023-07-19 15:15:05');
-INSERT INTO rundo_auth_rbac.rbac_dict (id, group_name, group_code, item_name, item_value, description, create_time, update_time) VALUES (28, '朝向', 'Toward', '南', '2', '', '2023-07-19 15:15:48', '2023-07-19 15:15:48');
-INSERT INTO rundo_auth_rbac.rbac_dict (id, group_name, group_code, item_name, item_value, description, create_time, update_time) VALUES (29, '朝向', 'Toward', '西', '3', '', '2023-07-19 15:15:59', '2023-07-19 15:15:59');
-INSERT INTO rundo_auth_rbac.rbac_dict (id, group_name, group_code, item_name, item_value, description, create_time, update_time) VALUES (30, '朝向', 'Toward', '北', '4', '', '2023-07-19 15:16:10', '2023-07-19 15:16:10');
-INSERT INTO rundo_auth_rbac.rbac_dict (id, group_name, group_code, item_name, item_value, description, create_time, update_time) VALUES (31, '朝向', 'Toward', '东南', '5', '', '2023-07-19 15:16:21', '2023-07-19 15:16:21');
-INSERT INTO rundo_auth_rbac.rbac_dict (id, group_name, group_code, item_name, item_value, description, create_time, update_time) VALUES (32, '朝向', 'Toward', '西南', '6', '', '2023-07-19 15:16:32', '2023-07-19 15:16:32');
-INSERT INTO rundo_auth_rbac.rbac_dict (id, group_name, group_code, item_name, item_value, description, create_time, update_time) VALUES (33, '设备厂商', 'EquipmentCompany', '海康', 'hikvision', '', '2023-07-19 15:16:35', '2023-07-19 15:16:35');
-INSERT INTO rundo_auth_rbac.rbac_dict (id, group_name, group_code, item_name, item_value, description, create_time, update_time) VALUES (34, '设备厂商', 'EquipmentCompany', '大华', 'dahua', '', '2023-07-19 15:16:47', '2023-07-19 15:16:47');
-INSERT INTO rundo_auth_rbac.rbac_dict (id, group_name, group_code, item_name, item_value, description, create_time, update_time) VALUES (35, '朝向', 'Toward', '西北', '7', '', '2023-07-19 15:16:56', '2023-07-19 15:16:56');
-INSERT INTO rundo_auth_rbac.rbac_dict (id, group_name, group_code, item_name, item_value, description, create_time, update_time) VALUES (36, '设备厂商', 'EquipmentCompany', '宇视', 'yushi', '', '2023-07-19 15:17:01', '2023-07-19 15:17:01');
-INSERT INTO rundo_auth_rbac.rbac_dict (id, group_name, group_code, item_name, item_value, description, create_time, update_time) VALUES (37, '朝向', 'Toward', '东北', '8', '', '2023-07-19 15:17:06', '2023-07-19 15:17:06');
-INSERT INTO rundo_auth_rbac.rbac_dict (id, group_name, group_code, item_name, item_value, description, create_time, update_time) VALUES (38, '朝向', 'Toward', '全向', '9', '', '2023-07-19 15:17:17', '2023-07-19 15:17:17');
-INSERT INTO rundo_auth_rbac.rbac_dict (id, group_name, group_code, item_name, item_value, description, create_time, update_time) VALUES (39, '设备厂商', 'EquipmentCompany', '华为', 'huawei', '', '2023-07-19 15:17:17', '2023-07-19 15:17:17');
-INSERT INTO rundo_auth_rbac.rbac_dict (id, group_name, group_code, item_name, item_value, description, create_time, update_time) VALUES (40, '设备状态', 'DeviceState', '在线', '1', '', '2023-07-19 15:17:51', '2023-07-19 15:17:51');
-INSERT INTO rundo_auth_rbac.rbac_dict (id, group_name, group_code, item_name, item_value, description, create_time, update_time) VALUES (41, '设备状态', 'DeviceState', '离线', '2', '', '2023-07-19 15:18:02', '2023-07-19 15:18:47');
-INSERT INTO rundo_auth_rbac.rbac_dict (id, group_name, group_code, item_name, item_value, description, create_time, update_time) VALUES (42, '传输协议', 'TransportProtocol', 'UDP', 'UDP', '', '2023-07-19 15:18:48', '2023-07-19 15:18:48');
-INSERT INTO rundo_auth_rbac.rbac_dict (id, group_name, group_code, item_name, item_value, description, create_time, update_time) VALUES (43, '传输协议', 'TransportProtocol', 'TCP', 'TCP', '', '2023-07-19 15:19:02', '2023-07-19 15:46:56');
-INSERT INTO rundo_auth_rbac.rbac_dict (id, group_name, group_code, item_name, item_value, description, create_time, update_time) VALUES (44, '通道类型', 'ChannelType', '视频', '0', '', '2023-07-19 15:19:39', '2023-07-19 15:19:39');
-INSERT INTO rundo_auth_rbac.rbac_dict (id, group_name, group_code, item_name, item_value, description, create_time, update_time) VALUES (45, '通道类型', 'ChannelType', '告警', '2', '', '2023-07-19 15:19:52', '2023-07-19 15:19:52');
-INSERT INTO rundo_auth_rbac.rbac_dict (id, group_name, group_code, item_name, item_value, description, create_time, update_time) VALUES (46, '通道类型', 'ChannelType', '音频', '1', '', '2023-07-19 15:20:03', '2023-07-19 15:20:03');
+insert into rundo_auth_rbac.rbac_dict (id, group_name, group_code, item_name, item_value, description, create_time, update_time)
+values  (12, '设备类型', 'DeviceTypes', 'DVR', '1', '', '2023-07-19 15:10:43', '2023-08-07 16:56:27'),
+        (13, '设备类型', 'DeviceTypes', 'NVR', '2', '', '2023-07-19 15:11:53', '2023-07-19 15:11:53'),
+        (14, '外观类型', 'Appearance', '枪机', '0', '', '2023-07-19 15:11:56', '2023-08-09 11:24:14'),
+        (15, '设备类型', 'DeviceTypes', 'CVR', '3', '', '2023-07-19 15:12:04', '2023-07-19 15:12:04'),
+        (16, '外观类型', 'Appearance', '球机', '2', '', '2023-07-19 15:12:08', '2023-07-19 15:12:08'),
+        (17, '设备类型', 'DeviceTypes', 'DVS', '4', '', '2023-07-19 15:12:17', '2023-07-19 15:12:17'),
+        (18, '外观类型', 'Appearance', '半球', '3', '', '2023-07-19 15:12:21', '2023-07-19 15:12:21'),
+        (19, '设备类型', 'DeviceTypes', 'IPC', '5', '', '2023-07-19 15:12:28', '2023-07-19 15:12:28'),
+        (20, '外观类型', 'Appearance', '云台枪机', '4', '', '2023-07-19 15:12:38', '2023-07-19 15:12:38'),
+        (21, '外观类型', 'Appearance', 'AR球机', '5', '', '2023-07-19 15:12:50', '2023-07-19 15:12:50'),
+        (22, '外观类型', 'Appearance', '全景', '6', '', '2023-07-19 15:13:02', '2023-07-19 15:13:02'),
+        (23, '外观类型', 'Appearance', '其它', '7', '', '2023-07-19 15:13:14', '2023-07-19 15:13:14'),
+        (24, '应用分类', 'AppTypes', 'Func', '1', '功能应用', '2023-07-19 15:13:29', '2023-07-19 15:13:29'),
+        (25, '应用分类', 'AppTypes', 'Conf', '2', '配置应用', '2023-07-19 15:13:41', '2023-07-19 15:13:41'),
+        (26, '应用分类', 'AppTypes', 'Dev', '3', '配置应用', '2023-07-19 15:13:55', '2023-07-19 15:13:55'),
+        (27, '朝向', 'Toward', '东', '1', '', '2023-07-19 15:15:05', '2023-07-19 15:15:05'),
+        (28, '朝向', 'Toward', '南', '2', '', '2023-07-19 15:15:48', '2023-07-19 15:15:48'),
+        (29, '朝向', 'Toward', '西', '3', '', '2023-07-19 15:15:59', '2023-07-19 15:15:59'),
+        (30, '朝向', 'Toward', '北', '4', '', '2023-07-19 15:16:10', '2023-07-19 15:16:10'),
+        (31, '朝向', 'Toward', '东南', '5', '', '2023-07-19 15:16:21', '2023-07-19 15:16:21'),
+        (32, '朝向', 'Toward', '西南', '6', '', '2023-07-19 15:16:32', '2023-07-19 15:16:32'),
+        (33, '设备厂商', 'EquipmentCompany', '海康', 'hikvision', '', '2023-07-19 15:16:35', '2023-07-19 15:16:35'),
+        (34, '设备厂商', 'EquipmentCompany', '大华', 'dahua', '', '2023-07-19 15:16:47', '2023-07-19 15:16:47'),
+        (35, '朝向', 'Toward', '西北', '7', '', '2023-07-19 15:16:56', '2023-07-19 15:16:56'),
+        (36, '设备厂商', 'EquipmentCompany', '宇视', 'yushi', '', '2023-07-19 15:17:01', '2023-07-19 15:17:01'),
+        (37, '朝向', 'Toward', '东北', '8', '', '2023-07-19 15:17:06', '2023-07-19 15:17:06'),
+        (38, '朝向', 'Toward', '全向', '9', '', '2023-07-19 15:17:17', '2023-07-19 15:17:17'),
+        (39, '设备厂商', 'EquipmentCompany', '华为', 'huawei', '', '2023-07-19 15:17:17', '2023-07-19 15:17:17'),
+        (40, '设备状态', 'DeviceState', '在线', '1', '', '2023-07-19 15:17:51', '2023-07-19 15:17:51'),
+        (41, '设备状态', 'DeviceState', '离线', '2', '', '2023-07-19 15:18:02', '2023-07-19 15:18:47'),
+        (42, '传输协议', 'TransportProtocol', 'UDP', 'UDP', '', '2023-07-19 15:18:48', '2023-07-19 15:18:48'),
+        (43, '传输协议', 'TransportProtocol', 'TCP', 'TCP', '', '2023-07-19 15:19:02', '2023-07-19 15:46:56'),
+        (44, '通道类型', 'ChannelType', '视频', '0', '', '2023-07-19 15:19:39', '2023-07-19 15:19:39'),
+        (45, '通道类型', 'ChannelType', '告警', '2', '', '2023-07-19 15:19:52', '2023-07-19 15:19:52'),
+        (46, '通道类型', 'ChannelType', '音频', '1', '', '2023-07-19 15:20:03', '2023-07-19 15:20:03'),
+        (47, '设备类型', 'DeviceTypes', 'ZDY', '99', '自定义测试', '2023-08-03 17:13:23', '2023-08-03 17:14:04'),
+        (48, '外观类型', 'Appearance', '鱼眼相机', '10', '鱼眼相机--自定义', '2023-08-03 17:15:34', '2023-08-03 17:15:34'),
+        (49, '设备厂商', 'EquipmentCompany', '天地伟业', 'TDWY99', '天地伟业-测试', '2023-08-03 17:22:33', '2023-08-03 17:22:52');
 
 #菜单数据
-INSERT INTO rundo_auth_rbac.rbac_menu (id, menu_pid, sort, menu_type, path, component, name, icon, description, level, level_num, is_full_screen, disabled, create_time, update_time) VALUES (7, 0, 1, 1, '/management', 'Layout', '应用', '', '', '0', 1, 1, 0, '2023-07-06 19:25:52', '2023-07-12 09:37:33');
-INSERT INTO rundo_auth_rbac.rbac_menu (id, menu_pid, sort, menu_type, path, component, name, icon, description, level, level_num, is_full_screen, disabled, create_time, update_time) VALUES (8, 0, 3, 1, '/systemManagement', 'Layout', '配置', '', '', '0', 1, 0, 0, '2023-07-06 19:25:17', '2023-07-10 10:20:44');
-INSERT INTO rundo_auth_rbac.rbac_menu (id, menu_pid, sort, menu_type, path, component, name, icon, description, level, level_num, is_full_screen, disabled, create_time, update_time) VALUES (9, 0, 2, 2, '/resourceManagement', 'Layout', '运维', '', '', '0', 1, 0, 0, '2023-07-06 19:23:49', '2023-07-10 10:21:10');
-INSERT INTO rundo_auth_rbac.rbac_menu (id, menu_pid, sort, menu_type, path, component, name, icon, description, level, level_num, is_full_screen, disabled, create_time, update_time) VALUES (10, 23, 2, 2, '/menuManagement', '/leftMenus/systemManagement/system/menuManagement.vue', '菜单管理', '', '', '0-9-23', 2, 0, 0, '2023-07-06 19:36:43', '2023-07-10 10:19:10');
-INSERT INTO rundo_auth_rbac.rbac_menu (id, menu_pid, sort, menu_type, path, component, name, icon, description, level, level_num, is_full_screen, disabled, create_time, update_time) VALUES (11, 23, 1, 2, '/dataDictionary', '/leftMenus/systemManagement/system/dataDictionary.vue', '数据字典', '', '', '0-9-23', 2, 0, 0, '2023-07-06 19:37:25', '2023-07-10 10:19:05');
-INSERT INTO rundo_auth_rbac.rbac_menu (id, menu_pid, sort, menu_type, path, component, name, icon, description, level, level_num, is_full_screen, disabled, create_time, update_time) VALUES (12, 25, 3, 2, '/accountManagement', '/leftMenus/systemManagement/accountManagement/index', '用户管理', '', '', '0-8-25', 2, 0, 0, '2023-07-06 19:38:18', '2023-07-10 10:18:33');
-INSERT INTO rundo_auth_rbac.rbac_menu (id, menu_pid, sort, menu_type, path, component, name, icon, description, level, level_num, is_full_screen, disabled, create_time, update_time) VALUES (13, 23, 3, 2, '/featureApi', '/leftMenus/systemManagement/FeatureApi/index', '功能接口', '', '', '0-9-23', 2, 0, 0, '2023-07-06 19:38:51', '2023-07-10 10:19:15');
-INSERT INTO rundo_auth_rbac.rbac_menu (id, menu_pid, sort, menu_type, path, component, name, icon, description, level, level_num, is_full_screen, disabled, create_time, update_time) VALUES (15, 23, 4, 2, '/resourceInterface', '/leftMenus/systemManagement/resourceInterface/index', '资源接口', '', '', '0-9-23', 2, 0, 0, '2023-07-06 19:40:15', '2023-07-10 10:19:20');
-INSERT INTO rundo_auth_rbac.rbac_menu (id, menu_pid, sort, menu_type, path, component, name, icon, description, level, level_num, is_full_screen, disabled, create_time, update_time) VALUES (19, 44, 1, 2, '/recordView', '/leftMenus/resourceManagement/components/RecordView.vue', '录像回放', 'lxhf', '', '0-7-44', 2, 0, 0, '2023-07-06 19:45:21', '2023-07-10 17:02:03');
-INSERT INTO rundo_auth_rbac.rbac_menu (id, menu_pid, sort, menu_type, path, component, name, icon, description, level, level_num, is_full_screen, disabled, create_time, update_time) VALUES (20, 43, 1, 2, '/live', '/leftMenus/resourceManagement/live.vue', '实施监控', 'ssjk', '', '0-7-43', 2, 0, 0, '2023-07-06 19:46:17', '2023-07-10 17:01:40');
-INSERT INTO rundo_auth_rbac.rbac_menu (id, menu_pid, sort, menu_type, path, component, name, icon, description, level, level_num, is_full_screen, disabled, create_time, update_time) VALUES (23, 9, 1, 1, '/systemManagement', 'Layout', '系统管理', 'xtgl', '', '0-9', 2, 0, 0, '2023-07-07 09:45:18', '2023-07-07 09:45:18');
-INSERT INTO rundo_auth_rbac.rbac_menu (id, menu_pid, sort, menu_type, path, component, name, icon, description, level, level_num, is_full_screen, disabled, create_time, update_time) VALUES (24, 8, 1, 1, '/resourceManagement', 'Layout', '资源管理', 'zygl', '', '0-8', 2, 0, 0, '2023-07-07 09:49:30', '2023-07-07 09:49:30');
-INSERT INTO rundo_auth_rbac.rbac_menu (id, menu_pid, sort, menu_type, path, component, name, icon, description, level, level_num, is_full_screen, disabled, create_time, update_time) VALUES (25, 8, 2, 1, '/organizationManagement', 'Layout', '组织管理', 'zzgl', '', '0-8', 2, 0, 0, '2023-07-07 09:52:13', '2023-07-10 10:48:21');
-INSERT INTO rundo_auth_rbac.rbac_menu (id, menu_pid, sort, menu_type, path, component, name, icon, description, level, level_num, is_full_screen, disabled, create_time, update_time) VALUES (26, 8, 3, 1, '/moduleManageMent', 'Layout', '服务管理', 'fwgl', '', '0-8', 2, 0, 0, '2023-07-07 09:53:19', '2023-07-07 09:53:19');
-INSERT INTO rundo_auth_rbac.rbac_menu (id, menu_pid, sort, menu_type, path, component, name, icon, description, level, level_num, is_full_screen, disabled, create_time, update_time) VALUES (27, 24, 1, 2, '/equipment', '/leftMenus/resourceManagement/index', '前端设备', null, '', '0-8-24', 3, 0, 0, '2023-07-10 10:03:43', '2023-07-10 10:30:31');
-INSERT INTO rundo_auth_rbac.rbac_menu (id, menu_pid, sort, menu_type, path, component, name, icon, description, level, level_num, is_full_screen, disabled, create_time, update_time) VALUES (35, 25, 4, 2, '/unitManagement', '/leftMenus/systemManagement/unitManagement/index', '部门管理', null, '', '0-8-25', 3, 0, 0, '2023-07-10 10:09:47', '2023-07-10 10:22:23');
-INSERT INTO rundo_auth_rbac.rbac_menu (id, menu_pid, sort, menu_type, path, component, name, icon, description, level, level_num, is_full_screen, disabled, create_time, update_time) VALUES (39, 25, 2, 2, '/roleManagement', '/leftMenus/systemManagement/roleManagement/index', '角色管理', null, '', '0-8-25', 3, 0, 0, '2023-07-10 10:12:27', '2023-07-10 10:22:14');
-INSERT INTO rundo_auth_rbac.rbac_menu (id, menu_pid, sort, menu_type, path, component, name, icon, description, level, level_num, is_full_screen, disabled, create_time, update_time) VALUES (40, 26, 1, 2, '/moduleManagement', '/leftMenus/resourceManagement/components/ModuleManagement.vue', '模块管理', null, '', '0-8-26', 3, 0, 0, '2023-07-10 10:13:18', '2023-07-10 10:13:18');
-INSERT INTO rundo_auth_rbac.rbac_menu (id, menu_pid, sort, menu_type, path, component, name, icon, description, level, level_num, is_full_screen, disabled, create_time, update_time) VALUES (41, 26, 2, 2, '/gatewayModuleManagement', '/leftMenus/resourceManagement/components/GatewayModuleManagement.vue', '网关模块', null, '', '0-8-26', 3, 0, 0, '2023-07-10 10:13:47', '2023-07-10 10:13:47');
-INSERT INTO rundo_auth_rbac.rbac_menu (id, menu_pid, sort, menu_type, path, component, name, icon, description, level, level_num, is_full_screen, disabled, create_time, update_time) VALUES (43, 7, 1, 1, '/live', 'Layout', '实施监控', 'ssjk', '', '0-7', 2, 0, 0, '2023-07-10 17:00:39', '2023-07-10 17:00:39');
-INSERT INTO rundo_auth_rbac.rbac_menu (id, menu_pid, sort, menu_type, path, component, name, icon, description, level, level_num, is_full_screen, disabled, create_time, update_time) VALUES (44, 7, 2, 1, '/recordView', 'Layout', '录像回放', 'lxhf', '', '0-7', 2, 0, 0, '2023-07-10 17:01:16', '2023-07-10 17:01:16');
-
+insert into rundo_auth_rbac.rbac_menu (id, menu_pid, sort, menu_type, path, component, name, icon, description, level, level_num, is_full_screen, disabled, create_time, update_time)
+values  (7, 0, 1, 1, '/management', 'Layout', '应用', '', '', '0', 1, 1, 0, '2023-07-06 19:25:52', '2023-07-12 09:37:33'),
+        (8, 0, 3, 1, '/systemManagement', 'Layout', '配置', '', '', '0', 1, 0, 0, '2023-07-06 19:25:17', '2023-07-10 10:20:44'),
+        (9, 0, 2, 1, '/resourceManagement', 'Layout', '运维', '', '', '0', 1, 0, 0, '2023-07-06 19:23:49', '2023-07-31 17:01:47'),
+        (10, 23, 2, 2, '/menuManagement', '/leftMenus/systemManagement/system/menuManagement.vue', '菜单管理', '', '', '0-9-23', 2, 0, 0, '2023-07-06 19:36:43', '2023-07-10 10:19:10'),
+        (11, 23, 1, 2, '/dataDictionary', '/leftMenus/systemManagement/system/dataDictionary.vue', '数据字典', '', '', '0-9-23', 2, 0, 0, '2023-07-06 19:37:25', '2023-07-31 17:01:49'),
+        (12, 25, 3, 2, '/accountManagement', '/leftMenus/systemManagement/accountManagement/index', '用户管理', '', '', '0-8-25', 2, 0, 0, '2023-07-06 19:38:18', '2023-07-10 10:18:33'),
+        (13, 23, 3, 2, '/featureApi', '/leftMenus/systemManagement/FeatureApi/index', '功能接口', '', '', '0-9-23', 2, 0, 0, '2023-07-06 19:38:51', '2023-07-10 10:19:15'),
+        (15, 23, 4, 2, '/resourceInterface', '/leftMenus/systemManagement/resourceInterface/index', '资源接口', '', '', '0-9-23', 2, 0, 0, '2023-07-06 19:40:15', '2023-07-10 10:19:20'),
+        (19, 44, 1, 2, '/recordView', '/leftMenus/resourceManagement/components/RecordView.vue', '录像回放', 'lxhf', '', '0-7-44', 2, 0, 0, '2023-07-06 19:45:21', '2023-08-10 15:54:48'),
+        (20, 43, 1, 2, '/live', '/leftMenus/resourceManagement/live.vue', '实时监控', 'ssjk', '', '0-7-43', 2, 0, 0, '2023-07-06 19:46:17', '2023-08-08 15:22:37'),
+        (23, 9, 1, 1, '/systemManagement', 'Layout', '系统管理', 'xtgl', '', '0-9', 2, 0, 0, '2023-07-07 09:45:18', '2023-07-07 09:45:18'),
+        (24, 8, 1, 1, '/resourceManagement', 'Layout', '资源管理', 'zygl', '', '0-8', 2, 0, 0, '2023-07-07 09:49:30', '2023-07-07 09:49:30'),
+        (25, 8, 2, 1, '/organizationManagement', 'Layout', '组织管理', 'zzgl', '', '0-8', 2, 0, 0, '2023-07-07 09:52:13', '2023-07-10 10:48:21'),
+        (26, 8, 3, 1, '/moduleManageMent', 'Layout', '服务管理', 'fwgl', '', '0-8', 2, 0, 0, '2023-07-07 09:53:19', '2023-07-07 09:53:19'),
+        (27, 24, 1, 2, '/equipment', '/leftMenus/resourceManagement/index', '前端设备', null, '', '0-8-24', 3, 0, 0, '2023-07-10 10:03:43', '2023-07-10 10:30:31'),
+        (35, 25, 4, 2, '/unitManagement', '/leftMenus/systemManagement/unitManagement/index', '部门管理', null, '', '0-8-25', 3, 0, 0, '2023-07-10 10:09:47', '2023-07-10 10:22:23'),
+        (39, 25, 2, 2, '/roleManagement', '/leftMenus/systemManagement/roleManagement/index', '角色管理', null, '', '0-8-25', 3, 0, 0, '2023-07-10 10:12:27', '2023-07-10 10:22:14'),
+        (40, 26, 1, 2, '/moduleManagement', '/leftMenus/resourceManagement/components/ModuleManagement.vue', '模块管理', null, '', '0-8-26', 3, 0, 0, '2023-07-10 10:13:18', '2023-07-10 10:13:18'),
+        (41, 26, 2, 2, '/gatewayModuleManagement', '/leftMenus/resourceManagement/components/GatewayModuleManagement.vue', '网关模块', null, '', '0-8-26', 3, 0, 0, '2023-07-10 10:13:47', '2023-07-10 10:13:47'),
+        (43, 7, 1, 1, '/live', 'Layout', '实时监控', 'ssjk', '', '0-7', 2, 0, 0, '2023-07-10 17:00:39', '2023-08-08 15:22:29'),
+        (44, 7, 2, 1, '/recordView', 'Layout', '录像回放', 'lxhf', '', '0-7', 2, 0, 0, '2023-07-10 17:01:16', '2023-08-03 17:38:08');
 
 # 功能接口数据
-INSERT INTO rundo_auth_rbac.rbac_func (id, menu_id, service_name, func_name, scope, path, method, disabled, create_time, update_time) VALUES (15, 1, 'cs', 'sc', 'cs', 'csscc', 2, 0, '2023-07-06 17:27:26', '2023-07-06 17:27:26');
-INSERT INTO rundo_auth_rbac.rbac_func (id, menu_id, service_name, func_name, scope, path, method, disabled, create_time, update_time) VALUES (16, 1, '1wc', 'c1w', '1', '1w', 1, 0, '2023-07-06 17:27:48', '2023-07-06 17:27:48');
-INSERT INTO rundo_auth_rbac.rbac_func (id, menu_id, service_name, func_name, scope, path, method, disabled, create_time, update_time) VALUES (18, 11, '权限模块', '字典查询', 'auth-rbac', '/rbac/dict/page', 1, 0, '2023-07-11 10:30:19', '2023-07-11 10:30:54');
-INSERT INTO rundo_auth_rbac.rbac_func (id, menu_id, service_name, func_name, scope, path, method, disabled, create_time, update_time) VALUES (19, 11, '权限模块', '增加字典', 'auth-rbac', '/rbac/dict/add', 2, 0, '2023-07-11 10:35:46', '2023-07-13 17:43:42');
-INSERT INTO rundo_auth_rbac.rbac_func (id, menu_id, service_name, func_name, scope, path, method, disabled, create_time, update_time) VALUES (20, 11, '权限模块', '修改字典', 'auth-rbac', '/rbac/dict/update', 3, 0, '2023-07-11 10:36:37', '2023-07-11 10:36:37');
-INSERT INTO rundo_auth_rbac.rbac_func (id, menu_id, service_name, func_name, scope, path, method, disabled, create_time, update_time) VALUES (21, 11, '权限模块', '删除字典', 'auth-rbac', '/rbac/dict/delete', 4, 0, '2023-07-11 10:37:35', '2023-07-11 10:37:35');
-INSERT INTO rundo_auth_rbac.rbac_func (id, menu_id, service_name, func_name, scope, path, method, disabled, create_time, update_time) VALUES (22, 10, '权限模块', '获取菜单树', 'auth-rbac', '/rbac/menu/tree', 1, 0, '2023-07-11 10:38:42', '2023-07-11 10:38:42');
-INSERT INTO rundo_auth_rbac.rbac_func (id, menu_id, service_name, func_name, scope, path, method, disabled, create_time, update_time) VALUES (23, 10, '权限模块', '添加菜单', 'auth-rbac', '/rbac/menu/add', 2, 0, '2023-07-11 10:39:55', '2023-07-11 10:39:55');
-INSERT INTO rundo_auth_rbac.rbac_func (id, menu_id, service_name, func_name, scope, path, method, disabled, create_time, update_time) VALUES (24, 10, '权限模块', '禁启用菜单', 'auth-rbac', '/rbac/menu/update/disabled', 3, 0, '2023-07-11 10:41:07', '2023-07-11 10:41:07');
-INSERT INTO rundo_auth_rbac.rbac_func (id, menu_id, service_name, func_name, scope, path, method, disabled, create_time, update_time) VALUES (25, 10, '权限模块', '隐藏菜单', 'auth-rbac', '/rbac/menu/update/hidden', 3, 0, '2023-07-11 10:42:14', '2023-07-11 10:42:14');
-INSERT INTO rundo_auth_rbac.rbac_func (id, menu_id, service_name, func_name, scope, path, method, disabled, create_time, update_time) VALUES (26, 10, '权限模块', '修改菜单', 'auth-rbac', '/rbac/menu/update', 3, 0, '2023-07-11 10:42:43', '2023-07-11 10:42:43');
-INSERT INTO rundo_auth_rbac.rbac_func (id, menu_id, service_name, func_name, scope, path, method, disabled, create_time, update_time) VALUES (27, 10, '权限模块', '删除菜单', 'auth-rbac', '/rbac/delete', 4, 0, '2023-07-11 10:43:31', '2023-07-11 10:43:31');
-INSERT INTO rundo_auth_rbac.rbac_func (id, menu_id, service_name, func_name, scope, path, method, disabled, create_time, update_time) VALUES (28, 13, '权限模块', '查询功能', 'auth-rbac', '/rbac/func/page', 1, 0, '2023-07-11 10:46:21', '2023-07-11 10:46:21');
-INSERT INTO rundo_auth_rbac.rbac_func (id, menu_id, service_name, func_name, scope, path, method, disabled, create_time, update_time) VALUES (29, 13, '权限模块', '添加功能', 'auth-rbac', '/rbac/func/add', 2, 0, '2023-07-11 10:47:22', '2023-07-11 10:47:22');
-INSERT INTO rundo_auth_rbac.rbac_func (id, menu_id, service_name, func_name, scope, path, method, disabled, create_time, update_time) VALUES (30, 13, '权限模块', '禁启用功能', 'auth-rbac', '/rbac/func/update/disabled', 3, 0, '2023-07-11 10:50:12', '2023-07-11 10:50:12');
-INSERT INTO rundo_auth_rbac.rbac_func (id, menu_id, service_name, func_name, scope, path, method, disabled, create_time, update_time) VALUES (31, 13, '权限模块', '修改功能', 'auth-rbac', '/rbac/func/update', 3, 0, '2023-07-11 10:50:51', '2023-07-11 10:50:51');
-INSERT INTO rundo_auth_rbac.rbac_func (id, menu_id, service_name, func_name, scope, path, method, disabled, create_time, update_time) VALUES (32, 13, '权限模块', '删除功能', 'auth-rbac', '/rbac/func/delete', 4, 0, '2023-07-11 10:53:30', '2023-07-11 10:53:30');
-INSERT INTO rundo_auth_rbac.rbac_func (id, menu_id, service_name, func_name, scope, path, method, disabled, create_time, update_time) VALUES (33, 13, '权限模块', '查询功能资源', 'auth-rbac', '/rbac/func/resource/list', 1, 0, '2023-07-11 10:54:30', '2023-07-11 10:54:30');
-INSERT INTO rundo_auth_rbac.rbac_func (id, menu_id, service_name, func_name, scope, path, method, disabled, create_time, update_time) VALUES (34, 13, '权限模块', '功能关联资源', 'auth-rbac', '/rbac/func/resource/associate', 2, 0, '2023-07-11 10:55:20', '2023-07-11 10:55:20');
-INSERT INTO rundo_auth_rbac.rbac_func (id, menu_id, service_name, func_name, scope, path, method, disabled, create_time, update_time) VALUES (35, 13, '权限模块', '禁启用功能资源', 'auth-rbac', '/rbac/func/resource/update/disabled', 3, 0, '2023-07-11 10:56:28', '2023-07-11 10:56:28');
-INSERT INTO rundo_auth_rbac.rbac_func (id, menu_id, service_name, func_name, scope, path, method, disabled, create_time, update_time) VALUES (36, 13, '权限模块', '修改功能资源信息', 'auth-rbac', '/rbac/func/resource/update', 3, 0, '2023-07-11 10:57:31', '2023-07-11 10:57:31');
-INSERT INTO rundo_auth_rbac.rbac_func (id, menu_id, service_name, func_name, scope, path, method, disabled, create_time, update_time) VALUES (37, 13, '权限模块', '资源删除', 'auth-rbac', '/rbac/func/resource/delete', 4, 0, '2023-07-11 10:57:48', '2023-07-11 10:57:48');
-INSERT INTO rundo_auth_rbac.rbac_func (id, menu_id, service_name, func_name, scope, path, method, disabled, create_time, update_time) VALUES (38, 15, '权限模块', '查询资源', 'auth-rbac', '/rbac/resource/tree', 1, 0, '2023-07-11 10:59:05', '2023-07-11 10:59:05');
-INSERT INTO rundo_auth_rbac.rbac_func (id, menu_id, service_name, func_name, scope, path, method, disabled, create_time, update_time) VALUES (39, 15, '权限模块', '获取资源目录', 'auth-rbac', '/rbac/resource/root', 1, 0, '2023-07-11 10:59:34', '2023-07-11 10:59:34');
-INSERT INTO rundo_auth_rbac.rbac_func (id, menu_id, service_name, func_name, scope, path, method, disabled, create_time, update_time) VALUES (40, 15, '权限模块', '添加资源目录', 'auth-rbac', '/rbac/resource/root/add', 2, 0, '2023-07-11 11:00:04', '2023-07-11 11:00:04');
-INSERT INTO rundo_auth_rbac.rbac_func (id, menu_id, service_name, func_name, scope, path, method, disabled, create_time, update_time) VALUES (41, 15, '权限模块', '批量添加资源', 'auth-rbac', '/rbac/resource/batch/add', 2, 0, '2023-07-11 11:00:31', '2023-07-11 11:00:31');
-INSERT INTO rundo_auth_rbac.rbac_func (id, menu_id, service_name, func_name, scope, path, method, disabled, create_time, update_time) VALUES (42, 15, '权限模块', '修改资源', 'auth-rbac', '/rbac/resource/update', 3, 0, '2023-07-11 11:00:53', '2023-07-11 11:00:53');
-INSERT INTO rundo_auth_rbac.rbac_func (id, menu_id, service_name, func_name, scope, path, method, disabled, create_time, update_time) VALUES (43, 15, '权限模块', '删除资源', 'auth-rbac', '/rbac/resource/delete', 4, 0, '2023-07-11 11:01:15', '2023-07-11 11:01:15');
-INSERT INTO rundo_auth_rbac.rbac_func (id, menu_id, service_name, func_name, scope, path, method, disabled, create_time, update_time) VALUES (44, 15, '权限模块', '资源上下级移动', 'auth-rbac', '/rbac/resource/move/fs', 3, 0, '2023-07-11 11:02:03', '2023-07-11 11:02:03');
-INSERT INTO rundo_auth_rbac.rbac_func (id, menu_id, service_name, func_name, scope, path, method, disabled, create_time, update_time) VALUES (45, 15, '权限模块', '资源同级移动', 'auth-rbac', '/rbac/resource/move/bt', 3, 0, '2023-07-11 11:02:31', '2023-07-11 11:02:31');
-INSERT INTO rundo_auth_rbac.rbac_func (id, menu_id, service_name, func_name, scope, path, method, disabled, create_time, update_time) VALUES (46, 39, '权限模块', '查询角色', 'auth-rbac', '/rbac/role/page', 1, 0, '2023-07-11 11:04:08', '2023-07-11 11:06:40');
-INSERT INTO rundo_auth_rbac.rbac_func (id, menu_id, service_name, func_name, scope, path, method, disabled, create_time, update_time) VALUES (47, 39, '权限模块', '添加角色', 'auth-rbac', '/rbac/role/add', 2, 0, '2023-07-11 11:05:48', '2023-07-20 16:59:48');
-INSERT INTO rundo_auth_rbac.rbac_func (id, menu_id, service_name, func_name, scope, path, method, disabled, create_time, update_time) VALUES (48, 39, '权限模块', '禁启用角色', 'auth-rbac', '/rbac/role/update/disabled', 3, 0, '2023-07-11 11:06:20', '2023-07-11 11:06:20');
-INSERT INTO rundo_auth_rbac.rbac_func (id, menu_id, service_name, func_name, scope, path, method, disabled, create_time, update_time) VALUES (49, 39, '权限模块', '修改角色', 'auth-rbac', '/rbac/role/update', 3, 0, '2023-07-11 11:07:14', '2023-07-11 11:07:14');
-INSERT INTO rundo_auth_rbac.rbac_func (id, menu_id, service_name, func_name, scope, path, method, disabled, create_time, update_time) VALUES (50, 39, '权限模块', '批量删除角色', 'auth-rbac', '/rbac/role/batch/delete', 4, 0, '2023-07-11 11:07:55', '2023-07-11 11:15:41');
-INSERT INTO rundo_auth_rbac.rbac_func (id, menu_id, service_name, func_name, scope, path, method, disabled, create_time, update_time) VALUES (52, 39, '权限模块', '查询角色菜单', 'auth-rbac', '/rabc/role/menu', 1, 0, '2023-07-11 11:11:35', '2023-07-11 11:18:01');
-INSERT INTO rundo_auth_rbac.rbac_func (id, menu_id, service_name, func_name, scope, path, method, disabled, create_time, update_time) VALUES (53, 39, '权限模块', '查询角色资源', 'auth-rbac', '/rabc/role/resource', 1, 0, '2023-07-11 11:12:11', '2023-07-11 11:18:41');
-INSERT INTO rundo_auth_rbac.rbac_func (id, menu_id, service_name, func_name, scope, path, method, disabled, create_time, update_time) VALUES (54, 39, '权限模块', '查询角色菜单下的绑定功能', 'auth-rbac', '/rabc/role/func/menu', 1, 0, '2023-07-11 11:12:53', '2023-07-11 11:19:02');
-INSERT INTO rundo_auth_rbac.rbac_func (id, menu_id, service_name, func_name, scope, path, method, disabled, create_time, update_time) VALUES (55, 39, '权限模块', '查询角色功能', 'auth-rbac', '/rabc/role/func', 1, 0, '2023-07-11 11:14:19', '2023-07-11 11:19:19');
-INSERT INTO rundo_auth_rbac.rbac_func (id, menu_id, service_name, func_name, scope, path, method, disabled, create_time, update_time) VALUES (56, 35, '权限模块', '查询部门', 'auth-rbac', '/rabc/section/tree', 1, 0, '2023-07-11 11:19:55', '2023-07-11 11:19:55');
-INSERT INTO rundo_auth_rbac.rbac_func (id, menu_id, service_name, func_name, scope, path, method, disabled, create_time, update_time) VALUES (57, 35, '权限模块', '添加部门', 'auth-rbac', '/rabc/section/add', 1, 0, '2023-07-11 11:20:07', '2023-07-11 11:20:07');
-INSERT INTO rundo_auth_rbac.rbac_func (id, menu_id, service_name, func_name, scope, path, method, disabled, create_time, update_time) VALUES (58, 35, '权限模块', '修改部门', 'auth-rbac', '/rabc/section/update', 3, 0, '2023-07-11 11:20:22', '2023-07-11 11:20:22');
-INSERT INTO rundo_auth_rbac.rbac_func (id, menu_id, service_name, func_name, scope, path, method, disabled, create_time, update_time) VALUES (59, 35, '权限模块', '删除部门', 'auth-rbac', '/rabc/section/delete', 4, 0, '2023-07-11 11:20:38', '2023-07-11 11:20:38');
-INSERT INTO rundo_auth_rbac.rbac_func (id, menu_id, service_name, func_name, scope, path, method, disabled, create_time, update_time) VALUES (60, 35, '权限模块', '部门上下级别移动', 'auth-rbac', '/rabc/section/move/fs', 3, 0, '2023-07-11 11:21:01', '2023-07-11 11:21:01');
-INSERT INTO rundo_auth_rbac.rbac_func (id, menu_id, service_name, func_name, scope, path, method, disabled, create_time, update_time) VALUES (61, 35, '权限模块', '部门同级别移动', 'auth-rbac', '/rabc/section/move/bt', 3, 0, '2023-07-11 11:21:15', '2023-07-11 11:21:15');
-INSERT INTO rundo_auth_rbac.rbac_func (id, menu_id, service_name, func_name, scope, path, method, disabled, create_time, update_time) VALUES (62, 12, '权限模块', '查询角色', 'auth-rbac', '/rbac/role/page/user', 1, 0, '2023-07-11 11:22:01', '2023-07-11 11:23:24');
-INSERT INTO rundo_auth_rbac.rbac_func (id, menu_id, service_name, func_name, scope, path, method, disabled, create_time, update_time) VALUES (63, 39, '权限模块', '查询角色绑定或未绑定的用户', 'auth-rbac', '/rbac/user/page/role', 1, 0, '2023-07-11 11:22:48', '2023-07-11 11:22:48');
-INSERT INTO rundo_auth_rbac.rbac_func (id, menu_id, service_name, func_name, scope, path, method, disabled, create_time, update_time) VALUES (64, 12, '权限模块', '新增用户', 'auth-rbac', '/rbac/user/add', 2, 0, '2023-07-11 11:23:43', '2023-07-11 11:24:07');
-INSERT INTO rundo_auth_rbac.rbac_func (id, menu_id, service_name, func_name, scope, path, method, disabled, create_time, update_time) VALUES (65, 12, '权限模块', '修改用户', 'auth-rbac', '/rbac/user/update', 2, 0, '2023-07-11 11:24:36', '2023-07-11 11:24:36');
-INSERT INTO rundo_auth_rbac.rbac_func (id, menu_id, service_name, func_name, scope, path, method, disabled, create_time, update_time) VALUES (66, 12, '权限模块', '禁启用用户', 'auth-rbac', '/rbac/user/update/disabled', 3, 0, '2023-07-11 11:25:20', '2023-07-11 11:25:20');
-INSERT INTO rundo_auth_rbac.rbac_func (id, menu_id, service_name, func_name, scope, path, method, disabled, create_time, update_time) VALUES (67, 12, '权限模块', '查询用户', 'auth-rbac', '/rbac/user/page', 1, 0, '2023-07-11 11:25:46', '2023-07-11 11:25:46');
-INSERT INTO rundo_auth_rbac.rbac_func (id, menu_id, service_name, func_name, scope, path, method, disabled, create_time, update_time) VALUES (68, 12, '权限模块', '批量删除用户', 'auth-rbac', '/rbac/user/batch/delete', 4, 0, '2023-07-11 11:26:41', '2023-07-11 11:26:41');
-INSERT INTO rundo_auth_rbac.rbac_func (id, menu_id, service_name, func_name, scope, path, method, disabled, create_time, update_time) VALUES (69, 20, '扩展服务', '直播接口', 'expansion', '/expansion/play/live', 2, 0, '2023-07-11 14:16:36', '2023-07-11 14:16:36');
-INSERT INTO rundo_auth_rbac.rbac_func (id, menu_id, service_name, func_name, scope, path, method, disabled, create_time, update_time) VALUES (70, 20, '扩展服务', 'ptz', 'expansion', ' /expansion/ptz/operation', 3, 0, '2023-07-11 14:27:12', '2023-07-11 14:27:12');
-INSERT INTO rundo_auth_rbac.rbac_func (id, menu_id, service_name, func_name, scope, path, method, disabled, create_time, update_time) VALUES (71, 20, '扩展服务', '预置位查询', 'expansion', '/expansion/ptz/preset/select', 1, 0, '2023-07-11 14:29:42', '2023-07-11 14:29:42');
-INSERT INTO rundo_auth_rbac.rbac_func (id, menu_id, service_name, func_name, scope, path, method, disabled, create_time, update_time) VALUES (72, 20, '扩展服务', '预置位编辑', 'expansion', '/expansion/ptz/preset/edit', 3, 0, '2023-07-11 14:30:22', '2023-07-11 14:30:22');
-INSERT INTO rundo_auth_rbac.rbac_func (id, menu_id, service_name, func_name, scope, path, method, disabled, create_time, update_time) VALUES (73, 20, '扩展服务', '预置位删除', 'expansion', '/expansion/ptz/preset/delete', 4, 0, '2023-07-11 14:31:48', '2023-07-11 14:31:48');
-INSERT INTO rundo_auth_rbac.rbac_func (id, menu_id, service_name, func_name, scope, path, method, disabled, create_time, update_time) VALUES (74, 20, '扩展服务', '预置位执行', 'expansion', '/expansion/ptz/preset/invoke', 3, 0, '2023-07-11 14:32:36', '2023-07-11 14:32:36');
-INSERT INTO rundo_auth_rbac.rbac_func (id, menu_id, service_name, func_name, scope, path, method, disabled, create_time, update_time) VALUES (75, 20, '扩展服务', '3d放大缩小', 'expansion', '/expansion/ptz/3d/zoom', 3, 0, '2023-07-11 14:33:09', '2023-07-11 14:33:09');
-INSERT INTO rundo_auth_rbac.rbac_func (id, menu_id, service_name, func_name, scope, path, method, disabled, create_time, update_time) VALUES (76, 19, '扩展服务', '回放接口', 'expansion', '/expansion/play/back', 2, 0, '2023-07-13 10:26:24', '2023-07-13 10:27:08');
-INSERT INTO rundo_auth_rbac.rbac_func (id, menu_id, service_name, func_name, scope, path, method, disabled, create_time, update_time) VALUES (77, 20, '扩展服务', '通道流信息', 'expansion', '/expansion/play/streamId/info', 1, 0, '2023-07-13 11:32:55', '2023-07-13 11:32:55');
-INSERT INTO rundo_auth_rbac.rbac_func (id, menu_id, service_name, func_name, scope, path, method, disabled, create_time, update_time) VALUES (78, 19, '扩展服务', '设备录像暂停', 'expansion', '/expansion/play/record/pause', 3, 0, '2023-07-14 16:42:49', '2023-07-14 16:42:49');
-INSERT INTO rundo_auth_rbac.rbac_func (id, menu_id, service_name, func_name, scope, path, method, disabled, create_time, update_time) VALUES (79, 19, '扩展服务', '设备录像恢复', 'expansion', '/expansion/play/record/resume', 3, 0, '2023-07-14 16:44:41', '2023-07-14 16:44:41');
-INSERT INTO rundo_auth_rbac.rbac_func (id, menu_id, service_name, func_name, scope, path, method, disabled, create_time, update_time) VALUES (80, 19, '扩展服务', '设备录像倍速', 'expansion', '/expansion/play/record/speed', 3, 0, '2023-07-14 16:46:13', '2023-07-14 16:46:13');
-INSERT INTO rundo_auth_rbac.rbac_func (id, menu_id, service_name, func_name, scope, path, method, disabled, create_time, update_time) VALUES (81, 19, '扩展服务', '设备录像拖拉', 'expansion', '/expansion/play/record/seek', 3, 0, '2023-07-14 16:47:15', '2023-07-14 16:47:15');
-INSERT INTO rundo_auth_rbac.rbac_func (id, menu_id, service_name, func_name, scope, path, method, disabled, create_time, update_time) VALUES (82, 19, '扩展服务', '回放通道流信息', 'expansion', '/expansion/play/back/streamId/info', 1, 0, '2023-07-14 16:48:16', '2023-07-14 16:48:16');
-INSERT INTO rundo_auth_rbac.rbac_func (id, menu_id, service_name, func_name, scope, path, method, disabled, create_time, update_time) VALUES (83, 27, '扩展服务', '添加接口', 'expansion', '/expansion/device/add', 2, 0, '2023-07-14 17:02:36', '2023-07-14 17:02:36');
-INSERT INTO rundo_auth_rbac.rbac_func (id, menu_id, service_name, func_name, scope, path, method, disabled, create_time, update_time) VALUES (84, 27, '扩展服务', '编辑', 'expansion', '/expansion/device/edit', 3, 0, '2023-07-14 17:03:46', '2023-07-14 17:03:46');
-INSERT INTO rundo_auth_rbac.rbac_func (id, menu_id, service_name, func_name, scope, path, method, disabled, create_time, update_time) VALUES (85, 27, '扩展服务', '删除', 'expansion', '/expansion/device/delete', 4, 0, '2023-07-14 17:04:23', '2023-07-14 17:04:23');
-INSERT INTO rundo_auth_rbac.rbac_func (id, menu_id, service_name, func_name, scope, path, method, disabled, create_time, update_time) VALUES (86, 27, '扩展服务', '批量删除', 'expansion', '/expansion/device/batchDelete', 2, 0, '2023-07-14 17:06:36', '2023-07-14 17:06:36');
-INSERT INTO rundo_auth_rbac.rbac_func (id, menu_id, service_name, func_name, scope, path, method, disabled, create_time, update_time) VALUES (87, 27, '扩展服务', '编码器', 'expansion', '/expansion/device/list', 2, 0, '2023-07-14 17:07:24', '2023-07-14 17:07:24');
-INSERT INTO rundo_auth_rbac.rbac_func (id, menu_id, service_name, func_name, scope, path, method, disabled, create_time, update_time) VALUES (88, 27, '扩展服务', '移动', 'expansion', '/expansion/device/move', 2, 0, '2023-07-14 17:07:57', '2023-07-14 17:07:57');
-INSERT INTO rundo_auth_rbac.rbac_func (id, menu_id, service_name, func_name, scope, path, method, disabled, create_time, update_time) VALUES (89, 27, '扩展服务', '通道添加', 'expansion', '/expansion/channel/add', 2, 0, '2023-07-14 17:10:30', '2023-07-14 17:10:30');
-INSERT INTO rundo_auth_rbac.rbac_func (id, menu_id, service_name, func_name, scope, path, method, disabled, create_time, update_time) VALUES (90, 27, '扩展服务', '通道编辑', 'expansion', '/expansion/channel/edit', 3, 0, '2023-07-14 17:11:51', '2023-07-14 17:11:51');
-INSERT INTO rundo_auth_rbac.rbac_func (id, menu_id, service_name, func_name, scope, path, method, disabled, create_time, update_time) VALUES (91, 27, '扩展服务', '通道删除', 'expansion', '/expansion/channel/delete', 4, 0, '2023-07-14 17:12:19', '2023-07-14 17:12:19');
-INSERT INTO rundo_auth_rbac.rbac_func (id, menu_id, service_name, func_name, scope, path, method, disabled, create_time, update_time) VALUES (92, 27, '扩展服务', '通道批量删除', 'expansion', '/expansion/channel/batchDelete', 2, 0, '2023-07-14 17:12:49', '2023-07-14 17:12:49');
-INSERT INTO rundo_auth_rbac.rbac_func (id, menu_id, service_name, func_name, scope, path, method, disabled, create_time, update_time) VALUES (93, 27, '扩展服务', '通道列表', 'expansion', '/expansion/channel/list', 2, 0, '2023-07-14 17:13:25', '2023-07-14 17:13:25');
-INSERT INTO rundo_auth_rbac.rbac_func (id, menu_id, service_name, func_name, scope, path, method, disabled, create_time, update_time) VALUES (94, 27, '扩展服务', '发现通道列表', 'expansion', '/expansion/channel/findList', 1, 0, '2023-07-14 17:14:04', '2023-07-14 17:14:04');
-INSERT INTO rundo_auth_rbac.rbac_func (id, menu_id, service_name, func_name, scope, path, method, disabled, create_time, update_time) VALUES (95, 27, '扩展服务', '通道移动', 'expansion', '/expansion/channel/move', 2, 0, '2023-07-14 17:15:04', '2023-07-14 17:15:04');
-INSERT INTO rundo_auth_rbac.rbac_func (id, menu_id, service_name, func_name, scope, path, method, disabled, create_time, update_time) VALUES (96, 27, '扩展服务', '设备通道同步', 'expansion', '/expansion/channel/channelSync', 1, 0, '2023-07-14 17:18:48', '2023-07-14 17:18:48');
-INSERT INTO rundo_auth_rbac.rbac_func (id, menu_id, service_name, func_name, scope, path, method, disabled, create_time, update_time) VALUES (97, 27, '扩展服务', '待注册列表', 'expansion', '/expansion/device/unregister/list', 1, 0, '2023-07-19 17:50:07', '2023-07-19 17:50:07');
-INSERT INTO rundo_auth_rbac.rbac_func (id, menu_id, service_name, func_name, scope, path, method, disabled, create_time, update_time) VALUES (98, 41, '扩展服务', '分页获取网关信息', 'expansion', '/expansion/gateway/page', 1, 0, '2023-07-19 19:48:51', '2023-07-19 19:52:04');
-INSERT INTO rundo_auth_rbac.rbac_func (id, menu_id, service_name, func_name, scope, path, method, disabled, create_time, update_time) VALUES (100, 41, '扩展服务', '修改网关信息', 'expansion', '/expansion/gateway/update', 3, 0, '2023-07-19 19:50:03', '2023-07-19 19:52:45');
-INSERT INTO rundo_auth_rbac.rbac_func (id, menu_id, service_name, func_name, scope, path, method, disabled, create_time, update_time) VALUES (101, 40, '扩展服务', '获取所有调度服务的名称', 'expansion', '/expansion/dispatch/name', 1, 0, '2023-07-19 19:50:29', '2023-07-19 19:50:29');
-INSERT INTO rundo_auth_rbac.rbac_func (id, menu_id, service_name, func_name, scope, path, method, disabled, create_time, update_time) VALUES (102, 40, '扩展服务', '获取调度服务信息', 'expansion', '/expansion/dispatch/page', 1, 0, '2023-07-19 19:50:54', '2023-07-19 19:50:54');
-INSERT INTO rundo_auth_rbac.rbac_func (id, menu_id, service_name, func_name, scope, path, method, disabled, create_time, update_time) VALUES (103, 40, '扩展服务', '修改调度服务额外的名字与可访问URL', 'expansion', '/expansion/dispatch/update', 3, 0, '2023-07-19 19:54:10', '2023-07-19 19:54:10');
-INSERT INTO rundo_auth_rbac.rbac_func (id, menu_id, service_name, func_name, scope, path, method, disabled, create_time, update_time) VALUES (104, 41, '扩展服务', '获取网关绑定的流媒体服务id', 'expansion', '/expansion/gateway-dispatch/gateway/data', 1, 0, '2023-07-19 19:55:08', '2023-07-19 19:55:28');
-INSERT INTO rundo_auth_rbac.rbac_func (id, menu_id, service_name, func_name, scope, path, method, disabled, create_time, update_time) VALUES (105, 40, '扩展服务', '获取流媒体服务绑定的网关', 'expansion', '/expansion/gateway-dispatch/dispatch/data/in', 1, 0, '2023-07-19 19:56:14', '2023-07-19 19:56:14');
-INSERT INTO rundo_auth_rbac.rbac_func (id, menu_id, service_name, func_name, scope, path, method, disabled, create_time, update_time) VALUES (106, 40, '扩展服务', '获取流媒体服务未绑定的网关', 'expansion', '/expansion/gateway-dispatch/dispatch/data/not-in', 1, 0, '2023-07-19 19:56:58', '2023-07-19 19:56:58');
-INSERT INTO rundo_auth_rbac.rbac_func (id, menu_id, service_name, func_name, scope, path, method, disabled, create_time, update_time) VALUES (107, 41, '扩展服务', '网关绑定调度服务', 'expansion', '/expansion/gateway-dispatch/gateway/binding', 2, 0, '2023-07-19 19:57:36', '2023-07-19 19:57:36');
-INSERT INTO rundo_auth_rbac.rbac_func (id, menu_id, service_name, func_name, scope, path, method, disabled, create_time, update_time) VALUES (108, 40, '扩展服务', '调度服务绑定网关', 'expansion', '/expansion/gateway-dispatch/dispatch/binding', 2, 0, '2023-07-19 19:58:08', '2023-07-19 19:58:08');
-INSERT INTO rundo_auth_rbac.rbac_func (id, menu_id, service_name, func_name, scope, path, method, disabled, create_time, update_time) VALUES (109, 40, '扩展服务', '调度服务取消绑定网关', 'expansion', '/expansion/gateway-dispatch/dispatch/unbinding', 2, 0, '2023-07-19 19:58:39', '2023-07-19 19:58:39');
-INSERT INTO rundo_auth_rbac.rbac_func (id, menu_id, service_name, func_name, scope, path, method, disabled, create_time, update_time) VALUES (110, 27, '扩展服务', '设备--安防通道列表', 'expansion', '/expansion/device/videoAreaList', 1, 0, '2023-07-19 20:00:39', '2023-07-19 20:00:39');
-INSERT INTO rundo_auth_rbac.rbac_func (id, menu_id, service_name, func_name, scope, path, method, disabled, create_time, update_time) VALUES (111, 27, '扩展服务', '视频回放录像文件列表', 'expansion', '/expansion/channel/record', 1, 0, '2023-07-19 20:02:24', '2023-07-19 20:02:24');
-INSERT INTO rundo_auth_rbac.rbac_func (id, menu_id, service_name, func_name, scope, path, method, disabled, create_time, update_time) VALUES (112, 27, '扩展服务', '安防通道列表', 'expansion', '/expansion/channel/videoAreaList', 1, 0, '2023-07-19 20:02:58', '2023-07-19 20:02:58');
-INSERT INTO rundo_auth_rbac.rbac_func (id, menu_id, service_name, func_name, scope, path, method, disabled, create_time, update_time) VALUES (113, 20, '扩展服务', '播放列表', 'expansion', '/expansion/channel/playList', 1, 0, '2023-07-19 20:03:50', '2023-07-19 20:03:50');
-INSERT INTO rundo_auth_rbac.rbac_func (id, menu_id, service_name, func_name, scope, path, method, disabled, create_time, update_time) VALUES (114, 19, '扩展服务', '停止播放', 'expansion', '/expansion/play/stop', 3, 0, '2023-07-19 20:05:34', '2023-07-20 16:02:06');
-INSERT INTO rundo_auth_rbac.rbac_func (id, menu_id, service_name, func_name, scope, path, method, disabled, create_time, update_time) VALUES (115, 20, '扩展服务', '直播--安防通道列表', 'expansion', '/expansion/play/videoAreaList', 1, 0, '2023-07-20 16:01:08', '2023-07-20 16:01:08');
-INSERT INTO rundo_auth_rbac.rbac_func (id, menu_id, service_name, func_name, scope, path, method, disabled, create_time, update_time) VALUES (116, 19, '扩展服务', '回放--安防通道列表', 'expansion', '/expansion/play/back/videoAreaList', 1, 0, '2023-07-20 16:01:48', '2023-07-20 16:01:48');
-INSERT INTO rundo_auth_rbac.rbac_func (id, menu_id, service_name, func_name, scope, path, method, disabled, create_time, update_time) VALUES (117, 19, '扩展服务', '回放--通道列表', 'expansion', '/expansion/channel/playBackList', 1, 0, '2023-07-20 16:04:49', '2023-07-20 16:04:49');
-INSERT INTO rundo_auth_rbac.rbac_func (id, menu_id, service_name, func_name, scope, path, method, disabled, create_time, update_time) VALUES (118, 39, '权限服务', '角色关联用户', 'auth-rbac', '/rbac/role/associate', 2, 0, '2023-07-20 16:48:04', '2023-07-20 16:48:04');
-INSERT INTO rundo_auth_rbac.rbac_func (id, menu_id, service_name, func_name, scope, path, method, disabled, create_time, update_time) VALUES (119, 39, '权限服务', '资源数据查询', 'auth-rbac', '/rbac/role/resource/tree', 1, 0, '2023-07-26 16:55:56', '2023-07-26 16:55:56');
-INSERT INTO rundo_auth_rbac.rbac_func (id, menu_id, service_name, func_name, scope, path, method, disabled, create_time, update_time) VALUES (120, 39, '权限服务', '资源组查询', 'auth-rbac', '/rbac/role/resource/root', 1, 0, '2023-07-26 16:56:33', '2023-07-26 16:56:33');
-INSERT INTO rundo_auth_rbac.rbac_func (id, menu_id, service_name, func_name, scope, path, method, disabled, create_time, update_time) VALUES (121, 39, '权限服务', '获取菜单树', 'auth-rbac', '/rbac/role/menu/tree', 1, 0, '2023-07-26 17:25:53', '2023-07-26 17:25:53');
-INSERT INTO rundo_auth_rbac.rbac_func (id, menu_id, service_name, func_name, scope, path, method, disabled, create_time, update_time) VALUES (122, 39, '权限服务', '获取功能列表', 'auth-rbac', '/rbac/role/func/page', 1, 0, '2023-07-26 17:26:21', '2023-07-26 17:26:21');
+insert into rundo_auth_rbac.rbac_func (id, menu_id, service_name, func_name, scope, path, method, disabled, create_time, update_time)
+values  (18, 11, '权限模块', '字典查询', 'auth-rbac', '/rbac/dict/page', 1, 0, '2023-07-11 10:30:19', '2023-07-11 10:30:54'),
+        (19, 11, '权限模块', '增加字典', 'auth-rbac', '/rbac/dict/add', 2, 0, '2023-07-11 10:35:46', '2023-07-13 17:43:42'),
+        (20, 11, '权限模块', '修改字典', 'auth-rbac', '/rbac/dict/update', 3, 0, '2023-07-11 10:36:37', '2023-07-11 10:36:37'),
+        (21, 11, '权限模块', '删除字典', 'auth-rbac', '/rbac/dict/delete', 4, 0, '2023-07-11 10:37:35', '2023-07-11 10:37:35'),
+        (22, 10, '权限模块', '获取菜单树', 'auth-rbac', '/rbac/menu/tree', 1, 0, '2023-07-11 10:38:42', '2023-07-11 10:38:42'),
+        (23, 10, '权限模块', '添加菜单', 'auth-rbac', '/rbac/menu/add', 2, 0, '2023-07-11 10:39:55', '2023-07-11 10:39:55'),
+        (24, 10, '权限模块', '禁启用菜单', 'auth-rbac', '/rbac/menu/update/disabled', 3, 0, '2023-07-11 10:41:07', '2023-07-11 10:41:07'),
+        (25, 10, '权限模块', '隐藏菜单', 'auth-rbac', '/rbac/menu/update/hidden', 3, 0, '2023-07-11 10:42:14', '2023-07-11 10:42:14'),
+        (26, 10, '权限模块', '修改菜单', 'auth-rbac', '/rbac/menu/update', 3, 0, '2023-07-11 10:42:43', '2023-07-11 10:42:43'),
+        (27, 10, '权限模块', '删除菜单', 'auth-rbac', '/rbac/delete', 4, 0, '2023-07-11 10:43:31', '2023-07-11 10:43:31'),
+        (28, 13, '权限模块', '查询功能', 'auth-rbac', '/rbac/func/page', 1, 0, '2023-07-11 10:46:21', '2023-07-11 10:46:21'),
+        (29, 13, '权限模块', '添加功能', 'auth-rbac', '/rbac/func/add', 2, 0, '2023-07-11 10:47:22', '2023-07-11 10:47:22'),
+        (30, 13, '权限模块', '禁启用功能', 'auth-rbac', '/rbac/func/update/disabled', 3, 0, '2023-07-11 10:50:12', '2023-07-11 10:50:12'),
+        (31, 13, '权限模块', '修改功能', 'auth-rbac', '/rbac/func/update', 3, 0, '2023-07-11 10:50:51', '2023-07-11 10:50:51'),
+        (32, 13, '权限模块', '删除功能', 'auth-rbac', '/rbac/func/delete', 4, 0, '2023-07-11 10:53:30', '2023-07-11 10:53:30'),
+        (33, 13, '权限模块', '查询功能资源', 'auth-rbac', '/rbac/func/resource/list', 1, 0, '2023-07-11 10:54:30', '2023-07-11 10:54:30'),
+        (34, 13, '权限模块', '功能关联资源', 'auth-rbac', '/rbac/func/resource/associate', 2, 0, '2023-07-11 10:55:20', '2023-07-11 10:55:20'),
+        (35, 13, '权限模块', '禁启用功能资源', 'auth-rbac', '/rbac/func/resource/update/disabled', 3, 0, '2023-07-11 10:56:28', '2023-07-11 10:56:28'),
+        (36, 13, '权限模块', '修改功能资源信息', 'auth-rbac', '/rbac/func/resource/update', 3, 0, '2023-07-11 10:57:31', '2023-07-11 10:57:31'),
+        (37, 13, '权限模块', '资源删除', 'auth-rbac', '/rbac/func/resource/delete', 4, 0, '2023-07-11 10:57:48', '2023-07-11 10:57:48'),
+        (38, 15, '权限模块', '查询资源', 'auth-rbac', '/rbac/resource/tree', 1, 0, '2023-07-11 10:59:05', '2023-07-11 10:59:05'),
+        (39, 15, '权限模块', '获取资源目录', 'auth-rbac', '/rbac/resource/root', 1, 0, '2023-07-11 10:59:34', '2023-07-11 10:59:34'),
+        (40, 15, '权限模块', '添加资源目录', 'auth-rbac', '/rbac/resource/root/add', 2, 0, '2023-07-11 11:00:04', '2023-07-11 11:00:04'),
+        (41, 15, '权限模块', '批量添加资源', 'auth-rbac', '/rbac/resource/batch/add', 2, 0, '2023-07-11 11:00:31', '2023-07-11 11:00:31'),
+        (42, 15, '权限模块', '修改资源', 'auth-rbac', '/rbac/resource/update', 3, 0, '2023-07-11 11:00:53', '2023-07-11 11:00:53'),
+        (43, 15, '权限模块', '删除资源', 'auth-rbac', '/rbac/resource/delete', 4, 0, '2023-07-11 11:01:15', '2023-07-11 11:01:15'),
+        (44, 15, '权限模块', '资源上下级移动', 'auth-rbac', '/rbac/resource/move/fs', 3, 0, '2023-07-11 11:02:03', '2023-07-11 11:02:03'),
+        (45, 15, '权限模块', '资源同级移动', 'auth-rbac', '/rbac/resource/move/bt', 3, 0, '2023-07-11 11:02:31', '2023-07-11 11:02:31'),
+        (46, 39, '权限模块', '查询角色', 'auth-rbac', '/rbac/role/page', 1, 0, '2023-07-11 11:04:08', '2023-07-11 11:06:40'),
+        (47, 39, '权限模块', '添加角色', 'auth-rbac', '/rbac/role/add', 2, 0, '2023-07-11 11:05:48', '2023-07-20 16:59:48'),
+        (48, 39, '权限模块', '禁启用角色', 'auth-rbac', '/rbac/role/update/disabled', 3, 0, '2023-07-11 11:06:20', '2023-07-11 11:06:20'),
+        (49, 39, '权限模块', '修改角色', 'auth-rbac', '/rbac/role/update', 3, 0, '2023-07-11 11:07:14', '2023-07-11 11:07:14'),
+        (50, 39, '权限模块', '批量删除角色', 'auth-rbac', '/rbac/role/batch/delete', 4, 0, '2023-07-11 11:07:55', '2023-07-11 11:15:41'),
+        (52, 39, '权限模块', '查询角色菜单', 'auth-rbac', '/rbac/role/menu', 1, 0, '2023-07-11 11:11:35', '2023-08-10 15:48:38'),
+        (53, 39, '权限模块', '查询角色资源', 'auth-rbac', '/rbac/role/resource', 1, 0, '2023-07-11 11:12:11', '2023-08-10 15:48:09'),
+        (54, 39, '权限模块', '查询角色菜单下的绑定功能', 'auth-rbac', '/rbac/role/func/menu', 1, 0, '2023-07-11 11:12:53', '2023-08-10 15:49:10'),
+        (55, 39, '权限模块', '查询角色功能', 'auth-rbac', '/rbac/role/func', 1, 0, '2023-07-11 11:14:19', '2023-08-10 15:49:27'),
+        (56, 35, '权限模块', '查询部门', 'auth-rbac', '/rbac/section/tree', 1, 0, '2023-07-11 11:19:55', '2023-08-09 16:34:11'),
+        (57, 35, '权限模块', '添加部门', 'auth-rbac', '/rbac/section/add', 1, 0, '2023-07-11 11:20:07', '2023-08-10 15:42:17'),
+        (58, 35, '权限模块', '修改部门', 'auth-rbac', '/rbac/section/update', 3, 0, '2023-07-11 11:20:22', '2023-08-09 16:33:16'),
+        (59, 35, '权限模块', '删除部门', 'auth-rbac', '/rbac/section/delete', 4, 0, '2023-07-11 11:20:38', '2023-08-09 14:51:27'),
+        (60, 35, '权限模块', '部门上下级别移动', 'auth-rbac', '/rbac/section/move/fs', 3, 0, '2023-07-11 11:21:01', '2023-08-09 14:51:31'),
+        (61, 35, '权限模块', '部门同级别移动', 'auth-rbac', '/rbac/section/move/bt', 3, 0, '2023-07-11 11:21:15', '2023-08-09 14:51:35'),
+        (62, 12, '权限模块', '查询角色', 'auth-rbac', '/rbac/role/page/user', 1, 0, '2023-07-11 11:22:01', '2023-08-09 16:03:17'),
+        (63, 39, '权限模块', '查询角色绑定或未绑定的用户', 'auth-rbac', '/rbac/user/page/role', 1, 0, '2023-07-11 11:22:48', '2023-08-09 11:46:18'),
+        (64, 12, '权限模块', '新增用户', 'auth-rbac', '/rbac/user/add', 2, 0, '2023-07-11 11:23:43', '2023-08-09 16:26:07'),
+        (65, 12, '权限模块', '修改用户', 'auth-rbac', '/rbac/user/update', 3, 0, '2023-07-11 11:24:36', '2023-08-10 16:48:57'),
+        (66, 12, '权限模块', '禁启用用户', 'auth-rbac', '/rbac/user/update/disabled', 3, 0, '2023-07-11 11:25:20', '2023-08-10 15:12:43'),
+        (67, 12, '权限模块', '查询用户', 'auth-rbac', '/rbac/user/page', 1, 0, '2023-07-11 11:25:46', '2023-08-09 16:25:39'),
+        (68, 12, '权限模块', '批量删除用户', 'auth-rbac', '/rbac/user/batch/delete', 4, 0, '2023-07-11 11:26:41', '2023-08-10 09:37:47'),
+        (69, 20, '扩展服务', '直播接口', 'expansion', '/expansion/play/live', 2, 0, '2023-07-11 14:16:36', '2023-08-07 15:03:16'),
+        (70, 20, '扩展服务', 'ptz', 'expansion', '/expansion/ptz/operation', 3, 0, '2023-07-11 14:27:12', '2023-08-04 18:19:57'),
+        (71, 20, '扩展服务', '预置位查询', 'expansion', '/expansion/ptz/preset/select', 1, 0, '2023-07-11 14:29:42', '2023-08-04 17:11:34'),
+        (72, 20, '扩展服务', '预置位编辑', 'expansion', '/expansion/ptz/preset/edit', 3, 0, '2023-07-11 14:30:22', '2023-08-04 18:26:51'),
+        (73, 20, '扩展服务', '预置位删除', 'expansion', '/expansion/ptz/preset/delete', 4, 0, '2023-07-11 14:31:48', '2023-08-04 18:26:52'),
+        (74, 20, '扩展服务', '预置位执行', 'expansion', '/expansion/ptz/preset/invoke', 3, 0, '2023-07-11 14:32:36', '2023-08-04 18:26:54'),
+        (75, 20, '扩展服务', '3d放大缩小', 'expansion', '/expansion/ptz/3d/zoom', 3, 0, '2023-07-11 14:33:09', '2023-08-04 18:26:56'),
+        (76, 19, '扩展服务', '回放接口', 'expansion', '/expansion/play/back', 2, 0, '2023-07-13 10:26:24', '2023-08-08 17:10:53'),
+        (77, 20, '扩展服务', '通道流信息', 'expansion', '/expansion/play/streamId/info', 1, 0, '2023-07-13 11:32:55', '2023-08-04 18:26:58'),
+        (78, 19, '扩展服务', '设备录像暂停', 'expansion', '/expansion/play/record/pause', 3, 0, '2023-07-14 16:42:49', '2023-08-08 15:54:54'),
+        (79, 19, '扩展服务', '设备录像恢复', 'expansion', '/expansion/play/record/resume', 3, 0, '2023-07-14 16:44:41', '2023-08-08 15:54:56'),
+        (80, 19, '扩展服务', '设备录像倍速', 'expansion', '/expansion/play/record/speed', 3, 0, '2023-07-14 16:46:13', '2023-08-08 15:02:11'),
+        (81, 19, '扩展服务', '设备录像拖拉', 'expansion', '/expansion/play/record/seek', 3, 0, '2023-07-14 16:47:15', '2023-08-08 16:02:40'),
+        (82, 19, '扩展服务', '回放通道流信息', 'expansion', '/expansion/play/back/streamId/info', 1, 0, '2023-07-14 16:48:16', '2023-08-08 14:39:46'),
+        (83, 27, '扩展服务', '添加接口', 'expansion', '/expansion/device/add', 2, 0, '2023-07-14 17:02:36', '2023-07-14 17:02:36'),
+        (84, 27, '扩展服务', '编辑', 'expansion', '/expansion/device/edit', 3, 0, '2023-07-14 17:03:46', '2023-07-14 17:03:46'),
+        (85, 27, '扩展服务', '删除', 'expansion', '/expansion/device/delete', 4, 0, '2023-07-14 17:04:23', '2023-07-14 17:04:23'),
+        (86, 27, '扩展服务', '批量删除', 'expansion', '/expansion/device/batchDelete', 4, 0, '2023-07-14 17:06:36', '2023-08-08 16:19:49'),
+        (87, 27, '扩展服务', '编码器', 'expansion', '/expansion/device/list', 2, 0, '2023-07-14 17:07:24', '2023-07-14 17:07:24'),
+        (88, 27, '扩展服务', '移动', 'expansion', '/expansion/device/move', 2, 0, '2023-07-14 17:07:57', '2023-07-14 17:07:57'),
+        (89, 27, '扩展服务', '通道添加', 'expansion', '/expansion/channel/add', 2, 0, '2023-07-14 17:10:30', '2023-07-14 17:10:30'),
+        (90, 27, '扩展服务', '通道编辑', 'expansion', '/expansion/channel/edit', 3, 0, '2023-07-14 17:11:51', '2023-07-14 17:11:51'),
+        (91, 27, '扩展服务', '通道删除', 'expansion', '/expansion/channel/delete', 4, 0, '2023-07-14 17:12:19', '2023-07-14 17:12:19'),
+        (92, 27, '扩展服务', '通道批量删除', 'expansion', '/expansion/channel/batchDelete', 4, 0, '2023-07-14 17:12:49', '2023-08-10 17:44:47'),
+        (93, 27, '扩展服务', '通道列表', 'expansion', '/expansion/channel/list', 2, 0, '2023-07-14 17:13:25', '2023-08-09 10:37:10'),
+        (94, 27, '扩展服务', '发现通道列表', 'expansion', '/expansion/channel/findList', 1, 0, '2023-07-14 17:14:04', '2023-08-09 10:37:46'),
+        (95, 27, '扩展服务', '通道移动', 'expansion', '/expansion/channel/move', 2, 0, '2023-07-14 17:15:04', '2023-07-14 17:15:04'),
+        (96, 27, '扩展服务', '设备通道同步', 'expansion', '/expansion/channel/channelSync', 1, 0, '2023-07-14 17:18:48', '2023-07-14 17:18:48'),
+        (97, 27, '扩展服务', '待注册列表', 'expansion', '/expansion/device/unregister/list', 1, 0, '2023-07-19 17:50:07', '2023-07-19 17:50:07'),
+        (98, 41, '扩展服务', '分页获取网关信息', 'expansion', '/expansion/gateway/page', 1, 0, '2023-07-19 19:48:51', '2023-08-04 18:30:09'),
+        (100, 41, '扩展服务', '修改网关信息', 'expansion', '/expansion/gateway/update', 3, 0, '2023-07-19 19:50:03', '2023-08-09 18:01:41'),
+        (102, 40, '扩展服务', '获取调度服务信息', 'expansion', '/expansion/dispatch/page', 1, 0, '2023-07-19 19:50:54', '2023-08-09 17:42:36'),
+        (103, 40, '扩展服务', '修改调度服务额外的名字与可访问URL', 'expansion', '/expansion/dispatch/update', 3, 0, '2023-07-19 19:54:10', '2023-07-19 19:54:10'),
+        (104, 41, '扩展服务', '获取网关绑定的流媒体服务id', 'expansion', '/expansion/gateway-dispatch/gateway/data', 1, 0, '2023-07-19 19:55:08', '2023-08-09 18:01:11'),
+        (105, 40, '扩展服务', '获取流媒体服务绑定的网关', 'expansion', '/expansion/gateway-dispatch/dispatch/data/in', 1, 0, '2023-07-19 19:56:14', '2023-07-19 19:56:14'),
+        (106, 40, '扩展服务', '获取流媒体服务未绑定的网关', 'expansion', '/expansion/gateway-dispatch/dispatch/data/not-in', 1, 0, '2023-07-19 19:56:58', '2023-07-19 19:56:58'),
+        (107, 41, '扩展服务', '网关绑定调度服务', 'expansion', '/expansion/gateway-dispatch/gateway/binding', 2, 0, '2023-07-19 19:57:36', '2023-08-09 18:01:39'),
+        (108, 40, '扩展服务', '调度服务绑定网关', 'expansion', '/expansion/gateway-dispatch/dispatch/binding', 2, 0, '2023-07-19 19:58:08', '2023-07-19 19:58:08'),
+        (109, 40, '扩展服务', '调度服务取消绑定网关', 'expansion', '/expansion/gateway-dispatch/dispatch/unbinding', 2, 0, '2023-07-19 19:58:39', '2023-07-19 19:58:39'),
+        (110, 27, '扩展服务', '设备--安防通道列表', 'expansion', '/expansion/device/videoAreaList', 1, 0, '2023-07-19 20:00:39', '2023-07-19 20:00:39'),
+        (112, 27, '扩展服务', '安防通道列表', 'expansion', '/expansion/channel/videoAreaList', 1, 0, '2023-07-19 20:02:58', '2023-08-09 10:46:19'),
+        (113, 20, '扩展服务', '播放列表', 'expansion', '/expansion/channel/playList', 1, 0, '2023-07-19 20:03:50', '2023-08-10 18:55:31'),
+        (114, 19, '扩展服务', '停止播放', 'expansion', '/expansion/play/stop', 3, 0, '2023-07-19 20:05:34', '2023-08-10 17:42:58'),
+        (115, 20, '扩展服务', '直播--安防通道列表', 'expansion', '/expansion/play/videoAreaList', 1, 0, '2023-07-20 16:01:08', '2023-08-10 18:55:40'),
+        (116, 19, '扩展服务', '回放--安防通道列表', 'expansion', '/expansion/play/back/videoAreaList', 1, 0, '2023-07-20 16:01:48', '2023-08-08 15:40:56'),
+        (117, 19, '扩展服务', '回放--通道列表', 'expansion', '/expansion/channel/playBackList', 1, 0, '2023-07-20 16:04:49', '2023-08-08 14:17:34'),
+        (118, 39, '权限服务', '角色关联用户', 'auth-rbac', '/rbac/role/associate', 2, 0, '2023-07-20 16:48:04', '2023-08-09 12:00:26'),
+        (119, 39, '权限服务', '资源数据查询', 'auth-rbac', '/rbac/role/resource/tree', 1, 0, '2023-07-26 16:55:56', '2023-08-09 12:00:25'),
+        (120, 39, '权限服务', '资源组查询', 'auth-rbac', '/rbac/role/resource/root', 1, 0, '2023-07-26 16:56:33', '2023-08-09 11:40:59'),
+        (121, 39, '权限服务', '获取菜单树', 'auth-rbac', '/rbac/role/menu/tree', 1, 0, '2023-07-26 17:25:53', '2023-08-09 11:18:52'),
+        (122, 39, '权限服务', '获取功能列表', 'auth-rbac', '/rbac/role/func/page', 1, 0, '2023-07-26 17:26:21', '2023-08-09 12:00:23'),
+        (123, 27, '扩展服务', '安防区域添加', 'expansion', '/expansion/videoArea/add', 2, 0, '2023-08-02 09:14:08', '2023-08-02 09:14:08'),
+        (124, 27, '扩展服务', '安防通道编辑', 'expansion', '/expansion/videoArea/edit', 3, 0, '2023-08-02 09:16:25', '2023-08-11 11:12:28'),
+        (125, 27, '扩展服务', '安防通道删除', 'expansion', '/expansion/videoArea/delete', 4, 0, '2023-08-02 09:17:02', '2023-08-02 09:17:02'),
+        (126, 27, '扩展服务', '安防通道移动', 'expansion', '/expansion/videoArea/move', 3, 0, '2023-08-02 09:17:30', '2023-08-02 09:17:30'),
+        (127, 27, '扩展服务', '安防通道排序', 'expansion', '/expansion/videoArea/sort', 3, 0, '2023-08-02 09:18:05', '2023-08-11 11:12:24'),
+        (129, 19, '扩展服务', '视频回放录像文件列表', 'expansion', '/expansion/channel/record', 1, 0, '2023-08-07 15:50:48', '2023-08-08 14:15:50'),
+        (133, 41, '扩展服务', '获取所有调度服务的名称', 'expansion', '/expansion/dispatch/name', 1, 0, '2023-08-10 14:24:11', '2023-08-10 14:25:41'),
+        (134, 27, '扩展服务', '恢复', 'expansion', '/expansion/device/resume', 3, 0, '2023-08-10 17:25:58', '2023-08-10 17:25:58');
 
 # 功能资源数据
-INSERT INTO rundo_auth_rbac.rbac_func_resource (id, func_id, resource_key, validate_param, disabled, create_time, update_time) VALUES (3, 69, 'safety_channel', 'channelId', 0, '2023-07-13 10:47:49', '2023-07-13 10:47:49');
-INSERT INTO rundo_auth_rbac.rbac_func_resource (id, func_id, resource_key, validate_param, disabled, create_time, update_time) VALUES (4, 70, 'safety_channel', 'channelExpansionId', 0, '2023-07-13 11:05:24', '2023-07-13 11:05:24');
-INSERT INTO rundo_auth_rbac.rbac_func_resource (id, func_id, resource_key, validate_param, disabled, create_time, update_time) VALUES (6, 71, 'safety_channel', 'channelExpansionId', 0, '2023-07-13 11:27:09', '2023-07-13 11:27:09');
-INSERT INTO rundo_auth_rbac.rbac_func_resource (id, func_id, resource_key, validate_param, disabled, create_time, update_time) VALUES (7, 72, 'safety_channel', 'channelExpansionId', 0, '2023-07-13 11:27:47', '2023-07-13 11:27:47');
-INSERT INTO rundo_auth_rbac.rbac_func_resource (id, func_id, resource_key, validate_param, disabled, create_time, update_time) VALUES (8, 73, 'safety_channel', 'channelExpansionId', 0, '2023-07-13 11:28:16', '2023-07-13 11:28:16');
-INSERT INTO rundo_auth_rbac.rbac_func_resource (id, func_id, resource_key, validate_param, disabled, create_time, update_time) VALUES (9, 75, 'safety_channel', 'channelExpansionId', 0, '2023-07-13 11:28:41', '2023-07-13 11:28:41');
-INSERT INTO rundo_auth_rbac.rbac_func_resource (id, func_id, resource_key, validate_param, disabled, create_time, update_time) VALUES (10, 77, 'safety_channel', 'channelExpansionId', 0, '2023-07-13 11:33:36', '2023-07-13 11:33:36');
-INSERT INTO rundo_auth_rbac.rbac_func_resource (id, func_id, resource_key, validate_param, disabled, create_time, update_time) VALUES (11, 76, 'safety_channel', 'channelId', 0, '2023-07-13 11:34:10', '2023-07-13 11:34:10');
-INSERT INTO rundo_auth_rbac.rbac_func_resource (id, func_id, resource_key, validate_param, disabled, create_time, update_time) VALUES (14, 78, 'safety_channel', 'channelId', 0, '2023-07-14 16:43:10', '2023-07-14 16:43:10');
-INSERT INTO rundo_auth_rbac.rbac_func_resource (id, func_id, resource_key, validate_param, disabled, create_time, update_time) VALUES (15, 79, 'safety_channel', 'channelId', 0, '2023-07-14 16:45:00', '2023-07-14 16:45:00');
-INSERT INTO rundo_auth_rbac.rbac_func_resource (id, func_id, resource_key, validate_param, disabled, create_time, update_time) VALUES (16, 80, 'safety_channel', 'channelId', 0, '2023-07-14 16:46:25', '2023-07-14 16:46:25');
-INSERT INTO rundo_auth_rbac.rbac_func_resource (id, func_id, resource_key, validate_param, disabled, create_time, update_time) VALUES (17, 82, 'safety_channel', 'channelExpansionId', 0, '2023-07-14 16:48:50', '2023-07-14 16:48:50');
+insert into rundo_auth_rbac.rbac_func_resource (id, func_id, resource_key, validate_param, disabled, create_time, update_time, multi_group)
+values  (6, 71, 'safety_channel', 'channelExpansionId', 0, '2023-07-13 11:27:09', '2023-08-04 17:52:50', null),
+        (7, 72, 'safety_channel', 'channelExpansionId', 0, '2023-07-13 11:27:47', '2023-07-13 11:27:47', null),
+        (8, 73, 'safety_channel', 'channelExpansionId', 0, '2023-07-13 11:28:16', '2023-07-13 11:28:16', null),
+        (9, 75, 'safety_channel', 'channelExpansionId', 0, '2023-07-13 11:28:41', '2023-07-13 11:28:41', null),
+        (11, 76, 'safety_channel', 'channelId', 0, '2023-07-13 11:34:10', '2023-07-13 11:34:10', null),
+        (14, 78, 'safety_channel', 'channelId', 0, '2023-07-14 16:43:10', '2023-07-14 16:43:10', null),
+        (18, 83, 'safety_device', 'pResourceValue', 0, '2023-08-01 15:10:13', '2023-08-01 15:10:13', ''),
+        (19, 84, 'safety_device', 'pResourceValue', 0, '2023-08-01 15:11:57', '2023-08-01 15:11:57', '1'),
+        (20, 84, 'safety_device', 'id', 0, '2023-08-01 15:12:06', '2023-08-01 15:12:06', null),
+        (21, 85, 'safety_device', 'id', 0, '2023-08-01 15:12:34', '2023-08-01 15:12:34', null),
+        (22, 86, 'safety_device', 'idList', 0, '2023-08-01 15:13:00', '2023-08-01 15:13:00', null),
+        (24, 88, 'safety_device', 'idList', 0, '2023-08-01 15:15:55', '2023-08-01 15:15:55', null),
+        (25, 88, 'safety_device', 'pResourceValue', 0, '2023-08-01 15:16:21', '2023-08-01 15:16:21', null),
+        (27, 90, 'safety_channel', 'id', 0, '2023-08-01 15:17:12', '2023-08-01 15:17:12', null),
+        (28, 90, 'safety_channel', 'pResourceValue', 0, '2023-08-01 15:17:22', '2023-08-01 15:17:22', '1'),
+        (29, 91, 'safety_channel', 'id', 0, '2023-08-01 15:17:38', '2023-08-01 15:17:38', null),
+        (30, 92, 'safety_channel', 'idList', 0, '2023-08-01 15:17:59', '2023-08-01 15:17:59', null),
+        (45, 126, 'safety_device', 'pResourceValue', 0, '2023-08-02 09:20:47', '2023-08-02 09:20:47', 'pResourceValue'),
+        (46, 127, 'safety_channel', 'resourceValue', 0, '2023-08-02 09:21:08', '2023-08-02 09:21:08', 'resourceValue'),
+        (49, 69, 'safety_channel', 'channelId', 0, '2023-08-04 14:37:34', '2023-08-04 14:37:34', ''),
+        (50, 70, 'safety_channel', 'channelExpansionId', 0, '2023-08-04 14:43:42', '2023-08-04 14:43:42', ''),
+        (51, 74, 'safety_channel', 'channelExpansionId', 0, '2023-08-04 14:44:43', '2023-08-04 14:44:43', null),
+        (52, 77, 'safety_channel', 'channelExpansionId', 0, '2023-08-04 14:47:21', '2023-08-04 14:47:21', null),
+        (53, 95, 'safety_channel', 'pResourceValue', 0, '2023-08-04 16:13:31', '2023-08-04 16:13:31', ''),
+        (55, 127, 'safety_device', 'resourceValue', 0, '2023-08-08 15:31:11', '2023-08-08 15:31:11', 'resourceValue'),
+        (56, 126, 'safety_channel', 'pResourceValue', 0, '2023-08-08 15:32:09', '2023-08-08 15:32:09', 'pResourceValue'),
+        (57, 134, 'safety_device', 'pResourceValue', 0, '2023-08-10 17:27:21', '2023-08-10 17:27:21', '');
 
 #资源数据
-INSERT INTO rundo_auth_rbac.rbac_resource (id, resource_pid, resource_type, resource_name, resource_key, resource_value, sort, level, create_time, update_time) VALUES (1, 0, 1, '安防通道', 'safety_channel', '0', 0, '0', '2023-07-13 10:46:00', '2023-07-13 10:46:00');
-INSERT INTO rundo_auth_rbac.rbac_resource (id, resource_pid, resource_type, resource_name, resource_key, resource_value, sort, level, create_time, update_time) VALUES (2, 0, 1, '安防设备', 'safety_device', '0', 0, '0', '2023-07-17 20:00:54', '2023-07-18 14:59:44');
-
+insert into rundo_auth_rbac.rbac_resource (id, resource_pid, resource_type, resource_name, resource_key, resource_value, sort, level, create_time, update_time)
+values  (1, 0, 1, '安防通道', 'safety_channel', '0', 0, '0', '2023-07-13 10:46:00', '2023-07-13 10:46:00'),
+        (2, 0, 1, '安防设备', 'safety_device', '0', 0, '0', '2023-07-17 20:00:54', '2023-07-18 14:59:44');
