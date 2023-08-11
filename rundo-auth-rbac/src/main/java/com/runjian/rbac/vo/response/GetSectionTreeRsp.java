@@ -2,6 +2,7 @@ package com.runjian.rbac.vo.response;
 
 import com.runjian.rbac.vo.AbstractTreeInfo;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -11,7 +12,9 @@ import java.util.List;
  * @author Miracle
  * @date 2023/5/31 14:58
  */
+
 @Data
+@EqualsAndHashCode(callSuper = true)
 public class GetSectionTreeRsp extends AbstractTreeInfo {
 
 

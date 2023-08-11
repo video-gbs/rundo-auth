@@ -4,6 +4,7 @@ import com.runjian.common.constant.CommonEnum;
 import com.runjian.rbac.constant.MenuType;
 import com.runjian.rbac.vo.AbstractTreeInfo;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 
 import java.util.List;
 
@@ -13,6 +14,7 @@ import java.util.List;
  * @date 2023/6/5 11:46
  */
 @Data
+@EqualsAndHashCode(callSuper = true)
 public class GetMenuTreeRsp extends AbstractTreeInfo {
 
 
