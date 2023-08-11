@@ -130,7 +130,7 @@ public class UserServiceImpl implements UserService {
         userInfo.setDisabled(disabled);
         userInfo.setUpdateTime(LocalDateTime.now());
         userMapper.updateDisabled(userInfo);
-        if (disabled.equals(CommonEnum.DISABLE.getCode())) {
+        if (disabled.equals(CommonEnum.ENABLE.getCode())) {
             // 强制下线
             authServerApi.signOut(userInfo.getUsername());
             // 移除缓存
