@@ -1,5 +1,6 @@
 package com.runjian.rbac.dao.relation;
 
+import com.runjian.rbac.dao.RoleMapper;
 import org.apache.ibatis.annotations.Delete;
 import org.apache.ibatis.annotations.Insert;
 import org.apache.ibatis.annotations.Mapper;
@@ -20,8 +21,11 @@ public interface UserRoleMapper {
     String USER_ROLE_TABLE_NAME = "rbac_user_role";
 
 
-    @Select(" SELECT role_id FROM " + USER_ROLE_TABLE_NAME +
-            " WHERE user_id = #{userId} ")
+    @Select(" SELECT ur.role_id FROM " + USER_ROLE_TABLE_NAME + " ur " +
+            " LEFT JOIN " + RoleMapper.ROLE_TABLE_NAME + " rt ON rt.id = ur.role_id " +
+            " WHERE ur.user_id = #{userId} " +
+            " AND rt.deleted = 0 " +
+            " AND rt.disabled = 0 ")
     Set<Long> selectRoleIdByUserId(Long userId);
 
     @Delete(" <script> " +

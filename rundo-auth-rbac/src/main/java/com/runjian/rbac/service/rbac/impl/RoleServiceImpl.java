@@ -133,6 +133,9 @@ public class RoleServiceImpl implements RoleService {
     @Override
     public void updateDisabled(Long roleId, Integer disabled) {
         RoleInfo roleInfo = dataBaseService.getRoleInfo(roleId);
+        if (roleInfo.getDisabled().equals(disabled)){
+            return;
+        }
         roleInfo.setDisabled(disabled);
         roleInfo.setUpdateTime(LocalDateTime.now());
         roleMapper.updateDisabled(roleInfo);
@@ -140,11 +143,6 @@ public class RoleServiceImpl implements RoleService {
         for (Long userId : userIds){
             UserInfo userInfo = dataBaseService.getUserInfo(userId);
             Set<Long> roleIds = userRoleMapper.selectRoleIdByUserId(userId);
-            if (disabled.equals(CommonEnum.DISABLE.getCode())){
-                roleIds.remove(roleId);
-            }else {
-                roleIds.add(roleId);
-            }
             cacheService.setUserRole(userInfo.getUsername(), roleIds);
             cacheService.setUserResourceCache(userInfo.getUsername(), roleIds);
         }
