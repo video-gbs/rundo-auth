@@ -183,8 +183,10 @@ public class UserServiceImpl implements UserService {
                 existRoleIds.removeAll(difference);
                 // 移除交集获得增加的数据
                 roleIds.removeAll(difference);
-                // 删除去除的角色
-                userRoleMapper.deleteAllByUserIdAndRoleIds(userId, existRoleIds);
+                if (!existRoleIds.isEmpty()){
+                    // 删除去除的角色
+                    userRoleMapper.deleteAllByUserIdAndRoleIds(userId, existRoleIds);
+                }
             }
             // 保存新的角色
             if (!roleIds.isEmpty()) {
