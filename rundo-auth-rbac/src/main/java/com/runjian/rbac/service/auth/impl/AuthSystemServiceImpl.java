@@ -67,7 +67,7 @@ public class AuthSystemServiceImpl implements AuthSystemService {
         }
         Set<Long> roleIds = userRoleMapper.selectRoleIdByUserId(userInfo.getId());
         if (roleIds.isEmpty()) {
-            authUserDto.setAuthorities(Collections.EMPTY_SET);
+            authUserDto.setAuthorities(null);
             return authUserDto;
         }
         authUserDto.setAuthorities(roleIds.stream().map(String::valueOf).collect(Collectors.toSet()));
