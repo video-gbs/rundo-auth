@@ -5,7 +5,9 @@ import com.runjian.auth.vo.response.AuthUserRsp;
 import com.runjian.common.config.exception.BusinessErrorEnums;
 import com.runjian.common.config.exception.BusinessException;
 import com.runjian.common.config.response.CommonResponse;
+import com.runjian.common.constant.LogTemplate;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.InternalAuthenticationServiceException;
 import org.springframework.security.core.AuthenticationException;
@@ -21,6 +23,7 @@ import java.util.Objects;
  * @author Miracle
  * @date 2023/4/19 15:13
  */
+@Slf4j
 @Configuration
 @RequiredArgsConstructor
 public class CustomUserDetailsService implements UserDetailsService  {
@@ -61,7 +64,7 @@ public class CustomUserDetailsService implements UserDetailsService  {
         } catch (AuthenticationException ex){
             throw ex;
         } catch (Exception ex){
-            ex.printStackTrace();
+            log.error(LogTemplate.PROCESS_LOG_MSG_TEMPLATE, "授权登录", "登录失败", ex);
             throw new InternalAuthenticationServiceException("权限RBAC系统访问异常");
         }
 
