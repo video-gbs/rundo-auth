@@ -29,7 +29,7 @@ public interface ClientService {
      * @param accessTokenTimeToLiveSecond 授权token过期时间，单位：秒
      * @param refreshTokenTimeToLiveSecond 刷新token过期时间，单位：秒
      */
-    void addClient(String clientId, String clientSecret, Set<String> authorizationGrantTypes, Set<String> scopes, Boolean requireAuthorizationConsent, Long accessTokenTimeToLiveSecond, Long refreshTokenTimeToLiveSecond);
+    void addClient(String clientId, String clientSecret, Set<Integer> authorizationGrantTypes, Set<String> scopes, Boolean requireAuthorizationConsent, Long accessTokenTimeToLiveSecond, Long refreshTokenTimeToLiveSecond);
 
     /**
      * 修改客户端
@@ -42,7 +42,7 @@ public interface ClientService {
      * @param accessTokenTimeToLiveSecond 授权token过期时间， 单位：秒
      * @param refreshTokenTimeToLiveSecond 刷新token过期时间，单位：秒
      */
-    void updateClient(Long id, String clientId, String clientSecret, Set<String> authorizationGrantTypes, Set<String> scopes, Boolean requireAuthorizationConsent, Long accessTokenTimeToLiveSecond, Long refreshTokenTimeToLiveSecond);
+    void updateClient(Long id, String clientId, String clientSecret, Set<Integer> authorizationGrantTypes, Set<String> scopes, Boolean requireAuthorizationConsent, Long accessTokenTimeToLiveSecond, Long refreshTokenTimeToLiveSecond);
 
     /**
      * 删除客户端
