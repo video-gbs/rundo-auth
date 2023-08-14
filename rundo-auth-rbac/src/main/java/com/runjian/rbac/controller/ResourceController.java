@@ -106,7 +106,7 @@ public class ResourceController {
     @PutMapping("/update/kv")
     public CommonResponse<?> updateResource(@RequestBody PutResourceKvReq req){
         validatorService.validateRequest(req);
-        resourceService.updateResourceByKv(req.getResourceKey(), req.getResourceValue(), req.getResourceValue());
+        resourceService.updateResourceByKv(req.getResourceKey(), req.getResourceValue(), req.getResourceName());
         return CommonResponse.success();
     }
 
