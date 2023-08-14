@@ -53,7 +53,7 @@ public class CustomUserDetailsService implements UserDetailsService  {
             }
             authUser = authUserRsp.getData();
             if (Objects.isNull(authUser)){
-                throw new UsernameNotFoundException("用户或密码错误");
+                throw new UsernameNotFoundException("用户名或密码错误");
             }
             if (authUser.getAuthorities().isEmpty()){
                 throw new UsernameNotFoundException("用户没有任何角色，禁止访问");
