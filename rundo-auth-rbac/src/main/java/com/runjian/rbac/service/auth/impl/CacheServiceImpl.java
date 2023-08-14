@@ -44,13 +44,15 @@ public class CacheServiceImpl implements CacheService {
     @Override
     public void setUserRole(String username, Set<Long> roleIds) {
         RList<Object> rList = redissonClient.getList(MarkConstant.REDIS_AUTH_USER_ROLE + username);
-        rList.clear();
-        rList.addAll(roleIds);
+        rList.delete();
+        if (!roleIds.isEmpty()){
+            rList.addAll(roleIds);
+        }
     }
 
     @Override
     public void removeUserRole(String username) {
-        redissonClient.getList(MarkConstant.REDIS_AUTH_USER_ROLE + username).clear();
+        redissonClient.getList(MarkConstant.REDIS_AUTH_USER_ROLE + username).delete();
     }
 
     @Override
@@ -66,7 +68,9 @@ public class CacheServiceImpl implements CacheService {
     public void setAllFuncCache(Map<String, String> funcCacheMap){
         RMap<Object, Object> redisMap = redissonClient.getMap(MarkConstant.REDIS_AUTH_FUNC);
         redisMap.delete();
-        redisMap.putAll(funcCacheMap);
+        if (!funcCacheMap.isEmpty()){
+            redisMap.putAll(funcCacheMap);
+        }
     }
 
     @Override
@@ -77,11 +81,6 @@ public class CacheServiceImpl implements CacheService {
     @Override
     public void removeFuncCache(String methodPath) {
         redissonClient.getMap(MarkConstant.REDIS_AUTH_FUNC).remove(methodPath);
-    }
-
-    @Override
-    public boolean isUserResourceExist(String resourceKey) {
-        return redissonClient.getMap(MarkConstant.REDIS_AUTH_USER_RESOURCE + resourceKey).isExists();
     }
 
     @Override
@@ -97,6 +96,10 @@ public class CacheServiceImpl implements CacheService {
     public void setUserResourceCache(String username, Set<Long> roleIds) {
         this.removeUserResourceByUsername(username);
         if (CollectionUtils.isEmpty(roleIds)){
+            List<String> resourceKeys = resourceMapper.selectAllRoot().stream().map(GetResourceRootRsp::getResourceKey).toList();
+            for (String resourceKey : resourceKeys){
+                redissonClient.getMap(MarkConstant.REDIS_AUTH_USER_RESOURCE + resourceKey).remove(username);
+            }
             return;
         }
         Set<ResourceInfo> resourceInfos = resourceMapper.selectByRoleIds(roleIds);
@@ -130,6 +133,7 @@ public class CacheServiceImpl implements CacheService {
     @Override
     public List<String> setUserResourceCache(String username, Set<Long> roleIds, String resourceKey) {
         if (CollectionUtils.isEmpty(roleIds)){
+            redissonClient.getMap(MarkConstant.REDIS_AUTH_USER_RESOURCE + resourceKey).remove(username);
             return null;
         }
         Set<ResourceInfo> resourceInfos = resourceMapper.selectByRoleIdsAndResourceKey(roleIds, resourceKey);
