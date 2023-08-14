@@ -58,13 +58,6 @@ public interface CacheService {
     void removeFuncCache(String methodPath);
 
     /**
-     * 判断用户数据是否存在
-     * @param resourceKey 资源key，如果为null，检查整个username
-     * @return
-     */
-    boolean isUserResourceExist(String resourceKey);
-
-    /**
      * 获取用户资源
      * @param username 用户名
      * @param resourceKey 资源分组
