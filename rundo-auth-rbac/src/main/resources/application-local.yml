@@ -76,6 +76,17 @@ spring:
 
 server:
   port: 9001
+  compression:
+    enabled: true
+    min-response-size: 2048
+    mime-types: application/json,application/xml,text/html,text/css
+  undertow:
+    threads:
+      worker: 200
+      io: 100
+    no-request-timeout: 60000
+    buffer-size: 32768
+    direct-buffers: true
 
 mybatis:
   configuration:
