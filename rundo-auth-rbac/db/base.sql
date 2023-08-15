@@ -1,4 +1,4 @@
-create table if not exists rbac_dict
+create table rbac_dict
 (
     id          bigint auto_increment
         primary key,
@@ -11,7 +11,10 @@ create table if not exists rbac_dict
     update_time datetime     null
 );
 
-create table if not exists rbac_func
+create index in_group_code
+    on rbac_dict (group_code);
+
+create table rbac_func
 (
     id           bigint auto_increment
         primary key,
@@ -29,7 +32,7 @@ create table if not exists rbac_func
 )
     comment '功能表';
 
-create table if not exists rbac_func_resource
+create table rbac_func_resource
 (
     id             bigint auto_increment
         primary key,
@@ -38,11 +41,12 @@ create table if not exists rbac_func_resource
     validate_param varchar(255)      null comment '需要校验的字段名称，为空返回resource_key数据',
     disabled       tinyint default 0 not null,
     create_time    datetime          null,
-    update_time    datetime          null
+    update_time    datetime          null,
+    multi_group    varchar(100)      null
 )
     comment '功能资源表';
 
-create table if not exists rbac_menu
+create table rbac_menu
 (
     id             bigint auto_increment
         primary key,
@@ -62,7 +66,7 @@ create table if not exists rbac_menu
     update_time    datetime      null
 );
 
-create table if not exists rbac_resource
+create table rbac_resource
 (
     id             bigint auto_increment
         primary key,
@@ -79,7 +83,7 @@ create table if not exists rbac_resource
         unique (resource_key, resource_value)
 );
 
-create table if not exists rbac_role
+create table rbac_role
 (
     id          bigint auto_increment
         primary key,
@@ -95,7 +99,7 @@ create table if not exists rbac_role
         unique (role_name)
 );
 
-create table if not exists rbac_role_func
+create table rbac_role_func
 (
     id          bigint auto_increment
         primary key,
@@ -107,7 +111,7 @@ create table if not exists rbac_role_func
         unique (role_id, func_id)
 );
 
-create table if not exists rbac_role_menu
+create table rbac_role_menu
 (
     id          bigint auto_increment
         primary key,
@@ -119,7 +123,7 @@ create table if not exists rbac_role_menu
         unique (role_id, menu_id)
 );
 
-create table if not exists rbac_role_resource
+create table rbac_role_resource
 (
     id          bigint auto_increment
         primary key,
@@ -130,7 +134,7 @@ create table if not exists rbac_role_resource
     create_by   varchar(255) null
 );
 
-create table if not exists rbac_section
+create table rbac_section
 (
     id           bigint auto_increment
         primary key,
@@ -145,7 +149,7 @@ create table if not exists rbac_section
     update_time  datetime     null
 );
 
-create table if not exists rbac_user
+create table rbac_user
 (
     id                bigint auto_increment
         primary key,
@@ -170,7 +174,7 @@ create table if not exists rbac_user
         unique (phone)
 );
 
-create table if not exists rbac_user_role
+create table rbac_user_role
 (
     id          bigint auto_increment
         primary key,

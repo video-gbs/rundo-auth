@@ -1,5 +1,6 @@
 package com.runjian.auth.vo.response;
 
+import lombok.Builder;
 import lombok.Data;
 
 import java.time.LocalDateTime;
@@ -11,7 +12,8 @@ import java.util.Set;
  * @date 2023/8/14 9:56
  */
 @Data
-public class GetClientPage {
+@Builder
+public class GetAuthClientPage {
 
     /**
      * 主键id
@@ -46,7 +48,7 @@ public class GetClientPage {
     /**
      * 回调url
      */
-    private String redirectUris;
+    private Set<String> redirectUris;
 
     /**
      * 授权范围
@@ -56,7 +58,7 @@ public class GetClientPage {
     /**
      * 是否需要用户授权
      */
-    private Boolean requireAuthorizationConsent;
+    private Boolean requireAuthConsent;
 
     /**
      * 授权token的过期时间 单位：秒
@@ -67,4 +69,17 @@ public class GetClientPage {
      * 刷新token的过期时间 单位：秒
      */
     private Long refreshTokenTimeToLiveSecond;
+
+    /**
+     * 刷新token的过期时间 单位：秒
+     */
+    private Long authCodeTimeToLiveSecond;
+
+    /**
+     * 客户端授权方式
+     */
+    private Set<String> clientAuthenticationMethods;
+
+
+
 }

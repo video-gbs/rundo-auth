@@ -1,10 +1,9 @@
 package com.runjian.auth.config.storage;
 
-import com.fasterxml.jackson.core.type.TypeReference;
-import com.fasterxml.jackson.databind.ObjectMapper;
+import com.runjian.auth.constant.AuthGrantType;
 import com.runjian.auth.dao.OAuth2AuthorizationDao;
 import com.runjian.auth.entity.OAuth2AuthorizationInfo;
-import jakarta.annotation.PostConstruct;
+import com.runjian.auth.utils.ClassToMapUtils;
 import lombok.RequiredArgsConstructor;
 import org.springframework.dao.DataRetrievalFailureException;
 import org.springframework.security.oauth2.core.AuthorizationGrantType;
@@ -40,7 +39,7 @@ public class IbatisOAuth2AuthorizationService implements OAuth2AuthorizationServ
 
     private final RegisteredClientRepository registeredClientRepository;
 
-    private final ObjectMapper objectMapper;
+    private final ClassToMapUtils classToMapUtils;
 
 
     @Override
@@ -101,8 +100,8 @@ public class IbatisOAuth2AuthorizationService implements OAuth2AuthorizationServ
         OAuth2Authorization.Builder builder = OAuth2Authorization.withRegisteredClient(registeredClient)
                 .id(entity.getId())
                 .principalName(entity.getPrincipalName())
-                .authorizationGrantType(resolveAuthorizationGrantType(entity.getAuthorizationGrantType()))
-                .attributes(attributes -> attributes.putAll(parseMap(entity.getAttributes())))
+                .authorizationGrantType(AuthGrantType.getByMsg(entity.getAuthorizationGrantType()).getAuthorizationGrantType())
+                .attributes(attributes -> attributes.putAll(classToMapUtils.parseMap(entity.getAttributes())))
                 .authorizedScopes(StringUtils.commaDelimitedListToSet(entity.getAuthorizedScopes()));
         if (entity.getState() != null) {
             builder.attribute(OAuth2ParameterNames.STATE, entity.getState());
@@ -113,7 +112,7 @@ public class IbatisOAuth2AuthorizationService implements OAuth2AuthorizationServ
                     entity.getAuthorizationCodeValue(),
                     entity.getAuthorizationCodeIssuedAt(),
                     entity.getAuthorizationCodeExpiresAt());
-            builder.token(authorizationCode, metadata -> metadata.putAll(parseMap(entity.getAuthorizationCodeMetadata())));
+            builder.token(authorizationCode, metadata -> metadata.putAll(classToMapUtils.parseMap(entity.getAuthorizationCodeMetadata())));
         }
 
         if (entity.getAccessTokenValue() != null) {
@@ -123,7 +122,7 @@ public class IbatisOAuth2AuthorizationService implements OAuth2AuthorizationServ
                     entity.getAccessTokenIssuedAt(),
                     entity.getAccessTokenExpiresAt(),
                     StringUtils.commaDelimitedListToSet(entity.getAccessTokenScopes()));
-            builder.token(accessToken, metadata -> metadata.putAll(parseMap(entity.getAccessTokenMetadata())));
+            builder.token(accessToken, metadata -> metadata.putAll(classToMapUtils.parseMap(entity.getAccessTokenMetadata())));
         }
 
         if (entity.getRefreshTokenValue() != null) {
@@ -131,11 +130,11 @@ public class IbatisOAuth2AuthorizationService implements OAuth2AuthorizationServ
                     entity.getRefreshTokenValue(),
                     entity.getRefreshTokenIssuedAt(),
                     entity.getRefreshTokenExpiresAt());
-            builder.token(refreshToken, metadata -> metadata.putAll(parseMap(entity.getRefreshTokenMetadata())));
+            builder.token(refreshToken, metadata -> metadata.putAll(classToMapUtils.parseMap(entity.getRefreshTokenMetadata())));
         }
 
         if (entity.getOidcIdTokenValue() != null) {
-            Map<String, Object> oidcTokenMetadata = parseMap(entity.getOidcIdTokenMetadata());
+            Map<String, Object> oidcTokenMetadata = classToMapUtils.parseMap(entity.getOidcIdTokenMetadata());
             OidcIdToken idToken = new OidcIdToken(
                     entity.getOidcIdTokenValue(),
                     entity.getOidcIdTokenIssuedAt(),
@@ -153,7 +152,7 @@ public class IbatisOAuth2AuthorizationService implements OAuth2AuthorizationServ
         entity.setRegisteredClientId(authorization.getRegisteredClientId());
         entity.setPrincipalName(authorization.getPrincipalName());
         entity.setAuthorizationGrantType(authorization.getAuthorizationGrantType().getValue());
-        entity.setAttributes(writeMap(authorization.getAttributes()));
+        entity.setAttributes(classToMapUtils.writeMap(authorization.getAttributes()));
         entity.setState(authorization.getAttribute(OAuth2ParameterNames.STATE));
         entity.setAuthorizedScopes(StringUtils.collectionToDelimitedString(authorization.getAuthorizedScopes(), ","));
 
@@ -219,35 +218,8 @@ public class IbatisOAuth2AuthorizationService implements OAuth2AuthorizationServ
             tokenValueConsumer.accept(oAuth2Token.getTokenValue());
             issuedAtConsumer.accept(oAuth2Token.getIssuedAt());
             expiresAtConsumer.accept(oAuth2Token.getExpiresAt());
-            metadataConsumer.accept(writeMap(token.getMetadata()));
+            metadataConsumer.accept(classToMapUtils.writeMap(token.getMetadata()));
         }
     }
 
-    private Map<String, Object> parseMap(String data) {
-        try {
-            return this.objectMapper.readValue(data, new TypeReference<>() {
-            });
-        } catch (Exception ex) {
-            throw new IllegalArgumentException(ex.getMessage(), ex);
-        }
-    }
-
-    private String writeMap(Map<String, Object> metadata) {
-        try {
-            return this.objectMapper.writeValueAsString(metadata);
-        } catch (Exception ex) {
-            throw new IllegalArgumentException(ex.getMessage(), ex);
-        }
-    }
-
-    private static AuthorizationGrantType resolveAuthorizationGrantType(String authorizationGrantType) {
-        if (AuthorizationGrantType.AUTHORIZATION_CODE.getValue().equals(authorizationGrantType)) {
-            return AuthorizationGrantType.AUTHORIZATION_CODE;
-        } else if (AuthorizationGrantType.CLIENT_CREDENTIALS.getValue().equals(authorizationGrantType)) {
-            return AuthorizationGrantType.CLIENT_CREDENTIALS;
-        } else if (AuthorizationGrantType.REFRESH_TOKEN.getValue().equals(authorizationGrantType)) {
-            return AuthorizationGrantType.REFRESH_TOKEN;
-        }
-        return new AuthorizationGrantType(authorizationGrantType);
-    }
 }

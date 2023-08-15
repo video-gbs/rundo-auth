@@ -1,12 +1,10 @@
 package com.runjian.auth.dao;
 
 import com.runjian.auth.entity.OAuth2RegisteredClientInfo;
-import org.apache.ibatis.annotations.Insert;
-import org.apache.ibatis.annotations.Mapper;
-import org.apache.ibatis.annotations.Select;
-import org.apache.ibatis.annotations.Update;
+import org.apache.ibatis.annotations.*;
 import org.springframework.stereotype.Repository;
 
+import java.util.List;
 import java.util.Optional;
 
 /**
@@ -29,7 +27,8 @@ public interface OAuth2RegisteredClientDao {
             " WHERE client_id = #{clientId} ")
     Integer countClientId(String clientId);
 
-    @Update(" UPDATE " + OAUTH2_REGISTERED_CLIENT_TABLE_NAME +
+    @Update(" <script>" +
+            " UPDATE " + OAUTH2_REGISTERED_CLIENT_TABLE_NAME +
             " SET client_name = #{clientName} " +
             " , client_authentication_methods = #{clientAuthenticationMethods} " +
             " , authorization_grant_types = #{authorizationGrantTypes} " +
@@ -37,20 +36,29 @@ public interface OAuth2RegisteredClientDao {
             " , scopes = #{scopes} " +
             " , client_settings = #{clientSettings} " +
             " , token_settings = #{tokenSettings} " +
-            " WHERE id = #{id} ")
-    void update(OAuth2RegisteredClientInfo entity);
-
-    @Select(" <script>" +
-            " SELECT * FROM " + OAUTH2_REGISTERED_CLIENT_TABLE_NAME +
+            " , client_secret_expires_at = #{clientSecretExpiresAt} " +
+            " <if test=\"clientSecret != null\" > , client_secret = #{clientSecret} </if> " +
             " WHERE id = #{id} " +
             " </script>")
+    void update(OAuth2RegisteredClientInfo entity);
+
+    @Select(" SELECT * FROM " + OAUTH2_REGISTERED_CLIENT_TABLE_NAME +
+            " WHERE id = #{id} ")
     Optional<OAuth2RegisteredClientInfo> findById(String id);
+
+    @Select(" SELECT * FROM " + OAUTH2_REGISTERED_CLIENT_TABLE_NAME +
+            " WHERE client_id = #{clientId}")
+    Optional<OAuth2RegisteredClientInfo> findByClientId(String clientId);
 
     @Select(" <script>" +
             " SELECT * FROM " + OAUTH2_REGISTERED_CLIENT_TABLE_NAME +
-            " WHERE client_id = #{clientId} " +
+            " WHERE 1=1 " +
+            " <if test=\"clientId != null\" > AND client_id LIKE CONCAT('%', #{clientId}, '%') </if> " +
+            " <if test=\"clientName != null\" > AND client_name LIKE CONCAT('%', #{clientName}, '%') </if> " +
             " </script>")
-    Optional<OAuth2RegisteredClientInfo> findByClientId(String clientId);
+    List<OAuth2RegisteredClientInfo> findByClientIdLikeAndClientNameLike(String clientId, String clientName);
 
-
+    @Delete(" DELETE FROM " + OAUTH2_REGISTERED_CLIENT_TABLE_NAME +
+            " WHERE id = #{id}")
+    void deleteById(String id);
 }

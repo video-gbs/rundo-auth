@@ -21,10 +21,14 @@ spring:
           uri: lb://auth-server
           predicates:
             - Path=/oauth2/**
-#          filters:
-#            - AuthHeader
-#            - Auth
-#            - AuthFailure
+        - id: auth-server
+          uri: lb://auth-server
+          predicates:
+            - Path=/auth-client/**
+          filters:
+            - AuthHeader
+            - Auth
+            - AuthFailure
         - id: auth-rbac
           uri: lb://auth-rbac
           predicates:

@@ -122,7 +122,7 @@ public class ResourceController {
     }
 
     /**
-     * 删除
+     * 删除资源
      * @param resourceKey 资源key
      * @param resourceValue 资源value
      * @return

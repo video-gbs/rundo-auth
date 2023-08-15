@@ -8,7 +8,9 @@ import com.runjian.auth.config.storage.IbatisRegisteredClientRepository;
 import com.runjian.auth.dao.OAuth2AuthorizationConsentDao;
 import com.runjian.auth.dao.OAuth2AuthorizationDao;
 import com.runjian.auth.dao.OAuth2RegisteredClientDao;
+import com.runjian.auth.utils.ClassToMapUtils;
 import jakarta.annotation.PostConstruct;
+import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -36,22 +38,12 @@ import java.util.UUID;
  * @date 2023/4/26 15:22
  */
 @Configuration
+@RequiredArgsConstructor
 public class AuthorizationStorageConfig {
 
     private final PasswordEncoder passwordEncoder;
 
-    private final ObjectMapper objectMapper;
-
-
-    public AuthorizationStorageConfig(PasswordEncoder passwordEncoder){
-        this.passwordEncoder = passwordEncoder;
-        this.objectMapper = new ObjectMapper();
-        ClassLoader classLoader = JdbcRegisteredClientRepository.class.getClassLoader();
-        List<Module> securityModules = SecurityJackson2Modules.getModules(classLoader);
-        this.objectMapper.registerModules(securityModules);
-        this.objectMapper.registerModule(new OAuth2AuthorizationServerJackson2Module());
-    }
-
+    private final ClassToMapUtils classToMapUtils;
 
 
     /**
@@ -85,7 +77,7 @@ public class AuthorizationStorageConfig {
                         .reuseRefreshTokens(false)
                         .build())
                 .build();
-        IbatisRegisteredClientRepository ibatisRegisteredClientRepository = new IbatisRegisteredClientRepository(oAuth2RegisteredClientDao, objectMapper);
+        IbatisRegisteredClientRepository ibatisRegisteredClientRepository = new IbatisRegisteredClientRepository(oAuth2RegisteredClientDao, classToMapUtils);
         if (null == ibatisRegisteredClientRepository.findByClientId("rundo-gbs-view")) {
             ibatisRegisteredClientRepository.save(registeredClient);
         }
@@ -100,7 +92,7 @@ public class AuthorizationStorageConfig {
      */
     @Bean
     public OAuth2AuthorizationService authorizationService(OAuth2AuthorizationDao oAuth2AuthorizationDao, RegisteredClientRepository registeredClientRepository) {
-        return new IbatisOAuth2AuthorizationService(oAuth2AuthorizationDao, registeredClientRepository, objectMapper);
+        return new IbatisOAuth2AuthorizationService(oAuth2AuthorizationDao, registeredClientRepository, classToMapUtils);
     }
 
 

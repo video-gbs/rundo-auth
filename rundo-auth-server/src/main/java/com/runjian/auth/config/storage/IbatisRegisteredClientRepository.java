@@ -1,35 +1,29 @@
 package com.runjian.auth.config.storage;
 
-import com.fasterxml.jackson.core.type.TypeReference;
-import com.fasterxml.jackson.databind.ObjectMapper;
+import com.runjian.auth.constant.ClientAuthMethod;
 import com.runjian.auth.dao.OAuth2RegisteredClientDao;
 import com.runjian.auth.entity.OAuth2RegisteredClientInfo;
+import com.runjian.auth.utils.ClassToMapUtils;
+import lombok.RequiredArgsConstructor;
 import org.springframework.security.oauth2.core.AuthorizationGrantType;
-import org.springframework.security.oauth2.core.ClientAuthenticationMethod;
 import org.springframework.security.oauth2.server.authorization.client.RegisteredClient;
 import org.springframework.security.oauth2.server.authorization.client.RegisteredClientRepository;
 import org.springframework.security.oauth2.server.authorization.settings.ClientSettings;
 import org.springframework.security.oauth2.server.authorization.settings.TokenSettings;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.StringUtils;
-
 import java.util.*;
 
 /**
  * @author Miracle
  * @date 2023/4/26 10:28
  */
-
+@RequiredArgsConstructor
 public class IbatisRegisteredClientRepository implements RegisteredClientRepository {
 
     private final OAuth2RegisteredClientDao registeredClientDao;
 
-    private final ObjectMapper objectMapper;
-
-    public IbatisRegisteredClientRepository(OAuth2RegisteredClientDao registeredClientDao, ObjectMapper objectMapper){
-        this.registeredClientDao = registeredClientDao;
-        this.objectMapper = objectMapper;
-    }
+    private final ClassToMapUtils classToMapUtils;
 
     @Override
     @Transactional(rollbackFor = Exception.class)
@@ -76,16 +70,16 @@ public class IbatisRegisteredClientRepository implements RegisteredClientReposit
                 .clientName(client.getClientName())
                 .clientAuthenticationMethods(authenticationMethods -> clientAuthenticationMethods
                         .forEach(authenticationMethod -> authenticationMethods
-                                .add(resolveClientAuthenticationMethod(authenticationMethod))))
+                                .add(ClientAuthMethod.getByMsg(authenticationMethod).getClientAuthenticationMethod())))
                 .authorizationGrantTypes((grantTypes) -> authorizationGrantTypes
                         .forEach(grantType -> grantTypes.add(resolveAuthorizationGrantType(grantType))))
                 .redirectUris((uris) -> uris.addAll(redirectUris))
                 .scopes((scopes) -> scopes.addAll(clientScopes));
 
-        Map<String, Object> clientSettingsMap = parseMap(client.getClientSettings());
+        Map<String, Object> clientSettingsMap = classToMapUtils.parseMap(client.getClientSettings());
         builder.clientSettings(ClientSettings.withSettings(clientSettingsMap).build());
 
-        Map<String, Object> tokenSettingsMap = parseMap(client.getTokenSettings());
+        Map<String, Object> tokenSettingsMap = classToMapUtils.parseMap(client.getTokenSettings());
         builder.tokenSettings(TokenSettings.withSettings(tokenSettingsMap).build());
 
         return builder.build();
@@ -113,27 +107,12 @@ public class IbatisRegisteredClientRepository implements RegisteredClientReposit
         entity.setAuthorizationGrantTypes(StringUtils.collectionToCommaDelimitedString(authorizationGrantTypes));
         entity.setRedirectUris(StringUtils.collectionToCommaDelimitedString(registeredClient.getRedirectUris()));
         entity.setScopes(StringUtils.collectionToCommaDelimitedString(registeredClient.getScopes()));
-        entity.setClientSettings(writeMap(registeredClient.getClientSettings().getSettings()));
-        entity.setTokenSettings(writeMap(registeredClient.getTokenSettings().getSettings()));
+        entity.setClientSettings(classToMapUtils.writeMap(registeredClient.getClientSettings().getSettings()));
+        entity.setTokenSettings(classToMapUtils.writeMap(registeredClient.getTokenSettings().getSettings()));
 
         return entity;
     }
 
-    private Map<String, Object> parseMap(String data) {
-        try {
-            return this.objectMapper.readValue(data, new TypeReference<>() {});
-        } catch (Exception ex) {
-            throw new IllegalArgumentException(ex.getMessage(), ex);
-        }
-    }
-
-    private String writeMap(Map<String, Object> data) {
-        try {
-            return this.objectMapper.writeValueAsString(data);
-        } catch (Exception ex) {
-            throw new IllegalArgumentException(ex.getMessage(), ex);
-        }
-    }
 
     private static AuthorizationGrantType resolveAuthorizationGrantType(String authorizationGrantType) {
         if (AuthorizationGrantType.AUTHORIZATION_CODE.getValue().equals(authorizationGrantType)) {
@@ -146,14 +125,4 @@ public class IbatisRegisteredClientRepository implements RegisteredClientReposit
         return new AuthorizationGrantType(authorizationGrantType);
     }
 
-    private static ClientAuthenticationMethod resolveClientAuthenticationMethod(String clientAuthenticationMethod) {
-        if (ClientAuthenticationMethod.CLIENT_SECRET_BASIC.getValue().equals(clientAuthenticationMethod)) {
-            return ClientAuthenticationMethod.CLIENT_SECRET_BASIC;
-        } else if (ClientAuthenticationMethod.CLIENT_SECRET_POST.getValue().equals(clientAuthenticationMethod)) {
-            return ClientAuthenticationMethod.CLIENT_SECRET_POST;
-        } else if (ClientAuthenticationMethod.NONE.getValue().equals(clientAuthenticationMethod)) {
-            return ClientAuthenticationMethod.NONE;
-        }
-        return new ClientAuthenticationMethod(clientAuthenticationMethod);
-    }
 }

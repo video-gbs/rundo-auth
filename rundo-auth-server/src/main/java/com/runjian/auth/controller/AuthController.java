@@ -7,7 +7,6 @@ import com.runjian.common.config.response.CommonResponse;
 import com.runjian.common.validator.ValidatorService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
 /**
@@ -56,13 +55,6 @@ public class AuthController {
     public CommonResponse<?> signOut(@RequestParam String username){
         authService.signOut(username);
         return CommonResponse.success();
-    }
-
-
-    @GetMapping("/oauth2")
-    public CommonResponse<String> authRequest(@RequestParam String code){
-        log.info("接收到验证code:" + code);
-        return CommonResponse.success(code);
     }
 
 }
