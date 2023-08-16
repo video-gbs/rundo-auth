@@ -75,7 +75,6 @@ public class AuthFilter implements GatewayFilter, Ordered {
                 .post()
                 .uri(authProperties.getAuthAddr())
                 .header(AuthProperties.AUTHORIZATION_HEADER_TOKEN, authToken)
-                //.body(BodyInserters.fromMultipartData(map))
                 .body(Mono.just(postAuthReq), PostAuthReq.class)
                 .retrieve()
                 .bodyToMono(CommonResponse.class)
@@ -97,7 +96,6 @@ public class AuthFilter implements GatewayFilter, Ordered {
                     }
                 })
                 .then(chain.filter(exchange));
-
     }
 
     @Override

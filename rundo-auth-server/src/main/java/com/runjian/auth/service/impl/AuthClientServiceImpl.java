@@ -128,8 +128,8 @@ public class AuthClientServiceImpl implements AuthClientService {
     }
 
     public GetAuthClientPage toObject(OAuth2RegisteredClientInfo client) {
-        Set<String> clientAuthenticationMethods = StringUtils.commaDelimitedListToSet(
-                client.getClientAuthenticationMethods());
+        Set<Integer> clientAuthenticationMethods = StringUtils.commaDelimitedListToSet(
+                client.getClientAuthenticationMethods()).stream().map(clientAuthMethod -> ClientAuthMethod.getByMsg(clientAuthMethod).getCode()).collect(Collectors.toSet());
         Set<Integer> authorizationGrantTypes = StringUtils.commaDelimitedListToSet(
                 client.getAuthorizationGrantTypes()).stream().map(authGrantType -> AuthGrantType.getByMsg(authGrantType).getCode()).collect(Collectors.toSet());
         Set<String> redirectUris = StringUtils.commaDelimitedListToSet(

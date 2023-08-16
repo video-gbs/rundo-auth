@@ -78,7 +78,7 @@ public class GetAuthClientPage {
     /**
      * 客户端授权方式
      */
-    private Set<String> clientAuthenticationMethods;
+    private Set<Integer> clientAuthenticationMethods;
 
 
 

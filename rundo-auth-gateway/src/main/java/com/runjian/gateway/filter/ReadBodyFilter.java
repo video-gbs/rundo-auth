@@ -27,7 +27,7 @@ public class ReadBodyFilter implements GlobalFilter, Ordered {
         HttpHeaders headers = request.getHeaders();
 
         // 检查请求是否包含请求体
-        boolean hasBody = headers.getContentLength() > 0 || headers.getContentType() != null;
+        boolean hasBody = headers.getContentLength() > 0;
 
         if (hasBody){
             // 从请求体中获取参数
