@@ -1,5 +1,6 @@
 package com.runjian.auth.vo.response;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.Builder;
 import lombok.Data;
 
@@ -28,11 +29,13 @@ public class GetAuthClientPage {
     /**
      * 客户端id发布时间
      */
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     private LocalDateTime clientIdIssuedAt;
 
     /**
      * 客户端密码过期时间
      */
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     private LocalDateTime clientSecretExpiresAt;
 
     /**
