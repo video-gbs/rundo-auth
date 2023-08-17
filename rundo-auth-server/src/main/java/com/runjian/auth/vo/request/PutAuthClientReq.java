@@ -1,5 +1,6 @@
 package com.runjian.auth.vo.request;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.runjian.auth.constant.AuthGrantType;
 import com.runjian.auth.constant.ClientAuthMethod;
 import com.runjian.auth.utils.ValidUrlUtils;
@@ -96,6 +97,7 @@ public class PutAuthClientReq implements ValidatorFunction {
     /**
      * 密码过期时间
      */
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     private LocalDateTime clientSecretExpiresAt;
 
     @Override
@@ -113,7 +115,7 @@ public class PutAuthClientReq implements ValidatorFunction {
             }
         }
         for (String url : this.redirectUris){
-            if(ValidUrlUtils.validateUri(url)){
+            if(!ValidUrlUtils.validateUri(url)){
                 result.setHasErrors(true);
                 result.getErrorMsgMap().put("回调地址请求参数有误", String.format("参数'%s'非合法的回调地址", url));
             }

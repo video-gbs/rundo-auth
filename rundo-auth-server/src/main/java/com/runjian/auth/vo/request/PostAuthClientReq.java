@@ -119,7 +119,7 @@ public class PostAuthClientReq implements ValidatorFunction {
             }
         }
         for (String url : this.redirectUris){
-            if(ValidUrlUtils.validateUri(url)){
+            if(!ValidUrlUtils.validateUri(url)){
                 result.setHasErrors(true);
                 result.getErrorMsgMap().put("回调地址请求参数有误", String.format("参数'%s'非合法的回调地址", url));
             }
