@@ -13,6 +13,8 @@ import com.runjian.common.config.exception.BusinessErrorEnums;
 import com.runjian.common.config.exception.BusinessException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.oauth2.core.AuthorizationGrantType;
+import org.springframework.security.oauth2.core.ClientAuthenticationMethod;
 import org.springframework.security.oauth2.server.authorization.client.RegisteredClient;
 import org.springframework.security.oauth2.server.authorization.client.RegisteredClientRepository;
 import org.springframework.security.oauth2.server.authorization.settings.ClientSettings;
@@ -58,11 +60,17 @@ public class AuthClientServiceImpl implements AuthClientService {
         if (Objects.nonNull(clientSecretExpiresAt)){
             clientBuilder.clientSecretExpiresAt(clientSecretExpiresAt.toInstant(ZoneOffset.of("+8")));
         }
+        Set<AuthorizationGrantType> authGrantTypes = authorizationGrantTypes.stream().map(code -> AuthGrantType.getByCode(code).getAuthorizationGrantType()).collect(Collectors.toSet());
+        Set<ClientAuthenticationMethod> clientAuthMethods = clientAuthenticationMethods.stream().map(code -> ClientAuthMethod.getByCode(code).getClientAuthenticationMethod()).collect(Collectors.toSet());
         RegisteredClient registeredClient = clientBuilder
                 .clientId(clientId)
                 .clientSecret(passwordEncoder.encode(clientSecret))
                 .clientName(clientName)
                 .clientIdIssuedAt(Instant.now())
+                .authorizationGrantTypes(a -> a.addAll(authGrantTypes))
+                .clientAuthenticationMethods(a -> a.addAll(clientAuthMethods))
+                .scopes(a -> a.addAll(scopes))
+                .redirectUris(Objects.nonNull(redirectUris) ? a -> a.addAll(redirectUris) : Set::clear)
                 .clientSettings(ClientSettings.builder()
                         .requireAuthorizationConsent(requireAuthorizationConsent)
                         .build())
@@ -73,10 +81,6 @@ public class AuthClientServiceImpl implements AuthClientService {
                         .reuseRefreshTokens(false)
                         .build()).build()
                 ;
-        registeredClient.getRedirectUris().addAll(redirectUris);
-        registeredClient.getClientAuthenticationMethods().addAll(clientAuthenticationMethods.stream().map(code -> ClientAuthMethod.getByCode(code).getClientAuthenticationMethod()).collect(Collectors.toSet()));
-        registeredClient.getScopes().addAll(scopes);
-        registeredClient.getAuthorizationGrantTypes().addAll(authorizationGrantTypes.stream().map(code -> AuthGrantType.getByCode(code).getAuthorizationGrantType()).collect(Collectors.toSet()));
         repository.save(registeredClient);
     }
 
