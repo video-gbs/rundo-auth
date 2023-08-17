@@ -2,6 +2,7 @@ package com.runjian.auth.vo.request;
 
 import com.runjian.auth.constant.AuthGrantType;
 import com.runjian.auth.constant.ClientAuthMethod;
+import com.runjian.auth.utils.ValidUrlUtils;
 import com.runjian.common.config.exception.BusinessException;
 import com.runjian.common.validator.ValidationResult;
 import com.runjian.common.validator.ValidatorFunction;
@@ -9,6 +10,7 @@ import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 import lombok.Data;
+import org.hibernate.validator.constraints.Range;
 
 import java.time.LocalDateTime;
 import java.util.Set;
@@ -76,16 +78,19 @@ public class PutAuthClientReq implements ValidatorFunction {
     /**
      * 授权token持续时间，单位：秒
      */
+    @Range(min = 1, max = 999999999, message = "非法授权token持续时间")
     private Long accessTokenTimeToLiveSecond;
 
     /**
      * 刷新token持续时间，单位：秒
      */
+    @Range(min = 1, max = 999999999, message = "非法授权token持续时间")
     private Long refreshTokenTimeToLiveSecond;
 
     /**
      * 授权code持续时间
      */
+    @Range(min = 1, max = 999999999, message = "非法授权token持续时间")
     private Long authCodeTimeToLiveSecond;
 
     /**
@@ -105,6 +110,12 @@ public class PutAuthClientReq implements ValidatorFunction {
             if (!AuthGrantType.inAuthGrantTypeScope(authGrantType)){
                 result.setHasErrors(true);
                 result.getErrorMsgMap().put("用户授权方式请求参数有误", String.format("参数'%s'非合法的用户授权方式", authGrantType));
+            }
+        }
+        for (String url : this.redirectUris){
+            if(ValidUrlUtils.validateUri(url)){
+                result.setHasErrors(true);
+                result.getErrorMsgMap().put("回调地址请求参数有误", String.format("参数'%s'非合法的回调地址", url));
             }
         }
     }

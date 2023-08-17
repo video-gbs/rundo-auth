@@ -1,7 +1,7 @@
 package com.runjian.auth.service;
 
 import com.github.pagehelper.PageInfo;
-import com.runjian.auth.vo.response.GetAuthClientPage;
+import com.runjian.auth.vo.response.AuthClientPage;
 import java.time.LocalDateTime;
 import java.util.Set;
 
@@ -17,7 +17,7 @@ public interface AuthClientService {
      * @param clientName 客户端名称
      * @return
      */
-    PageInfo<GetAuthClientPage> getClientPage(int page, int num, String clientId, String clientName);
+    PageInfo<AuthClientPage> getClientPage(int page, int num, String clientId, String clientName);
 
     /**
      * @param clientId 客户端id

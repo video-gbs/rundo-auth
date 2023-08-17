@@ -14,7 +14,7 @@ import java.util.Set;
  */
 @Data
 @Builder
-public class GetAuthClientPage {
+public class AuthClientPage {
 
     /**
      * 主键id
@@ -61,7 +61,7 @@ public class GetAuthClientPage {
     /**
      * 是否需要用户授权
      */
-    private Boolean requireAuthConsent;
+    private Boolean requireAuthorizationConsent;
 
     /**
      * 授权token的过期时间 单位：秒

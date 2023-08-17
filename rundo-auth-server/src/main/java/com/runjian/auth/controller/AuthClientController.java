@@ -5,7 +5,7 @@ import com.github.pagehelper.PageInfo;
 import com.runjian.auth.service.AuthClientService;
 import com.runjian.auth.vo.request.PostAuthClientReq;
 import com.runjian.auth.vo.request.PutAuthClientReq;
-import com.runjian.auth.vo.response.GetAuthClientPage;
+import com.runjian.auth.vo.response.AuthClientPage;
 import com.runjian.common.aspect.annotation.BlankStringValid;
 import com.runjian.common.aspect.annotation.IllegalStringValid;
 import com.runjian.common.config.response.CommonResponse;
@@ -39,9 +39,9 @@ public class AuthClientController {
     @GetMapping("/page")
     @BlankStringValid
     @IllegalStringValid
-    public CommonResponse<PageInfo<GetAuthClientPage>> getAuthClientPage(@RequestParam(defaultValue = "1") int page,
-                                                                         @RequestParam(defaultValue = "10") int num,
-                                                                         String clientId, String clientName){
+    public CommonResponse<PageInfo<AuthClientPage>> getAuthClientPage(@RequestParam(defaultValue = "1") int page,
+                                                                      @RequestParam(defaultValue = "10") int num,
+                                                                      String clientId, String clientName){
         return CommonResponse.success(authClientService.getClientPage(page, num, clientId, clientName));
     }
 
