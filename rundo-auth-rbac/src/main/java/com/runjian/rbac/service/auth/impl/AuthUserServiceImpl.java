@@ -232,6 +232,7 @@ public class AuthUserServiceImpl implements AuthUserService {
             getCatalogueResourceRsp.setResourceId(resourceInfo.getId());
             getCatalogueResourceRsp.setResourceName(resourceInfo.getResourceName());
             getCatalogueResourceRsp.setResourceValue(resourceInfo.getResourceValue());
+            getCatalogueResourceRsp.setParentResourceId(resourceInfo.getResourcePid());
             List<Long> ids = levelMap.get(resourceInfo.getId());
             StringBuilder stringBuilder = new StringBuilder();
             for (Long id : ids){
