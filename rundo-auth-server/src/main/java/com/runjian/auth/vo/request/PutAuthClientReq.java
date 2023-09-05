@@ -32,7 +32,6 @@ public class PutAuthClientReq implements ValidatorFunction {
     /**
      * 客户端密码
      */
-    @NotBlank(message = "客户端密码不能为空")
     @Size(min = 6, max = 999, message = "客户端密码的范围在1~999")
     private String clientSecret;
 
