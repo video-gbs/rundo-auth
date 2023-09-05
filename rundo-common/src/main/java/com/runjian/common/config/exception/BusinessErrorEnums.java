@@ -62,6 +62,8 @@ public enum BusinessErrorEnums {
     USER_NO_RESOURCE_AUTH(403, 20008, "用户无资源权限"),
     USER_TOKEN_INVALID(401, 20001, "非法token,请重新登录"),
 
+    AUTHORIZATION_FAILURE(400, 20001, "权限操作失败"),
+
 
     TOKEN_IS_EXPIRE(401, 20003, "访问令牌过期"),
     USER_LOGIN_FAILURE(401, 20004, "用户已经退出或者在其他地方登录"),

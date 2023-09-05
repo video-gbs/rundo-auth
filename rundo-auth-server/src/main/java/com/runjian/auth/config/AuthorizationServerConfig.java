@@ -53,6 +53,7 @@ public class AuthorizationServerConfig {
                 token.accessTokenRequestConverter(new OAuth2TokenPasswordAuthenticationConvert())
                         .authenticationProvider(new OAuth2PasswordTokenAuthenticationProvider(authorizationService, http, userDetailsService, passwordEncoder))
                         .accessTokenResponseHandler(new CustomAuthenticationSuccessHandler())
+                        .errorResponseHandler(new CustomAuthenticationFailureHandler())
         );
         http.exceptionHandling(exceptions -> exceptions.authenticationEntryPoint(authExceptionEntryPoint()))
                 .securityMatcher(endpointsMatcher)
