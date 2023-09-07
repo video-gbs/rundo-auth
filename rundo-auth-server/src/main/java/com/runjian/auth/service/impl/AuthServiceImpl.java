@@ -15,9 +15,12 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.scheduling.annotation.Scheduled;
+import org.springframework.security.oauth2.core.OAuth2AccessToken;
 import org.springframework.security.oauth2.core.OAuth2Token;
+import org.springframework.security.oauth2.core.endpoint.OAuth2ParameterNames;
 import org.springframework.security.oauth2.server.authorization.OAuth2Authorization;
 import org.springframework.security.oauth2.server.authorization.OAuth2AuthorizationService;
+import org.springframework.security.oauth2.server.authorization.OAuth2TokenType;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
@@ -77,7 +80,7 @@ public class AuthServiceImpl implements AuthService {
     @Override
     public void logout(String token) {
         String jwtToken = token.split(" ")[1];
-        OAuth2Authorization authorization = this.authorizationService.findByToken(jwtToken, null);
+        OAuth2Authorization authorization = this.authorizationService.findByToken(jwtToken, OAuth2TokenType.ACCESS_TOKEN);
         if (Objects.nonNull(authorization)){
             this.authorizationService.remove(authorization);
         }

@@ -69,7 +69,7 @@ public interface OAuth2AuthorizationDao {
 
     @Select(" <script>" +
             " SELECT * FROM " + OAUTH2_AUTHORIZATION_TABLE_NAME +
-            " WHERE id = #{id} " +
+            " WHERE id = #{id} for update" +
             " </script>")
     Optional<OAuth2AuthorizationInfo> findById(String id);
 
