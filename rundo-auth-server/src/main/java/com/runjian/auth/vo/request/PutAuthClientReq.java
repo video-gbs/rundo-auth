@@ -14,6 +14,7 @@ import lombok.Data;
 import org.hibernate.validator.constraints.Range;
 
 import java.time.LocalDateTime;
+import java.util.Objects;
 import java.util.Set;
 
 /**
@@ -78,19 +79,19 @@ public class PutAuthClientReq implements ValidatorFunction {
     /**
      * 授权token持续时间，单位：秒
      */
-    @Range(min = 1, max = 999999999, message = "非法授权token持续时间")
+    @Range(min = 300, max = 999999999, message = "授权token持续时间最低为300秒")
     private Long accessTokenTimeToLiveSecond;
 
     /**
      * 刷新token持续时间，单位：秒
      */
-    @Range(min = 1, max = 999999999, message = "非法授权token持续时间")
+    @Range(min = 300, max = 999999999, message = "非法授权token持续时间最低为300秒")
     private Long refreshTokenTimeToLiveSecond;
 
     /**
      * 授权code持续时间
      */
-    @Range(min = 1, max = 999999999, message = "非法授权token持续时间")
+    @Range(min = 15, max = 999999999, message = "非法授权token持续时间最低为15秒")
     private Long authCodeTimeToLiveSecond;
 
     /**
@@ -101,6 +102,17 @@ public class PutAuthClientReq implements ValidatorFunction {
 
     @Override
     public void validEvent(ValidationResult result, Object data, Object matchData) throws BusinessException {
+        if (Objects.nonNull(this.accessTokenTimeToLiveSecond) &&  Objects.nonNull(this.refreshTokenTimeToLiveSecond) && (this.accessTokenTimeToLiveSecond > this.refreshTokenTimeToLiveSecond)){
+            result.setHasErrors(true);
+            result.getErrorMsgMap().put("客户端授权方式请求参数有误", "刷新token持续时间必须大于授权token持续时间");
+        }else if (Objects.isNull(this.accessTokenTimeToLiveSecond) && Objects.nonNull(this.refreshTokenTimeToLiveSecond) && this.refreshTokenTimeToLiveSecond < 3600){
+            result.setHasErrors(true);
+            result.getErrorMsgMap().put("客户端授权方式请求参数有误", "授权token未填，默认为3600秒，刷新token持续时间必须大于授权token持续时间");
+        } else if (Objects.isNull(this.refreshTokenTimeToLiveSecond) && Objects.nonNull(this.accessTokenTimeToLiveSecond) && this.accessTokenTimeToLiveSecond > 10800) {
+            result.setHasErrors(true);
+            result.getErrorMsgMap().put("客户端授权方式请求参数有误", "刷新token未填，默认为10800秒，刷新token持续时间必须大于授权token持续时间");
+        }
+
         for (Integer clientAuthMethod : clientAuthenticationMethods){
             if (!ClientAuthMethod.inClientAuthMethodScope(clientAuthMethod)){
                 result.setHasErrors(true);
