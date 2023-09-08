@@ -1,10 +1,16 @@
 package com.runjian.rbac.vo.request;
 
+import com.runjian.common.config.exception.BusinessException;
+import com.runjian.common.validator.ValidationResult;
+import com.runjian.common.validator.ValidatorFunction;
+import com.runjian.rbac.constant.MenuType;
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 import lombok.Data;
 import org.hibernate.validator.constraints.Range;
+
+import java.util.Objects;
 
 /**
  * 修改菜单请求体
@@ -12,7 +18,7 @@ import org.hibernate.validator.constraints.Range;
  * @date 2023/6/12 15:30
  */
 @Data
-public class PutMenuReq {
+public class PutMenuReq implements ValidatorFunction {
 
     /**
      * 菜单id
@@ -77,4 +83,19 @@ public class PutMenuReq {
     @NotNull(message = "禁用状态不能为空")
     @Range(min = 0, max = 1, message = "非法禁用状态")
     private Integer disabled;
+
+    @Override
+    public void validEvent(ValidationResult result, Object data, Object matchData) throws BusinessException {
+        if(!Objects.equals(this.menuType, MenuType.ABSTRACT.getCode())){
+            if (Objects.isNull(this.path)) {
+                result.getErrorMsgMap().put("修改失败", "跳转路径不能为空");
+                result.setHasErrors(true);
+
+            }
+            if (Objects.isNull(this.component)) {
+                result.getErrorMsgMap().put("修改失败", "前端组件不能为空");
+                result.setHasErrors(true);
+            }
+        }
+    }
 }
