@@ -53,6 +53,7 @@ public class JoseConfig {
     @Bean
     public OAuth2TokenCustomizer<JwtEncodingContext> oAuth2TokenCustomizer() {
         return context -> {
+
             // 检查登录用户信息是不是UserDetails，排除掉没有用户参与的流程
             if (context.getPrincipal().getPrincipal() instanceof UserDetails user) {
                 // 获取用户的权限
@@ -67,7 +68,7 @@ public class JoseConfig {
                 JwtClaimsSet.Builder claims = context.getClaims();
                 // 将权限信息放入jwt的claims中
                 claims.claim("authorities", authoritySet);
-                claims.claim("random-id", new Random().nextInt(100000000));
+                claims.claim("random-id", UUID.randomUUID().toString());
             }
         };
     }

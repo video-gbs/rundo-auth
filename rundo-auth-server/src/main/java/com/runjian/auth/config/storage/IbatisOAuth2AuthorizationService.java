@@ -45,7 +45,7 @@ public class IbatisOAuth2AuthorizationService implements OAuth2AuthorizationServ
 
     @Override
     @Transactional(rollbackFor = Exception.class)
-    public synchronized void save(OAuth2Authorization authorization) {
+    public void save(OAuth2Authorization authorization) {
         Assert.notNull(authorization, "authorization cannot be null");
         Optional<OAuth2AuthorizationInfo> oAuth2AuthorizationInfo = this.auth2AuthorizationDao.findById(authorization.getId());
         if (oAuth2AuthorizationInfo.isEmpty()){
