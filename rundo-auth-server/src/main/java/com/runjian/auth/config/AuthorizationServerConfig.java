@@ -41,8 +41,6 @@ public class AuthorizationServerConfig {
     @Bean
     @Order(Ordered.HIGHEST_PRECEDENCE)
     public SecurityFilterChain oauthSecurityFilterChain(HttpSecurity http) throws Exception{
-        // 设置jwt token个性化
-        http.setSharedObject(OAuth2TokenCustomizer.class, new JoseConfig.CustomOAuth2TokenCustomizer());
         // 授权服务器配置
         OAuth2AuthorizationServerConfigurer authorizationServerConfigurer =
                 new OAuth2AuthorizationServerConfigurer();
