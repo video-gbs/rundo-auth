@@ -73,13 +73,13 @@ public interface OAuth2AuthorizationDao {
             " </script>")
     Optional<OAuth2AuthorizationInfo> findById(String id);
 
-    @Select(" <script>" +
+    @Select(" <script> " +
             " SELECT * FROM " + OAUTH2_AUTHORIZATION_TABLE_NAME +
             " WHERE state = #{token} OR " +
             " authorization_code_value = #{token} OR " +
             " access_token_value = #{token} OR " +
             " refresh_token_value = #{token} " +
-            " </script>")
+            " </script> ")
     Optional<OAuth2AuthorizationInfo> findByStateOrAuthorizationCodeValueOrAccessTokenValueOrRefreshTokenValue(String token);
 
     @Select(" <script>" +

@@ -60,8 +60,9 @@ public class AuthServiceImpl implements AuthService {
     public AuthDataRsp authenticate(String reqPath, String reqMethod, String queryData, String bodyData) {
         String jwtToken = request.getHeader(CommonConstant.AUTHORIZATION).split(" ")[1];
         if (Objects.isNull(jwtToken)){
-            return AuthDataRsp.getFailureRsp(BusinessErrorEnums.USER_TOKEN_INVALID);
+            return AuthDataRsp.getFailureRsp(BusinessErrorEnums.USER_TOKEN_IS_GONE);
         }
+        log.warn("token值：{}", jwtToken);
         OAuth2Authorization authorization = this.authorizationService.findByToken(jwtToken, null);
         if (Objects.isNull(authorization)){
             return AuthDataRsp.getFailureRsp(BusinessErrorEnums.USER_TOKEN_INVALID);

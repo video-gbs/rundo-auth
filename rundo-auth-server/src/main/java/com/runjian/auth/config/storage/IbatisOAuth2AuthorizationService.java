@@ -5,6 +5,7 @@ import com.runjian.auth.dao.OAuth2AuthorizationDao;
 import com.runjian.auth.entity.OAuth2AuthorizationInfo;
 import com.runjian.auth.utils.ClassToMapUtils;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.dao.DataRetrievalFailureException;
 import org.springframework.security.oauth2.core.AuthorizationGrantType;
 import org.springframework.security.oauth2.core.OAuth2AccessToken;
@@ -32,6 +33,7 @@ import java.util.function.Consumer;
  * @author Miracle
  * @date 2023/4/26 10:34
  */
+@Slf4j
 @RequiredArgsConstructor
 public class IbatisOAuth2AuthorizationService implements OAuth2AuthorizationService {
 
@@ -74,6 +76,7 @@ public class IbatisOAuth2AuthorizationService implements OAuth2AuthorizationServ
 
         Optional<OAuth2AuthorizationInfo> result;
         if (tokenType == null) {
+            log.warn("token1值：{}", token );
             result = this.auth2AuthorizationDao.findByStateOrAuthorizationCodeValueOrAccessTokenValueOrRefreshTokenValue(token);
         } else if (OAuth2ParameterNames.STATE.equals(tokenType.getValue())) {
             result = this.auth2AuthorizationDao.findByState(token);
