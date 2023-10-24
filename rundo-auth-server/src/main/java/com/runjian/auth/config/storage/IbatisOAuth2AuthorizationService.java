@@ -53,7 +53,6 @@ public class IbatisOAuth2AuthorizationService implements OAuth2AuthorizationServ
         }else {
             this.auth2AuthorizationDao.update(toEntity(authorization));
         }
-
     }
 
     @Override
