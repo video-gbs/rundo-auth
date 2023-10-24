@@ -46,7 +46,7 @@ public class IbatisOAuth2AuthorizationService implements OAuth2AuthorizationServ
 
     @Override
     @Transactional(rollbackFor = Exception.class)
-    public void save(OAuth2Authorization authorization) {
+    public synchronized void save(OAuth2Authorization authorization) {
         Assert.notNull(authorization, "authorization cannot be null");
         Optional<OAuth2AuthorizationInfo> oAuth2AuthorizationInfo = this.auth2AuthorizationDao.findById(authorization.getId());
         if (oAuth2AuthorizationInfo.isEmpty()){
@@ -65,18 +65,19 @@ public class IbatisOAuth2AuthorizationService implements OAuth2AuthorizationServ
     }
 
     @Override
+    @Transactional(rollbackFor = Exception.class)
     public OAuth2Authorization findById(String id) {
         Assert.hasText(id, "id cannot be empty");
         return this.auth2AuthorizationDao.findById(id).map(this::toObject).orElse(null);
     }
 
     @Override
+    @Transactional(rollbackFor = Exception.class)
     public OAuth2Authorization findByToken(String token, OAuth2TokenType tokenType) {
         Assert.hasText(token, "token cannot be empty");
 
         Optional<OAuth2AuthorizationInfo> result;
         if (tokenType == null) {
-            log.warn("token1值：{}", token );
             result = this.auth2AuthorizationDao.findByStateOrAuthorizationCodeValueOrAccessTokenValueOrRefreshTokenValue(token);
         } else if (OAuth2ParameterNames.STATE.equals(tokenType.getValue())) {
             result = this.auth2AuthorizationDao.findByState(token);
