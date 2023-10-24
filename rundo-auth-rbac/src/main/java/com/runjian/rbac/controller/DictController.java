@@ -65,6 +65,15 @@ public class DictController {
     }
 
     /**
+     * 获取单个字典数据
+     * @param dictId 字典id
+     * @return
+     */
+    public CommonResponse<GetDictGroupRsp> getDictGroupById(@RequestParam Long dictId){
+        return CommonResponse.success(dictService.getDictById(dictId));
+    }
+
+    /**
      * 增加字典
      * @param req 增加字典请求体
      * @return

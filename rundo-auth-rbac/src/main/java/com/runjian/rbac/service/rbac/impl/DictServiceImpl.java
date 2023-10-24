@@ -30,13 +30,17 @@ public class DictServiceImpl implements DictService {
     @Override
     public PageInfo<GetDictPageRsp> getDictPage(int page, int num, String groupName, String itemName) {
         PageHelper.startPage(page, num);
-
         return new PageInfo<>(dictMapper.selectByGroupNameAndItemName(groupName, itemName));
     }
 
     @Override
     public List<GetDictGroupRsp> getDictByGroupName(String groupCode) {
         return dictMapper.selectByGroupCode(groupCode);
+    }
+
+    @Override
+    public GetDictGroupRsp getDictById(Long dictId) {
+        return dictMapper.selectRspById(dictId);
     }
 
     @Override

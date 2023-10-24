@@ -29,6 +29,13 @@ public interface DictService {
     List<GetDictGroupRsp> getDictByGroupName(String groupCode);
 
     /**
+     * 获取字典
+     * @param dictId 字典id
+     * @return
+     */
+    GetDictGroupRsp getDictById(Long dictId);
+
+    /**
      * 增加字典
      * @param groupName 分组名称
      * @param groupCode 分组编码

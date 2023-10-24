@@ -42,6 +42,24 @@ spring:
             - Auth
             - AuthFailure
             - StripPrefix=1
+        - id: alarm-manage
+          uri: lb://alarm-manage
+          predicates:
+            - Path=/alarm-manage/**
+          filters:
+            - AuthHeader
+            - Auth
+            - AuthFailure
+            - StripPrefix=1
+        - id: utils-template
+          uri: lb://timer-utils
+          predicates:
+            - Path=/timer-utils/**
+          filters:
+            - AuthHeader
+            - Auth
+            - AuthFailure
+            - StripPrefix=1
         - id: device-expansion
           uri: lb://device-expansion
           predicates:

@@ -24,6 +24,10 @@ public interface DictMapper {
             " WHERE id = #{id} ")
     Optional<DictInfo> selectById(Long id);
 
+    @Select(" SELECT * FROM " + DICT_TABLE_NAME +
+            " WHERE id = #{id} ")
+    GetDictGroupRsp selectRspById(Long id);
+
     @Insert(" INSERT INTO " + DICT_TABLE_NAME +
             " (group_name, group_code, item_name, item_value, description, create_time, update_time) " +
             " VALUES " +
