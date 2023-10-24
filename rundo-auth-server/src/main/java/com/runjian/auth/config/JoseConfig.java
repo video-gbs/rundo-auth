@@ -68,7 +68,7 @@ public class JoseConfig {
                 JwtClaimsSet.Builder claims = context.getClaims();
                 // 将权限信息放入jwt的claims中
                 claims.claim("authorities", authoritySet);
-                claims.claim("random-id", UUID.randomUUID().toString());
+                claims.claim("rid", UUID.randomUUID().toString());
             }
         };
     }
