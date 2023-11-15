@@ -77,6 +77,10 @@ spring:
             - Auth
             - AuthFailure
             - StripPrefix=1
+        - id: alarm-manage-open
+          uri: lb://alarm-manage
+          predicates:
+            - Path=/alarm-manage-open/**
       globalcors:
         add-to-simple-url-handler-mapping: true
         cors-configurations:
@@ -97,8 +101,16 @@ spring:
   config:
     import:
       - optional:nacos:${spring.application.name}-${spring.profiles.active}.yml
+  servlet:
+    multipart:
+      max-file-size: 50MB
+      max-request-size: 50MB
+      enabled: true
+
+
 server:
   port: 9090
+
 
 auth:
   addr: /auth-server/request
