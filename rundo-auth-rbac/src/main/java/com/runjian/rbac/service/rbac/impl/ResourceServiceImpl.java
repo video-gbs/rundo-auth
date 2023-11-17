@@ -169,6 +169,7 @@ public class ResourceServiceImpl implements ResourceService {
             resourceInfoList.add(pResourceInfo);
             Set<Long> resourceIds = resourceInfoList.stream().filter(resourceInfo -> Objects.equals(resourceInfo.getResourceType(), ResourceType.CATALOGUE.getCode())).map(ResourceInfo::getId).collect(Collectors.toSet());
             if (resourceInfoList.size() > resourceIds.size()){
+                dataSourceTransactionManager.commit(transaction);
                 throw new BusinessException(BusinessErrorEnums.VALID_ILLEGAL_OPERATION, "删除失败，该节点下或者下级节点下存在资源");
             }
             funcResourceMapper.deleteAllByResourceIds(resourceIds);
