@@ -181,8 +181,9 @@ public class ResourceServiceImpl implements ResourceService {
             resourceMapper.batchDelete(resourceIds);
             cacheService.removeUserResourceByResourceKey(pResourceInfo.getResourceKey());
             dataSourceTransactionManager.commit(transaction);
-        } finally {
+        } catch (Exception ex){
             dataSourceTransactionManager.rollback(transaction);
+            throw ex;
         }
     }
 
