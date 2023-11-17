@@ -176,7 +176,6 @@ public class ResourceServiceImpl implements ResourceService {
             cacheService.removeUserResourceByResourceKey(pResourceInfo.getResourceKey());
             dataSourceTransactionManager.commit(transaction);
         } catch (Exception exception){
-            log.error(LogTemplate.ERROR_LOG_TEMPLATE, "资源服务", "删除失败", exception.getMessage());
             throw exception;
         } finally {
             dataSourceTransactionManager.rollback(transaction);
