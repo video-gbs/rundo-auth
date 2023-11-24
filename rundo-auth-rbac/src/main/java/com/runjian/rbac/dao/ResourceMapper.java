@@ -189,11 +189,7 @@ public interface ResourceMapper {
             " WHERE resource_key = #{resourceKey} AND resource_type = #{resourceType} AND level LIKE CONCAT(#{level}, '%') ")
     Set<GetResourceTreeRsp> selectByResourceKeyAndResourceTypeAndLevelLike(String resourceKey, Integer resourceType, String level);
 
-    @Select(" <script> " +
-            " SELECT * FROM " + RESOURCE_TABLE_NAME +
-            " WHERE resource_type = #{resourceType} AND " +
-            " resource_key = #{resourceKey} AND " +
-            " resource_value IN <foreach collection='resourceValues' item='item' open='(' separator=',' close=')'> #{item} </foreach> " +
-            " </script>")
-    Set<ResourceInfo> selectAllByResourceKeyAndResourceTypeAndResourceValueIn(String resourceKey, Integer resourceType, List<String> resourceValues);
+    @Select(" SELECT resource_value FROM " + RESOURCE_TABLE_NAME +
+            " WHERE resource_key = #{resourceKey} AND resource_type = #{resourceType}")
+    List<String> selectResourceValueByResourceKeyAndResourceType(String resourceKey, Integer resourceType);
 }

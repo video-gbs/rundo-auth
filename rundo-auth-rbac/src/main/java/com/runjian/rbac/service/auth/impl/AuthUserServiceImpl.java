@@ -262,4 +262,13 @@ public class AuthUserServiceImpl implements AuthUserService {
         cacheService.refreshUserResourceRefreshMark(resourceKey, authData.getUsername(), new HashSet<>(authData.getRoleIds()));
     }
 
+    @Override
+    public List<String> getUserResource(String resourceKey) {
+        AuthDataDto authData = authUtils.getAuthData();
+        if (authData.getIsAdmin()){
+            return resourceMapper.selectResourceValueByResourceKeyAndResourceType(resourceKey, ResourceType.RESOURCE.getCode());
+        }
+        return cacheService.getUserResource(authData.getUsername(), resourceKey);
+    }
+
 }

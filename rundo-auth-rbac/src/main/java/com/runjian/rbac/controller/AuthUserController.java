@@ -77,7 +77,7 @@ public class AuthUserController {
      */
     @GetMapping("/resource")
     @ApiDoc(result = GetResourceTreeRsp.class)
-    public CommonResponse<GetResourceTreeRsp> getResource(@RequestParam String resourceKey){
+    public CommonResponse<GetResourceTreeRsp> getResourceTree(@RequestParam String resourceKey){
         return CommonResponse.success(authUserService.getCatalogueResource(resourceKey));
     }
 
@@ -91,6 +91,15 @@ public class AuthUserController {
     @ApiDoc(result = GetCatalogueResourceRsp.class)
     public CommonResponse<List<GetCatalogueResourceRsp>> getCatalogueResourceRsp(@RequestParam Long pid, @RequestParam Boolean isIncludeChild){
         return CommonResponse.success(authUserService.getResourceByCatalogue(pid, isIncludeChild));
+    }
+
+    /**
+     * 获取用户所有的资源
+     * @return
+     */
+    @GetMapping("/resource/all")
+    public CommonResponse<List<String>> getUserResource(@RequestParam String resourceKey){
+        return CommonResponse.success(authUserService.getUserResource(resourceKey));
     }
 
     /**

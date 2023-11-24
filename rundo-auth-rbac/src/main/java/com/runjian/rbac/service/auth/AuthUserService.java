@@ -55,4 +55,9 @@ public interface AuthUserService {
      */
     void refreshUserResource(String resourceKey);
 
+    /**
+     * 获取用户所有资源
+     * @return
+     */
+    List<String> getUserResource(String resourceKey);
 }
