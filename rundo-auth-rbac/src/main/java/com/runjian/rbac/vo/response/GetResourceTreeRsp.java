@@ -48,6 +48,11 @@ public class GetResourceTreeRsp extends AbstractTreeInfo {
     private String level;
 
     /**
+     * 资源数量
+     */
+    private Long resourceNum;
+
+    /**
      * 创建时间
      */
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")

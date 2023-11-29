@@ -64,9 +64,9 @@ public interface ResourceMapper {
     @Select(" <script> " +
             " SELECT * FROM " + RESOURCE_TABLE_NAME +
             " WHERE resource_key = #{resourceKey} " +
-            " AND resource_type = 1 " +
-            " </script>")
-    List<GetResourceTreeRsp> selectAllByResourceKeyAndResourceType(String resourceKey);
+            " AND resource_type = #{resourceType} " +
+            " </script>" )
+    List<GetResourceTreeRsp> selectAllByResourceKeyAndResourceType(String resourceKey, Integer resourceType);
 
     @Select(" SELECT * FROM " + RESOURCE_TABLE_NAME +
             " WHERE level LIKE CONCAT(#{level}, '%') ")
@@ -145,8 +145,8 @@ public interface ResourceMapper {
     List<GetResourceRootRsp> selectAllRoot();
 
     @Select(" SELECT * FROM " + RESOURCE_TABLE_NAME +
-            " WHERE resource_key = #{resourceKey} AND resource_type = #{resourceType}")
-    List<ResourceInfo> selectAllByResourceKey(String resourceKey, Integer resourceType);
+            " WHERE resource_key = #{resourceKey} ")
+    List<GetResourceTreeRsp> selectAllByResourceKey(String resourceKey);
 
     @Select(" SELECT resource_value FROM " + RESOURCE_TABLE_NAME +
             " WHERE resource_key = #{resourceKey} AND level LIKE CONCAT(#{level}, '%') ")

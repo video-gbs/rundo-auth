@@ -18,6 +18,7 @@ import com.runjian.rbac.vo.AbstractTreeInfo;
 import com.runjian.rbac.vo.dto.AuthDataDto;
 import com.runjian.rbac.vo.response.*;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
 
@@ -28,6 +29,7 @@ import java.util.stream.Collectors;
  * @author Miracle
  * @date 2023/6/15 17:33
  */
+@Slf4j
 @Service
 @RequiredArgsConstructor
 public class AuthUserServiceImpl implements AuthUserService {
@@ -149,13 +151,16 @@ public class AuthUserServiceImpl implements AuthUserService {
     public GetResourceTreeRsp getCatalogueResource(String resourceKey) {
         AuthDataDto authData = authUtils.getAuthData();
         List<GetResourceTreeRsp> resourceInfoList;
+        List<GetResourceTreeRsp> allResourceList;
         Optional<GetResourceTreeRsp> rootOp = resourceMapper.selectRootByResourceKey(resourceKey);
         if (rootOp.isEmpty()){
             return null;
         }
         GetResourceTreeRsp root = rootOp.get();
         if (authData.getIsAdmin()){
-            resourceInfoList = resourceMapper.selectAllByResourceKeyAndResourceType(resourceKey);
+            List<GetResourceTreeRsp> resourceInfos = resourceMapper.selectAllByResourceKey(resourceKey);
+            resourceInfoList = resourceInfos.stream().filter(catalogueInfo -> catalogueInfo.getResourceType().equals(ResourceType.CATALOGUE.getCode())).toList();
+            allResourceList = resourceInfos.stream().filter(catalogueInfo -> catalogueInfo.getResourceType().equals(ResourceType.RESOURCE.getCode())).toList();
         }else {
             if (CollectionUtils.isEmpty(authData.getRoleIds())){
                 return null;
@@ -178,7 +183,18 @@ public class AuthUserServiceImpl implements AuthUserService {
             for (GetResourceTreeRsp rsp : catalogueRoleResourceRsp){
                 resourceInfoList.addAll(resourceMapper.selectByResourceKeyAndResourceTypeAndLevelLike(resourceKey, ResourceType.CATALOGUE.getCode(), rsp.getLevel() + MarkConstant.MARK_SPLIT_RAIL + rsp.getId()));
             }
+            allResourceList = roleResourceRsp.stream().filter(catalogueInfo -> catalogueInfo.getResourceType().equals(ResourceType.RESOURCE.getCode())).toList();
+
         }
+
+        for (GetResourceTreeRsp rsp : resourceInfoList){
+            rsp.setResourceNum(allResourceList.stream().filter(resourceInfo -> {
+                if (rsp.getLevel().equals("0")){
+                    return true;
+                } else return resourceInfo.getLevel().startsWith(rsp.getLevel() + MarkConstant.MARK_SPLIT_RAIL + rsp.getId());
+            }).count());
+        }
+        log.warn("getCatalogueResource Rsp:{}", resourceInfoList);
 
         root.setChildList(root.recursionData(resourceInfoList, root.getLevel() + MarkConstant.MARK_SPLIT_RAIL + root.getId()));
         return root;
