@@ -188,14 +188,9 @@ public class AuthUserServiceImpl implements AuthUserService {
         }
         log.warn("allResourceList:{}", allResourceList);
         for (GetResourceTreeRsp rsp : resourceInfoList){
-            rsp.setResourceNum(allResourceList.stream().filter(resourceInfo -> {
-                if (rsp.getLevel().equals("0")){
-                    return true;
-                } else return resourceInfo.getLevel().startsWith(rsp.getLevel() + MarkConstant.MARK_SPLIT_RAIL + rsp.getId());
-            }).count());
+            rsp.setResourceNum(allResourceList.stream().filter(resourceInfo -> resourceInfo.getLevel().startsWith(rsp.getLevel() + MarkConstant.MARK_SPLIT_RAIL + rsp.getId())).count());
         }
-        log.warn("getCatalogueResource Rsp:{}", resourceInfoList);
-
+        root.setResourceNum((long) allResourceList.size());
         root.setChildList(root.recursionData(resourceInfoList, root.getLevel() + MarkConstant.MARK_SPLIT_RAIL + root.getId()));
         return root;
     }
