@@ -194,7 +194,7 @@ public interface ResourceMapper {
     List<String> selectResourceValueByResourceKeyAndResourceType(String resourceKey, Integer resourceType);
 
     @Select(" SELECT * FROM " + RESOURCE_TABLE_NAME +
-            " WHERE resource_value IN <foreach collection='resourceValue' item='item' open='(' separator=',' close=')'> #{item} </foreach> " +
+            " WHERE resource_value IN <foreach collection='resourceValueList' item='item' open='(' separator=',' close=')'> #{item} </foreach> " +
             " AND resource_type = #{resourceType} ")
-    List<GetResourceTreeRsp> selectAllByResourceValueAndResourceType(List<String> resourceValue, Integer resourceType);
+    List<GetResourceTreeRsp> selectAllByResourceValueAndResourceType(List<String> resourceValueList, Integer resourceType);
 }

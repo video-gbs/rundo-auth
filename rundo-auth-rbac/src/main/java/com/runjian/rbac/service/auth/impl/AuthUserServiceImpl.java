@@ -151,7 +151,7 @@ public class AuthUserServiceImpl implements AuthUserService {
     public GetResourceTreeRsp getCatalogueResource(String resourceKey) {
         AuthDataDto authData = authUtils.getAuthData();
         List<GetResourceTreeRsp> resourceInfoList;
-        List<GetResourceTreeRsp> allResourceList;
+        List<GetResourceTreeRsp> allResourceList = null;
         Optional<GetResourceTreeRsp> rootOp = resourceMapper.selectRootByResourceKey(resourceKey);
         if (rootOp.isEmpty()){
             return null;
@@ -184,13 +184,19 @@ public class AuthUserServiceImpl implements AuthUserService {
                 resourceInfoList.addAll(resourceMapper.selectByResourceKeyAndResourceTypeAndLevelLike(resourceKey, ResourceType.CATALOGUE.getCode(), rsp.getLevel() + MarkConstant.MARK_SPLIT_RAIL + rsp.getId()));
             }
             List<String> userResource = cacheService.getUserResource(authData.getUsername(), resourceKey);
-            allResourceList = resourceMapper.selectAllByResourceValueAndResourceType(userResource, ResourceType.RESOURCE.getCode());
+            if (!userResource.isEmpty()){
+                allResourceList = resourceMapper.selectAllByResourceValueAndResourceType(userResource, ResourceType.RESOURCE.getCode());
+            }
 
         }
-        log.warn("allResourceList:{}", allResourceList);
-        for (GetResourceTreeRsp rsp : resourceInfoList){
-            rsp.setResourceNum(allResourceList.stream().filter(resourceInfo -> resourceInfo.getLevel().startsWith(rsp.getLevel() + MarkConstant.MARK_SPLIT_RAIL + rsp.getId())).count());
+
+        if (Objects.nonNull(allResourceList) && !allResourceList.isEmpty()){
+            log.warn("allResourceList:{}", allResourceList);
+            for (GetResourceTreeRsp rsp : resourceInfoList){
+                rsp.setResourceNum(allResourceList.stream().filter(resourceInfo -> resourceInfo.getLevel().startsWith(rsp.getLevel() + MarkConstant.MARK_SPLIT_RAIL + rsp.getId())).count());
+            }
         }
+
         root.setResourceNum((long) allResourceList.size());
         root.setChildList(root.recursionData(resourceInfoList, root.getLevel() + MarkConstant.MARK_SPLIT_RAIL + root.getId()));
         return root;
