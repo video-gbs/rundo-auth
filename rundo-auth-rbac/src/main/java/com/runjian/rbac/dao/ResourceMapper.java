@@ -192,4 +192,8 @@ public interface ResourceMapper {
     @Select(" SELECT resource_value FROM " + RESOURCE_TABLE_NAME +
             " WHERE resource_key = #{resourceKey} AND resource_type = #{resourceType}")
     List<String> selectResourceValueByResourceKeyAndResourceType(String resourceKey, Integer resourceType);
+
+    @Select(" SELECT * FROM " + RESOURCE_TABLE_NAME +
+            " WHERE resource_value = #{resourceValue} AND resource_type = #{resourceType} ")
+    List<GetResourceTreeRsp> selectAllByResourceValueAndResourceType(List<String> resourceValue, Integer resourceType);
 }

@@ -183,7 +183,8 @@ public class AuthUserServiceImpl implements AuthUserService {
             for (GetResourceTreeRsp rsp : catalogueRoleResourceRsp){
                 resourceInfoList.addAll(resourceMapper.selectByResourceKeyAndResourceTypeAndLevelLike(resourceKey, ResourceType.CATALOGUE.getCode(), rsp.getLevel() + MarkConstant.MARK_SPLIT_RAIL + rsp.getId()));
             }
-            allResourceList = roleResourceRsp.stream().filter(catalogueInfo -> catalogueInfo.getResourceType().equals(ResourceType.RESOURCE.getCode())).toList();
+            List<String> userResource = cacheService.getUserResource(authData.getUsername(), resourceKey);
+            allResourceList = resourceMapper.selectAllByResourceValueAndResourceType(userResource, ResourceType.RESOURCE.getCode());
 
         }
         log.warn("allResourceList:{}", allResourceList);
