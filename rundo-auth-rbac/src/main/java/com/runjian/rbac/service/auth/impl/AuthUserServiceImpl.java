@@ -186,7 +186,7 @@ public class AuthUserServiceImpl implements AuthUserService {
             allResourceList = roleResourceRsp.stream().filter(catalogueInfo -> catalogueInfo.getResourceType().equals(ResourceType.RESOURCE.getCode())).toList();
 
         }
-
+        log.warn("allResourceList:{}", allResourceList);
         for (GetResourceTreeRsp rsp : resourceInfoList){
             rsp.setResourceNum(allResourceList.stream().filter(resourceInfo -> {
                 if (rsp.getLevel().equals("0")){
