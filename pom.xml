@@ -9,16 +9,16 @@
         <relativePath/> <!-- lookup parent from repository -->
     </parent>
     <groupId>com.runjian</groupId>
-    <artifactId>rundo-auth</artifactId>
+    <artifactId>bigdata-auth</artifactId>
     <version>0.0.1-SNAPSHOT</version>
     <packaging>pom</packaging>
-    <name>rundo-auth</name>
-    <description>rundo-auth</description>
+    <name>bigdata-auth</name>
+    <description>bigdata-auth</description>
     <modules>
-        <module>rundo-auth-server</module>
-        <module>rundo-common</module>
-        <module>rundo-auth-gateway</module>
-        <module>rundo-auth-rbac</module>
+        <module>bigdata-auth-server</module>
+        <module>bigdata-common</module>
+        <module>bigdata-auth-gateway</module>
+        <module>bigdata-auth-rbac</module>
     </modules>
     <properties>
         <java.version>17</java.version>
@@ -67,7 +67,7 @@
             </dependency>
             <dependency>
                 <groupId>com.runjian</groupId>
-                <artifactId>rundo-common</artifactId>
+                <artifactId>bigdata-common</artifactId>
                 <version>${project.version}</version>
             </dependency>
             <dependency>
